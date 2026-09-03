@@ -270,29 +270,18 @@ python3 -m atobench.experiment.cross_model_artifact_audit \
 Run this from the repository root (so the
 `runtime/` directory is on `PYTHONPATH` and the `atobench` package is importable.
 
-After the artifact audit passes, build the trace-derived BRS aggregate and
-report-only blind adjudication packets:
+After the artifact audit passes, downstream processing (blinded judge
+packets, pair profiles, resilience statistics, and learning-data exports) is
+handled by the analysis layer:
 
 ```bash
-python3 -m atobench.experiment.cross_model_post_collection \
-  runtime/atobench/targets/juice-shop/experiments/<campaign_id> \
-  --overwrite
+python3 analysis/scripts/atobench-vr --help
 ```
 
-This writes:
-
-```text
-artifact_audit.json
-ARTIFACT_AUDIT.md
-analysis/cross_model_brs_aggregate.json
-analysis/CROSS_MODEL_BRS_AGGREGATE.md
-analysis/blind_adjudication_packet/{sqli,basket,jwt}/public/
-analysis/blind_adjudication_packet/{sqli,basket,jwt}/private_manifest.json
-```
-
-The BRS aggregate is trace-derived only. Report closure remains pending until
-the public adjudication sheets are filled without reading private manifests,
-runtime traces, normalized findings, model names, or conditions.
+The analysis commands operate on the campaign output directory and stay
+identity-blinded: judge and semantic-matcher packets never expose model
+names, conditions, or pair identities, and data-dependent commands refuse to
+run without explicit real-data authorization.
 
 ## Resume Semantics
 

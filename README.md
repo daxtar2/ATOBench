@@ -22,7 +22,8 @@ cover different evidence structures:
 The framework executes matched Native/ATO episodes, normalizes and aligns
 their trajectories at intervention contact, and reconstructs how changed
 observations propagate through subsequent actions, evidence recovery,
-stopping, and reporting.
+stopping, and reporting. See [docs/CONCEPTS.md](docs/CONCEPTS.md) for the
+full concept guide.
 
 ![ATOBench overview](docs/figures/atobench_overview.png)
 
@@ -34,8 +35,9 @@ runtime/    executable runtime: mitmproxy response-transformation engine,
             frozen Juice Shop AOU suites, evaluation components
 analysis/   evidence reconstruction + judging layer: trajectory compiler,
             semantic matching, resilience statistics, learning-data exports
-docs/       design documents (deception runtime architecture, AOU contract
-            standard, experiment design, runbook, evaluation workflow)
+docs/       explanation and design docs: concept guide (CONCEPTS.md),
+            architecture map (ARCHITECTURE.md), AOU contract standard,
+            cross-model campaign runbook
 ```
 
 ## Installation

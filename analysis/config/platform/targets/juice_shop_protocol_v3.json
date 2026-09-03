@@ -1,0 +1,33 @@
+{
+  "schema_version": "atobench.target_adapter.v1",
+  "id": "juice-shop-protocol-v3",
+  "label": "OWASP Juice Shop protocol-v3 target adapter",
+  "freeze_status": "frozen",
+  "adapter": {
+    "kind": "docker-compose-target-v1",
+    "lifecycle_contract": "start/reset/health are delegated to the existing ATOBench runner",
+    "supports": [
+      "start",
+      "reset",
+      "health",
+      "snapshot"
+    ]
+  },
+  "snapshot": {
+    "label": "juice-shop-20.1.1-protocol-v3",
+    "cryptographic": false,
+    "image_digest": "sha256:e68144772ebaaca0ec117b38d44903af92416793230288ef7c5437fc4f26850a"
+  },
+  "frozen_artifacts": [
+    {
+      "artifact_id": "target_state_contract",
+      "path": "../runtime/atobench/targets/juice-shop/protocol_v3/target_state_contract.yaml",
+      "sha256": "f402059dfdb78531c4fdbe40fffacd0c3cb957fdfa163c7b541035cd94da53e6"
+    },
+    {
+      "artifact_id": "target_compose",
+      "path": "../runtime/atobench/targets/juice-shop/docker-compose.yml",
+      "sha256": "3a4fb655f9d620170949059ed92d1760aac490bd05969ea3734d6dfc8e365f17"
+    }
+  ]
+}

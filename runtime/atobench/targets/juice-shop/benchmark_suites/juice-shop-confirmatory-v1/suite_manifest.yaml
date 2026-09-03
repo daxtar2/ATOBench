@@ -1,0 +1,25 @@
+schema_version: atobench.benchmark_suite.v1
+suite_id: juice-shop-confirmatory-v1
+target_name: juice-shop
+target_url: http://127.0.0.1:3000
+construction_state: scope_reset_confirmatory_materialized_pending_replay
+created_at: '2026-07-13T16:59:56.412357+00:00'
+standard_conditions:
+  C0: programs/c0_identity/runtime_program.yaml
+  EVIDENCE_SQLI_CLOSURE: programs/evidence_sqli_closure/runtime_program.yaml
+  RECOVERY_SEARCH_P3: programs/recovery_search_p3/runtime_program.yaml
+paper_grade_gate:
+  scope_reset_handoff_integrated: true
+  mechanism_summary_v2_complete: true
+  minimal_programs_materialized: true
+  behavior_predicates_frozen: false
+  replay_validation_complete: false
+  smoke_gate_complete: false
+  counted_collection_allowed: false
+case_count: 3
+runtime_rule_count: 3
+notes:
+- This suite is the scope-reset confirmatory candidate.
+- It intentionally excludes D-ladder programs and broad C1 non-SQLi cases.
+- The suite is hash locked for materialization provenance, but counted collection
+  is blocked until replay and smoke gates pass.

@@ -1,0 +1,282 @@
+{
+  "schema_version": "atobench.verification_resilience.pipeline_contract.v2",
+  "release": "standalone-v1.6-runner-dependency-locking",
+  "canonical_reference": "stage_20_jwt_semantic_contract_repair_v1",
+  "authorization_state": {
+    "offline_processing": "implemented",
+    "real_data": "requires_explicit_allow_real_data",
+    "judge_calls": "requires_frozen_lock_allowlist_and_explicit_call_authorization",
+    "semantic_matcher_calls": "requires_frozen_lock_allowlist_and_explicit_call_authorization",
+    "paper_integration": "disabled_in_packaged_reference"
+  },
+  "stages": [
+    {
+      "id": "01",
+      "name": "census_claude_sessions",
+      "depends_on": [],
+      "mode": "implemented"
+    },
+    {
+      "id": "02",
+      "name": "flatten_claude_sessions",
+      "depends_on": [
+        "01"
+      ],
+      "mode": "implemented"
+    },
+    {
+      "id": "03",
+      "name": "redact_session_records",
+      "depends_on": [
+        "02"
+      ],
+      "mode": "implemented"
+    },
+    {
+      "id": "04",
+      "name": "align_claude_http",
+      "depends_on": [
+        "03"
+      ],
+      "mode": "implemented_deterministic_and_dual_verifier"
+    },
+    {
+      "id": "05",
+      "name": "build_episode_fact_registry",
+      "depends_on": [
+        "04"
+      ],
+      "mode": "implemented"
+    },
+    {
+      "id": "06",
+      "name": "extract_report_claim_atoms",
+      "depends_on": [
+        "05"
+      ],
+      "mode": "implemented"
+    },
+    {
+      "id": "07",
+      "name": "build_judge_packets",
+      "depends_on": [
+        "05",
+        "06"
+      ],
+      "mode": "implemented"
+    },
+    {
+      "id": "08",
+      "name": "run_trajectory_judges",
+      "depends_on": [
+        "07",
+        "frozen_judge_lock"
+      ],
+      "mode": "implemented_resumable_gated_calls"
+    },
+    {
+      "id": "09",
+      "name": "validate_judges",
+      "depends_on": [
+        "08"
+      ],
+      "mode": "implemented"
+    },
+    {
+      "id": "10",
+      "name": "build_episode_states",
+      "depends_on": [
+        "05",
+        "09"
+      ],
+      "mode": "implemented"
+    },
+    {
+      "id": "11",
+      "name": "semantic_report_matching",
+      "depends_on": [
+        "06",
+        "07",
+        "frozen_semantic_lock"
+      ],
+      "mode": "implemented_resumable_gated_calls"
+    },
+    {
+      "id": "12",
+      "name": "build_pair_profiles",
+      "depends_on": [
+        "10",
+        "11"
+      ],
+      "mode": "implemented"
+    },
+    {
+      "id": "13a",
+      "name": "freeze_statistics_populations",
+      "depends_on": [
+        "12",
+        "frozen_statistics_lock"
+      ],
+      "mode": "implemented"
+    },
+    {
+      "id": "13",
+      "name": "run_resilience_statistics",
+      "depends_on": [
+        "13a"
+      ],
+      "mode": "implemented_audited"
+    },
+    {
+      "id": "14",
+      "name": "export_results_facts",
+      "depends_on": [
+        "13",
+        "statistics_audit"
+      ],
+      "mode": "implemented"
+    },
+    {
+      "id": "15",
+      "name": "run_qa",
+      "depends_on": [
+        "01",
+        "04",
+        "05",
+        "09",
+        "11",
+        "13",
+        "14"
+      ],
+      "mode": "implemented"
+    },
+    {
+      "id": "16",
+      "name": "build_result_figures",
+      "depends_on": [
+        "14",
+        "15"
+      ],
+      "mode": "implemented_reference"
+    },
+    {
+      "id": "17",
+      "name": "build_trajectory_dynamics",
+      "depends_on": [
+        "05",
+        "10",
+        "12"
+      ],
+      "mode": "implemented_exploratory"
+    },
+    {
+      "id": "18",
+      "name": "export_learning_data",
+      "depends_on": [
+        "05",
+        "10",
+        "12",
+        "frozen_learning_schema"
+      ],
+      "mode": "implemented_candidate_not_rl_ready"
+    },
+    {
+      "id": "19",
+      "name": "export_learning_transitions",
+      "depends_on": [
+        "10",
+        "12",
+        "frozen_graph_nodes",
+        "frozen_transition_schema"
+      ],
+      "mode": "implemented_structured_candidate_not_direct_rl_ready"
+    },
+    {
+      "id": "20",
+      "name": "build_transition_audit_packets",
+      "depends_on": [
+        "19",
+        "frozen_transition_audit_protocol"
+      ],
+      "mode": "implemented_selection_awaiting_human_review"
+    },
+    {
+      "id": "21",
+      "name": "prepare_guarded_execution",
+      "depends_on": [
+        "platform_freeze_lock",
+        "validated_external_artifacts",
+        "target_adapter_capabilities"
+      ],
+      "mode": "implemented_metadata_only_handoff_then_explicit_execute"
+    },
+    {
+      "id": "22",
+      "name": "initialize_frozen_campaign",
+      "depends_on": [
+        "registered_frozen_target",
+        "registered_frozen_aous",
+        "registered_frozen_profile",
+        "validated_runner"
+      ],
+      "mode": "implemented_manifest_only_explicit_registry_registration"
+    }
+  ],
+  "canonical_source_policy": {
+    "claude_main_jsonl": "authoritative",
+    "claude_subagent_jsonl": "authoritative",
+    "tasks_output": "optional_large_output_sidecar",
+    "tasks_output_count_zero": "valid_inline_only_transcript",
+    "private_tmp": "discovery_hint_only",
+    "legacy_analysis": "reconciliation_only"
+  },
+  "measurement_roles": {
+    "verification_control": "retained_numeric_diagnostic",
+    "stop_decision": "descriptor_primary_numeric_provenance",
+    "report_grounding": "retained_numeric_score_proximity_plus_registered_finding_semantics"
+  },
+  "latest_contract_correction": {
+    "scope": "jwt_only",
+    "registered_finding": "password-hash exposure in a decodable JWT returned by a successful login",
+    "pentest_rerun_required": false,
+    "non_jwt_labels_changed": false
+  },
+  "learning_data_plane": {
+    "schema_version": "atobench.learning_record.v1",
+    "views": [
+      "episode_summary",
+      "process_label",
+      "counterfactual_pair"
+    ],
+    "numeric_reward_assigned": false,
+    "rl_ready": false,
+    "next_gate": "human-audited AOU-specific reward mapping and downstream learning validation"
+  },
+  "learning_transition_plane": {
+    "schema_version": "atobench.learning_transition.v1",
+    "view": "structured_transition",
+    "projection": "whitelisted_metadata_only_no_body_values_or_free_text",
+    "generic_reward_assigned": false,
+    "direct_offline_rl_ready": false,
+    "human_audit_packet_selection": "implemented_awaiting_human_review",
+    "next_gate": "execute human audit, then freeze AOU-specific reward maps"
+  },
+  "platform_scaffold": {
+    "schema_version": "atobench.platform_registry.v1",
+    "registry": "config/platform/registry.json",
+    "target_adapter_contract": "atobench.target_adapter.v1",
+    "aou_bundle_contract": "atobench.aou_bundle.v1",
+    "analysis_profile_contract": "atobench.analysis_profile.v1",
+    "campaign_contract": "atobench.campaign.v1",
+    "execution_adapter": "atobench-cross-model-v1_guarded_handoff",
+    "campaign_initializer": "init-campaign validates component artifacts plus the loaded atobench-cross-model wrapper/protocol sources; registry write requires --register",
+    "real_execution_enabled": true,
+    "real_execution_requires": [
+      "current freeze lock",
+      "current artifact validation",
+      "prepared execution handoff",
+      "--allow-external-artifacts",
+      "--allow-real-execution"
+    ]
+  }
+}

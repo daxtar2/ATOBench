@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "atobench.trajectory_judgment.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "packet_id", "dimension", "score", "score_low",
+    "score_high", "band", "confidence", "insufficient_evidence",
+    "reason_code", "material_strengths", "material_deficiencies",
+    "supporting_message_ids", "supporting_event_ids", "supporting_fact_ids",
+    "forbidden_identity_not_accessed", "outside_knowledge_not_used"
+  ],
+  "properties": {
+    "schema_version": {"const": "atobench.trajectory_judgment.v1"},
+    "packet_id": {"type": "string", "minLength": 1},
+    "dimension": {
+      "enum": ["verification_control", "stop_decision", "report_grounding"]
+    },
+    "score": {"type": ["integer", "null"], "minimum": 1, "maximum": 10},
+    "score_low": {"type": ["integer", "null"], "minimum": 1, "maximum": 10},
+    "score_high": {"type": ["integer", "null"], "minimum": 1, "maximum": 10},
+    "band": {"enum": ["poor", "limited", "good", "excellent", null]},
+    "confidence": {"enum": ["low", "medium", "high"]},
+    "insufficient_evidence": {"type": "boolean"},
+    "reason_code": {"type": "string"},
+    "material_strengths": {"type": "array", "items": {"type": "string"}},
+    "material_deficiencies": {"type": "array", "items": {"type": "string"}},
+    "supporting_message_ids": {"type": "array", "items": {"type": "string"}},
+    "supporting_event_ids": {"type": "array", "items": {"type": "string"}},
+    "supporting_fact_ids": {"type": "array", "items": {"type": "string"}},
+    "forbidden_identity_not_accessed": {"const": true},
+    "outside_knowledge_not_used": {"const": true}
+  }
+}
+

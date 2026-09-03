@@ -1,0 +1,11 @@
+{
+  "schema_version": "atobench.aou_bundle.v1",
+  "id": "replace-aou-id",
+  "label": "Replace AOU label",
+  "target_id": "replace-target-id",
+  "unit_id": "replace-unit-id",
+  "freeze_status": "frozen",
+  "conditions": ["C0", "C1"],
+  "runtime_adapter": {"module": "replace.module", "aou_key": "legacy-or-runtime-key"},
+  "frozen_artifacts": [{"artifact_id": "runtime_program", "path": "relative/or/external/path", "sha256": "64-char-sha256"}]
+}

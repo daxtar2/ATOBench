@@ -1,0 +1,18 @@
+{
+  "schema_version": "atobench.packet_builder_config.v1",
+  "packet_id_seed": "atobench-verification-resilience-v1-draft",
+  "packet_schema_version": "atobench.trajectory_packet.v1",
+  "redaction_version": "atobench.stable_redaction.v1",
+  "prompt_version": "atobench.trajectory_judge.draft-v1",
+  "forbidden_public_keys": [
+    "condition",
+    "model",
+    "model_route_raw",
+    "pair_id",
+    "campaign_id",
+    "episode_id",
+    "source_path",
+    "raw_source_pointer"
+  ]
+}
+

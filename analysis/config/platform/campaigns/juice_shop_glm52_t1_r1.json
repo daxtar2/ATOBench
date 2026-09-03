@@ -1,0 +1,41 @@
+{
+  "aou_ids": [
+    "sqli-evidence-closure-v3",
+    "basket-scope-closure-v3_1",
+    "jwt-hash-suppression-v3_1"
+  ],
+  "execution": {
+    "agent_timeout_multiplier": null,
+    "continue_on_error": true,
+    "max_tool_calls": 60,
+    "models": [
+      "glm-5.2"
+    ],
+    "parallel_workers": 1,
+    "rounds": 1,
+    "start_target": true
+  },
+  "freeze_status": "frozen",
+  "frozen_artifacts": [
+    {
+      "artifact_id": "legacy_runner",
+      "path": "../runtime/atobench/scripts/atobench-cross-model",
+      "sha256": "b4e90e902c5d4f2244057b6a2960074ad76ee95d4356c8ef36efc46e44d6cc6e"
+    },
+    {
+      "artifact_id": "legacy_runner_protocol",
+      "path": "../runtime/atobench/experiment/cross_model_protocol.py",
+      "sha256": "821d7dbb81d1814e47428d0487e309d635286804d329d76e4056ccea8f134833"
+    }
+  ],
+  "id": "juice-shop-glm52-t1-r1",
+  "label": "Generated frozen campaign juice-shop-glm52-t1-r1",
+  "profile_id": "verification-resilience-stage20",
+  "runner": {
+    "adapter": "atobench-cross-model-v1",
+    "entrypoint": "../runtime/atobench/scripts/atobench-cross-model",
+    "module": "atobench.experiment.cross_model_protocol"
+  },
+  "schema_version": "atobench.campaign.v1",
+  "target_id": "juice-shop-protocol-v3"
+}

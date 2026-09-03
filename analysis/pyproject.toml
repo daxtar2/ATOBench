@@ -1,0 +1,25 @@
+[project]
+name = "atobench-verification-resilience"
+version = "1.6.0"
+requires-python = ">=3.10"
+description = "Standalone fail-closed analysis framework for ATOBench verification resilience"
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+figures = ["matplotlib>=3.8", "numpy>=1.26"]
+
+[project.scripts]
+atobench-vr = "atobench_vr.cli:main"
+atobench = "atobench_vr.platform:cli"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

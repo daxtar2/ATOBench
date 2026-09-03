@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atobench.local/schemas/learning_transition.v1.json",
+  "title": "ATOBench Structured Learning Transition v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "record_id",
+    "view",
+    "identity",
+    "environment",
+    "split",
+    "state_before",
+    "action",
+    "observation",
+    "state_after",
+    "provenance",
+    "training"
+  ],
+  "properties": {
+    "schema_version": {"const": "atobench.learning_transition.v1"},
+    "record_id": {"type": "string", "minLength": 8},
+    "view": {"const": "structured_transition"},
+    "identity": {"type": "object"},
+    "environment": {"type": "object"},
+    "split": {"type": "object"},
+    "state_before": {"type": "object"},
+    "action": {"type": "object"},
+    "observation": {"type": "object"},
+    "state_after": {"type": "object"},
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "raw_paths_removed": {"const": true},
+        "request_and_response_values_removed": {"const": true},
+        "identity_and_resource_values_removed": {"const": true},
+        "hidden_chain_of_thought_included": {"const": false}
+      }
+    },
+    "training": {"type": "object"}
+  },
+  "additionalProperties": true
+}

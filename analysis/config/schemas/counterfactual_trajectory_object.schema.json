@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atobench.local/schemas/counterfactual_trajectory_object.schema.json",
+  "title": "ATOBench Counterfactual Verification Trajectory Object v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "object_type",
+    "object_id",
+    "identity",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "atobench.counterfactual_trajectory_object.v1"
+    },
+    "object_type": {
+      "enum": [
+        "canonical_trajectory",
+        "intervention_record",
+        "step_behavior_record",
+        "decision_failure_point",
+        "evidence_claim_record",
+        "counterfactual_pair_record"
+      ]
+    },
+    "object_id": {
+      "type": "string",
+      "minLength": 4
+    },
+    "identity": {
+      "type": "object"
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["label_origin", "source_record_ids", "hidden_chain_of_thought_included"],
+      "properties": {
+        "label_origin": {"type": "string"},
+        "source_record_ids": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "hidden_chain_of_thought_included": {"const": false}
+      }
+    }
+  },
+  "additionalProperties": true
+}

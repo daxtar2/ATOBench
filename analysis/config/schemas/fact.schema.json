@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "fact_id", "episode_id", "fact_class", "fact_type", "value",
+    "measurement_status", "importance", "source_kind", "source_pointers",
+    "predicate_or_prompt_version", "confidence"
+  ],
+  "properties": {
+    "fact_id": {"type": "string"},
+    "episode_id": {"type": "string"},
+    "fact_class": {"enum": ["intervention", "verification", "process", "report"]},
+    "fact_type": {"type": "string"},
+    "value": {},
+    "measurement_status": {"enum": ["positive", "negative", "unknown", "unavailable", "not_applicable"]},
+    "importance": {"enum": ["critical", "high", "medium", "low"]},
+    "source_kind": {"enum": ["deterministic_http", "recorded_rationale", "tool_result", "final_report", "hybrid_semantic"]},
+    "source_pointers": {"type": "array", "items": {"type": "string"}},
+    "predicate_or_prompt_version": {"type": "string"},
+    "confidence": {"enum": ["exact", "validated_semantic", "uncertain"]}
+  }
+}
+

@@ -1,0 +1,32 @@
+schema_version: atobench.verification_resilience.lock.v1
+analysis_version: verification_resilience_v1
+freeze_status: frozen
+engineering_pilot_authorized: true
+full_cohort_authorized: true
+judge_calls_authorized: false
+alignment_verifier_calls_authorized: false
+offline_result_construction_authorized: true
+statistics_authorized: true
+paper_integration_authorized: false
+measurement_resolution:
+  verification_control: retain_numeric_diagnostic
+  stop_decision: descriptor_first_numeric_demoted
+  report_grounding: retain_numeric_keep_band_definitions_demote_band_agreement_gate
+  report_grounding_primary_reliability_view: score_proximity
+source_policy:
+  claude_jsonl: canonical
+  tasks_output: optional_large_output_sidecar
+  zero_sidecars_mean_missing: false
+  legacy_analysis: reconciliation_only
+execution_scope:
+  stage: post_judgment_offline_result_construction
+  judgment_root: 06_judgments/08m_full_cohort_v1
+  expected_packet_count: 1290
+  expected_episode_count: 430
+  expected_dimension_counts:
+    verification_control: 430
+    stop_decision: 430
+    report_grounding: 430
+  active_incomplete_marker_count: 0
+  paper_facing_results_authorized: false
+hashes: {}

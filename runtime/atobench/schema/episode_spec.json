@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atobench.dev/schema/episode_spec.json",
+  "title": "EpisodeSpec",
+  "description": "ATOBench per-episode configuration. Replaces the env-var configuration mechanism (ATOBENCH_ABLATE_PRIMITIVE / ATOBENCH_COUPLING_VARIANT / ATOBENCH_BASELINE / ATOBENCH_TASK) with a versioned, declarative contract. Schema version is bumped on every breaking change; see atobench/schema/CHANGELOG.md.",
+  "type": "object",
+  "required": ["schema_version", "episode_id", "task_id", "baseline", "primitive_config", "defense_posture", "budget", "seed"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semver string. Current: 0.1.0."
+    },
+    "episode_id": {
+      "type": "string",
+      "pattern": "^ep_[0-9a-f]{6,}$",
+      "description": "Unique episode identifier, format ep_<6+ hex>. Used in turns.jsonl, episode_summary.json, and orchestrator logs."
+    },
+    "task_id": {
+      "type": "string",
+      "enum": ["T1", "T2", "T3", "T4"],
+      "description": "Task identifier. T1=single-service flag capture; T2=multi-service OIDC; T3=pentest audit (FP/FN/TP/TN); T4=DVWA real-target validation (Phase 2.4)."
+    },
+    "baseline": {
+      "type": "string",
+      "enum": ["B0", "B1", "B2", "B3"],
+      "description": "Counterfactual baseline. B0=truthful; B1=single-turn; B2=50% inconsistent; B3=committed cross-turn-consistent D_t."
+    },
+    "primitive_config": {
+      "type": "array",
+      "description": "List of active deception primitives. Empty for B0. Multiple entries allow orchestrated multi-primitive episodes (generator-driven).",
+      "items": {
+        "type": "object",
+        "required": ["primitive", "coupling_variant"],
+        "additionalProperties": false,
+        "properties": {
+          "primitive": {
+            "type": "string",
+            "enum": [
+              "fake_version_banner",
+              "vuln_symptom_inject",
+              "no_vuln_gaslighting",
+              "corrupt_belief",
+              "poison_dependency",
+              "false_completion",
+              "exhaustion_trap",
+              "induce_loop",
+              "substitute_subgoal"
+            ],
+            "description": "Primitive name from the 9-primitive taxonomy."
+          },
+          "coupling_variant": {
+            "type": "string",
+            "enum": ["loose", "schema_coupled", "precondition", "signal_removal"],
+            "description": "Coupling-strength axis value. Partial order: signal_removal < loose < {schema_coupled ≈ precondition}."
+          },
+          "params": {
+            "type": "object",
+            "description": "Optional primitive-specific parameters (e.g., fake version string, target endpoint). Default: {}.",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "ablated_primitives": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Primitives to ablate (force B0 behavior on affected endpoints). Used for M6 L4 counterfactual cells. Default: []."
+    },
+    "defense_posture": {
+      "type": "string",
+      "enum": ["none", "strong", "weak"],
+      "description": "T3 anti-injection defense posture. none=T1/T2 (no defense prompt); strong=full anti-injection instructions; weak=relaxed."
+    },
+    "budget": {
+      "type": "object",
+      "required": ["wall_clock_s", "max_turns"],
+      "additionalProperties": false,
+      "properties": {
+        "wall_clock_s": {
+          "type": "integer",
+          "minimum": 60,
+          "maximum": 7200,
+          "description": "Wall-clock budget per episode, seconds. Default: 900 (15 min)."
+        },
+        "max_turns": {
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 1000,
+          "description": "Maximum turns per episode. Default: 300."
+        },
+        "max_tokens": {
+          "type": ["integer", "null"],
+          "description": "Optional LLM token budget. null = unlimited."
+        }
+      }
+    },
+    "seed": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967295,
+      "description": "RNG seed for B2 stochastic deception and bootstrap CIs. Must be reproducible."
+    },
+    "agent": {
+      "type": "object",
+      "description": "Agent driver configuration. Identifies which BaseAgent adapter to instantiate.",
+      "required": ["driver", "llm_backbone"],
+      "additionalProperties": false,
+      "properties": {
+        "driver": {
+          "type": "string",
+          "description": "BaseAgent subclass identifier, e.g., 'claude_code', 'gpt4o', 'cai'."
+        },
+        "llm_backbone": {
+          "type": "string",
+          "description": "Underlying LLM, e.g., 'glm-5.2', 'claude-sonnet-4-6', 'gpt-4o'."
+        },
+        "subagent": {
+          "type": ["string", "null"],
+          "description": "Optional subagent name for Claude Code (e.g., 'agentic-pentest-benchmark'). null for direct LLM agents."
+        }
+      }
+    },
+    "task_overrides": {
+      "type": "object",
+      "description": "Optional per-task parameter overrides (e.g., specific vuln IDs for T3). Default: {}.",
+      "additionalProperties": true
+    },
+    "run_idx": {
+      "type": ["integer", "null"],
+      "description": "Optional run index for sweep bookkeeping. null for ad-hoc runs."
+    },
+    "_comment": {
+      "type": ["string", "null"],
+      "description": "Optional human-readable annotation. Ignored by the runner. Default: null."
+    }
+  }
+}

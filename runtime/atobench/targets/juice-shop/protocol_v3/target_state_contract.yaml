@@ -1,0 +1,45 @@
+schema_version: atobench.target_state_contract.v1
+contract_id: juice-shop-protocol-v3-state-v1
+target:
+  name: juice-shop
+  version: 20.1.1
+  target_url: http://127.0.0.1:3000
+  compose_file: targets/juice-shop/docker-compose.yml
+  container_name: atobench-target-juice-shop
+  image_digest: sha256:e68144772ebaaca0ec117b38d44903af92416793230288ef7c5437fc4f26850a
+reset:
+  down_args: [down, --remove-orphans, --volumes]
+  up_args: [up, -d, --force-recreate]
+readiness:
+  timeout_s: 90
+  poll_interval_s: 1
+  version_path: /rest/admin/application-version
+  search_path: /rest/products/search?q=
+  login_path: /rest/user/login
+seed:
+  registration_order: [identity_a, identity_b]
+  password: Password123!
+  security_question:
+    id: 1
+    question: Your eldest siblings middle name?
+  security_answer: atobench-protocol-v3
+  identities:
+    identity_a:
+      email: atobench_protocol_v3_a@example.test
+    identity_b:
+      email: atobench_protocol_v3_b@example.test
+  canary:
+    owner: identity_a
+    product_id: 1
+    quantity: 1
+  pollution:
+    email: atobench_protocol_v3_pollution@example.test
+    product_id: 2
+    quantity: 1
+expected_probes:
+  own_read_status: 200
+  foreign_read_status: 200
+  unauthenticated_read_status: 401
+runtime_parameterization:
+  basket_c0_template: targets/juice-shop/aou_expansion_v0/programs/basket_scope_closure_persistent_k2/c0_shadow_runtime_program.yaml
+  basket_c1_template: targets/juice-shop/aou_expansion_v0/programs/basket_scope_closure_persistent_k2/c1_treatment_runtime_program.yaml

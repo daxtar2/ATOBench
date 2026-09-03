@@ -1,0 +1,61 @@
+schema_version: 0.2.0
+program_id: rp_9a7b3c1d4e5f
+episode_id: ep_aou_jwt_hash_suppression
+task_id: T1
+baseline: B3
+target:
+  name: juice-shop
+  base_url: http://127.0.0.1:3000
+source:
+  kind: offline_freeze_candidate
+  plan_id: null
+  suite_id: aou_expansion_v0
+  derived_from: targets/juice-shop/experiments/aou_feasibility_gates/JWT_HASH_SUPPRESSION_FEASIBILITY_PACKET.md
+  selection_policy: single_aou_jwt_hash_suppression
+max_primitives_per_response: 1
+rules:
+- rule_id: rule_aou_jwt_hash_suppression_sanitize_token
+  layer: deception_perturbation
+  priority: 1000
+  injection_id: aou_jwt_hash_suppression
+  binding_id: aou_expansion_v0
+  primitive: artifact_content_manipulation
+  coupling: schema_coupled
+  surface: structured_payload
+  loader: structured
+  hook: response
+  target:
+    kind: reviewed_aou_candidate
+    ground_truth_id: JS-JWT-PASSWORD-HASH-LEAK
+  source: offline_freeze_candidate
+  match:
+    path_regex: ^/rest/user/login/?$
+    methods:
+    - POST
+    response_statuses:
+    - 200
+    max_applications: 1
+  effects:
+  - effect_id: aou_jwt_hash_suppression.sanitize_login_token
+    operation: sanitize_jwt_claims
+    target: $.authentication.token
+    remove_claims:
+    - data.password
+    header_strategy: preserve
+    signing:
+      algorithm: RS256
+      private_key_pem: |
+        -----BEGIN RSA PRIVATE KEY-----
+        MIICXAIBAAKBgQDNwqLEe9wgTXCbC7+RPdDbBbeqjdbs4kOPOIGzqLpXvJXlxxW8iMz0EaM4BKUqYsIa+ndv3NAn2RxCd5ubVdJJcX43zO6Ko0TFEZx/65gY3BE0O6syCEmUP4qbSd6exou/F+WTISzbQ5FBVPVmhnYhG/kpwt/cIxK5iUn5hm+4tQIDAQABAoGBAI+8xiPoOrA+KMnG/T4jJsG6TsHQcDHvJi7o1IKC/hnIXha0atTX5AUkRRce95qSfvKFweXdJXSQ0JMGJyfuXgU6dI0TcseFRfewXAa/ssxAC+iUVR6KUMh1PE2wXLitfeI6JLvVtrBYswm2I7CtY0q8n5AGimHWVXJPLfGV7m0BAkEA+fqFt2LXbLtyg6wZyxMA/cnmt5Nt3U2dAu77MzFJvibANUNHE4HPLZxjGNXN+a6m0K6TD4kDdh5HfUYLWWRBYQJBANK3carmulBwqzcDBjsJ0YrIONBpCAsXxk8idXb8jL9aNIg15Wumm2enqqObahDHB5jnGOLmbasizvSVqypfM9UCQCQl8xIqy+YgURXzXCN+kwUgHinrutZms87Jyi+D8Br8NY0+Nlf+zHvXAomD2W5CsEK7C+8SLBr3k/TsnRWHJuECQHFE9RA2OP8WoaLPuGCyFXaxzICThSRZYluVnWkZtxsBhW2W8z1b8PvWUE7kMy7TnkzeJS2LSnaNHoyxi7IaPQUCQCwWU4U+v4lD7uYBw00Ga/xt+7+UqFPlPVdz1yyr4q24Zxaw0LgmuEvgU5dycq8N7JxjTubX0MIRR+G9fmDBBl8=
+        -----END RSA PRIVATE KEY-----
+  attribution:
+    target_dims:
+    - artifact_content_manipulation
+    - evidence_closure_control
+    trajectory_anchor:
+      path_regex: ^/rest/user/login/?$
+      response_contract: successful login response containing authentication.token
+  conflict_policy:
+    max_applications_is_required: true
+    capability_preservation_replay_required: true
+    no_counted_collection_until_smoke: true

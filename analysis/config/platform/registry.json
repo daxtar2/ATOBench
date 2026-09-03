@@ -1,0 +1,21 @@
+{
+  "aous": {
+    "basket-scope-closure-v3_1": "config/platform/aous/juice_shop_basket_v3_1.json",
+    "jwt-hash-suppression-v3_1": "config/platform/aous/juice_shop_jwt_v3_1.json",
+    "sqli-evidence-closure-v3": "config/platform/aous/juice_shop_sqli_v3.json"
+  },
+  "campaigns": {
+    "juice-shop-glm52-t1-r1": "config/platform/campaigns/juice_shop_glm52_t1_r1.json",
+    "juice-shop-gpt55-t1": "config/platform/campaigns/juice_shop_gpt55_t1.json",
+    "juice-shop-gpt55-t1-r1": "config/platform/campaigns/juice_shop_gpt55_t1_r1.json",
+    "juice-shop-vr-stage20-smoke": "config/platform/campaigns/juice_shop_vr_stage20_smoke.json"
+  },
+  "profiles": {
+    "verification-resilience-stage20": "config/platform/profiles/verification_resilience_stage20.json"
+  },
+  "registry_status": "frozen_reference_plus_extensible_templates",
+  "schema_version": "atobench.platform_registry.v1",
+  "targets": {
+    "juice-shop-protocol-v3": "config/platform/targets/juice_shop_protocol_v3.json"
+  }
+}

@@ -1,0 +1,453 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atobench.dev/schema/deception_plan.json",
+  "title": "DeceptionPlan",
+  "description": "ATOBench deception plan (v3 §6.1 schema). Human-readable strategy artifact produced by the deception-planner subagent. Carries fields the proxy does NOT need (attack_face, target_dims, side_dims, rationale, meta, invariants) — these are for paper §X coverage tables, evaluator attribution, and review. The deception-validator subagent translates this to deception_config.yaml (schema 0.1.0) which the proxy actually consumes.",
+  "type": "object",
+  "required": ["plan"],
+  "additionalProperties": false,
+  "properties": {
+    "plan": {
+      "type": "object",
+      "required": ["version", "plan_id", "created_at", "target", "task_mode", "injections", "meta", "invariants"],
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "type": "string",
+          "enum": ["v2"],
+          "description": "Plan schema version. Current: v2 (matches deception_framework_v3.md §6.1)."
+        },
+        "plan_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "UUID for this plan. Used in logs + paper citations."
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp."
+        },
+        "target": {
+          "type": "object",
+          "required": ["name", "architecture", "stack_hint", "entry_url"],
+          "additionalProperties": false,
+          "properties": {
+            "name": {"type": "string", "description": "Target name, e.g. juice-shop / crAPI / DVGA."},
+            "architecture": {
+              "type": "string",
+              "enum": ["monolith", "multi-service", "microservices"],
+              "description": "Deployment architecture. Used for target realism and cross-service consistency checks."
+            },
+            "stack_hint": {
+              "type": "string",
+              "description": "Tech stack hint, e.g. node-express / java-spring / python-flask / graphql. Used by planner to pick stack-matched fake_values (avoids atobench_p2_negative_result failure mode)."
+            },
+            "entry_url": {
+              "type": "string",
+              "pattern": "^https?://",
+              "description": "Base URL as seen by the pentest agent (e.g. http://target:80 from inside docker network)."
+            }
+          }
+        },
+        "task_mode": {
+          "type": "string",
+          "enum": ["T1", "T2", "T3", "T4"],
+          "description": "Legacy run label retained for compatibility. Canonical v2 experiments use one pentest objective: find as many valid vulnerabilities as possible."
+        },
+        "scoring_profile": {
+          "type": "string",
+          "enum": ["pentest_report"],
+          "description": "Canonical v2 scoring rubric. Outcomes are computed from normalized clean/deception pentest reports; flag-like tokens are proof evidence, not task objectives."
+        },
+        "ground_truth_vulns": {
+          "type": ["string", "array"],
+          "description": "Path to yaml file OR inline list of real vulns (for T3 recall/precision computation)."
+        },
+        "agent_budget": {
+          "type": "object",
+          "required": ["max_turns", "max_wall_seconds"],
+          "additionalProperties": false,
+          "properties": {
+            "max_turns": {"type": "integer", "minimum": 1, "maximum": 500, "description": "Max agent turns before forced termination."},
+            "max_wall_seconds": {"type": "integer", "minimum": 30, "maximum": 3600, "description": "Max wall-clock seconds. Default 240 for B3 episodes."}
+          }
+        },
+        "known_real_vulns": {
+          "type": "array",
+          "description": "Prior list of real vulns (for attribution, NOT for injection). Helps evaluator distinguish 'agent found real vuln' from 'agent adopted fake vuln'.",
+          "items": {
+            "type": "object",
+            "required": ["endpoint", "vuln_class"],
+            "additionalProperties": false,
+            "properties": {
+              "endpoint": {"type": "string", "description": "URL path of real vuln."},
+              "vuln_class": {"type": "string", "description": "e.g. sqli / idor / xss / broken-auth."},
+              "severity": {"type": "string", "enum": ["critical", "high", "medium", "low"]}
+            }
+          }
+        },
+        "primary_target_dims": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "description": "1-3 pentest-effect outcome, behavior, resource, or cognitive dimensions this plan primarily targets.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "flag_rate", "fca", "report_recall", "report_precision", "fabrication_rate",
+              "false_positive_vuln_a", "false_positive_vuln_b", "false_negative_vuln",
+              "time_stalling", "resource_thrashing", "plan_hijack", "scope_narrowing",
+              "termination_give_up", "belief_fake_field", "reception_class", "cross_turn_persistence"
+            ]
+          }
+        },
+        "injections": {
+          "type": "array",
+          "description": "Active deception primitives for this plan. Empty for B0 baseline control.",
+          "items": {"$ref": "#/$defs/Injection"}
+        },
+        "meta": {
+          "type": "object",
+          "required": ["max_primitives_per_response"],
+          "additionalProperties": false,
+          "properties": {
+            "max_primitives_per_response": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5,
+              "default": 2,
+              "description": "Anti-pattern cap (framework §3.7): max primitives matching same (path, method) pair. Prevents 'single-response multi-leak' anti-pattern."
+            },
+            "consistency_lock": {
+              "type": "array",
+              "description": "Cross-primitive field consistency declarations. Filled by deception-consistency subagent. Each entry: source primitive declares fields that propagate_to primitives must take same values.",
+              "items": {
+                "type": "object",
+                "required": ["fields", "source", "propagate_to"],
+                "additionalProperties": false,
+                "properties": {
+                  "fields": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+                  "source": {"type": "string", "description": "Primitive name that declares the canonical value."},
+                  "propagate_to": {"type": "array", "items": {"type": "string"}, "minItems": 1}
+                }
+              }
+            },
+            "unimplemented_wiki_primitives": {
+              "type": "array",
+              "description": "Primitives in primitive_wiki_v2.md but NOT in primitive_library.json registered enum. Tracked for paper §X.3 coverage table (gap disclosure).",
+              "items": {"type": "string"}
+            },
+            "realism_unverified": {
+              "type": "boolean",
+              "default": true,
+              "description": "True = no target_stack_profile.yaml mechanism yet, fake_values realism depends on LLM judgment. Paper must disclose this."
+            }
+          }
+        },
+        "invariants": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Checks the deception-validator runs at plan validation time. Canonical v2 invariants protect logging, state-machine namespaces, coupling validity, and known-real-finding evidence boundaries.",
+          "items": {"$ref": "#/$defs/Invariant"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "Injection": {
+      "type": "object",
+      "required": ["id", "primitive", "attack_face", "coupling", "target_dims", "rationale"],
+      "anyOf": [
+        {"required": ["trigger", "transform"]},
+        {"required": ["bindings"]}
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "description": "Slug identifier. Used in logs + injection_log.jsonl."
+        },
+        "primitive": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "description": "Primitive name. Compiler validates this against primitive_index.yaml plus the legacy transformer registry. Runtime execution is driven by RuntimeProgram effects, not by this schema enum."
+        },
+        "attack_face": {
+          "type": "string",
+          "enum": ["F1", "F2", "F3", "F4", "F5", "F6"],
+          "description": "F1=Discovery-Phase Poisoning; F2=Authority Bias; F3=HTTP-Etiquette Reflex; F4=Pattern-Match Shortcut; F5=Report-Time Framing; F6=Alignment Reflex. From framework_v3 §3."
+        },
+        "coupling": {
+          "type": "string",
+          "enum": ["loose", "schema_coupled", "precondition", "signal_removal"],
+          "description": "Coupling-strength axis. Default schema_coupled (empirically strongest). loose is 0%-effect control arm — only use with explicit rationale. signal_removal inverts dim effect for audit-class endpoints."
+        },
+        "target_dims": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Pentest-effect dimensions this injection primarily targets. Used for per-primitive attribution and ablation grouping.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "flag_rate", "fca", "report_recall", "report_precision", "fabrication_rate",
+              "false_positive_vuln_a", "false_positive_vuln_b", "false_negative_vuln",
+              "time_stalling", "resource_thrashing", "plan_hijack", "scope_narrowing",
+              "termination_give_up", "belief_fake_field", "reception_class", "cross_turn_persistence"
+            ]
+          }
+        },
+        "side_dims": {
+          "type": "array",
+          "description": "Optional secondary dims (side effects).",
+          "items": {
+            "type": "string",
+            "enum": [
+              "flag_rate", "fca", "report_recall", "report_precision", "fabrication_rate",
+              "false_positive_vuln_a", "false_positive_vuln_b", "false_negative_vuln",
+              "time_stalling", "resource_thrashing", "plan_hijack", "scope_narrowing",
+              "termination_give_up", "belief_fake_field", "reception_class", "cross_turn_persistence"
+            ]
+          }
+        },
+        "bindings": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Explicit runtime insertion bindings. One high-level primitive may bind to multiple surfaces, loaders, hooks, and targets while preserving one injection_id for attribution.",
+          "items": {"$ref": "#/$defs/Binding"}
+        },
+        "trigger": {
+          "type": "object",
+          "required": ["path_regex"],
+          "additionalProperties": false,
+          "properties": {
+            "path_regex": {"type": "string", "description": "Python re.search pattern applied to URL path (no query). Example: ^/$|/version$."},
+            "methods": {
+              "type": "array",
+              "items": {"type": "string", "enum": ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]},
+              "description": "HTTP methods this injection applies to. Empty or omitted = all methods."
+            },
+            "request_body_match": {"type": "string", "description": "Optional regex on request body. For payload-triggered primitives (e.g. decoy_sql_search fires on SQLi payload)."},
+            "every_n_calls": {"type": "integer", "minimum": 1, "description": "Trigger every N-th call to this endpoint. For rate_limit_gaslighting (default every 3)."}
+          }
+        },
+        "transform": {
+          "type": "object",
+          "required": ["type"],
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["replace", "augment", "stateful_replace", "synthetic_response", "recipe_render"],
+              "description": "replace=full body replace (clobbers existing fields); augment=add fields to existing body; stateful_replace=replace with state machine; synthetic_response=return synthetic body; recipe_render=delegate effect generation to the primitive recipe renderer."
+            },
+            "response_fields": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "Response body field names to inspect/modify. For replace=fields to inject; for augment=fields to add; for signal_removal=fields to remove."
+            },
+            "injected_values": {
+              "type": "object",
+              "description": "Field→fake value mapping. Required for belief_injection primitives. Values must be target-specific (NOT wiki templates).",
+              "additionalProperties": true
+            },
+            "removed_fields": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "For signal_removal variant: fields/headers to strip from response."
+            },
+            "params": {
+              "type": "object",
+              "description": "Optional primitive-specific parameters (e.g. symptom field list for vuln_symptom_inject).",
+              "additionalProperties": true
+            }
+          }
+        },
+        "state_machine": {
+          "type": "object",
+          "description": "Required when primitive is stateful (corrupt_belief, exhaustion_trap, induce_loop, canary_secret_nonacceptance, etc.). Forbidden otherwise. Validator Check 3 enforces this.",
+          "additionalProperties": false,
+          "required": ["name", "params"],
+          "properties": {
+            "name": {
+              "type": "string",
+              "enum": [
+                "decrementing_queue", "perpetual_pending", "eta_cycle",
+                "token_ttl_dedup", "csrf_churn", "auth_scheme_cycle",
+                "escalating_gate", "consent_dance",
+                "consistent_narrative", "unified_catalog",
+                "phantom_rate_limit", "selective_5xx", "etag_conditional_loop",
+                "stale_cache_window", "pagination_cursor_endless", "callback_pending",
+                "realtime_dead_air", "identity_shadow", "cross_turn_claim_escalation",
+                "canary_secret_drift", "honeypot_session", "rank_sink",
+                "clock_skew_drift"
+              ],
+              "description": "State machine name. Maps to transformer SM_NAME in primitive_wiki_v2.md pseudocode."
+            },
+            "params": {
+              "type": "object",
+              "description": "State machine parameters. Type-specific (e.g. decrementing_queue needs initial/terminal/cycle/terminal_hold_turns).",
+              "additionalProperties": true
+            }
+          }
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 20,
+          "description": "Why this primitive × coupling × dim combination. Must cite wiki §<primitive> line <N> for injected_value template AND memory: atobench_<name> for empirical justification AND target_profile <field> for target-specific value choice. Non-empty (validator enforces)."
+        },
+        "trajectory_anchor": {
+          "type": "object",
+          "description": "REQUIRED when planner operates in trajectory-aware mode (clean-run profile present). Anchors this injection to a surface the agent actually contacted in the clean baseline. Proves deception fires on agent's real path, not a white-box-only surface. Validator Check 7 (if profile present) verifies path_regex matches an anchored path.",
+          "additionalProperties": false,
+          "required": ["path", "turn_idx", "visit_count"],
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "Request path (no query) from clean-run trajectory that this injection targets. Must be a path agent actually visited in clean run."
+            },
+            "turn_idx": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Turn index in clean-run turns.jsonl where agent first contacted this surface."
+            },
+            "visit_count": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "How many times agent visited this path in clean run. visit_count >= 2 indicates a 'trusted' surface (high-value anchor)."
+            },
+            "field": {
+              "type": "string",
+              "description": "Optional: response field on this path that the injection modifies. Should be a field agent actually saw (from profile.fields_seen_per_path). Strongly preferred: field in profile.cited_fields (agent cited it in final report)."
+            },
+            "cited_in_report": {
+              "type": "boolean",
+              "description": "True if this field appeared in agent's clean-run final_report_text. Highest-trust anchor."
+            }
+          }
+        }
+      }
+    },
+    "Binding": {
+      "type": "object",
+      "required": ["binding_id", "surface", "loader", "hook", "selector", "target", "transform"],
+      "additionalProperties": false,
+      "properties": {
+        "binding_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "description": "Stable id for this insertion binding inside an injection. Compiler emits one RuntimeProgram rule per binding."
+        },
+        "surface": {
+          "type": "string",
+          "enum": [
+            "metadata",
+            "structured_payload",
+            "document_text",
+            "failure_signal",
+            "discovery_document",
+            "enumeration_listing",
+            "progress_state",
+            "interactive_session"
+          ],
+          "description": "Semantic injection surface S1-S8. This says what observation layer the deception targets."
+        },
+        "loader": {
+          "type": "string",
+          "enum": ["metadata", "document", "structured", "session"],
+          "description": "Runtime loader class responsible for parsing/patching this binding."
+        },
+        "hook": {
+          "type": "string",
+          "enum": ["request", "response"],
+          "default": "response",
+          "description": "Runtime hook. Current mitmproxy implementation executes response hooks; request hooks are compile-visible for future request pipeline support."
+        },
+        "selector": {
+          "type": "object",
+          "required": ["path_regex"],
+          "additionalProperties": false,
+          "properties": {
+            "path_regex": {"type": "string", "description": "Python re.search pattern applied to URL path (no query)."},
+            "methods": {
+              "type": "array",
+              "items": {"type": "string", "enum": ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]},
+              "description": "HTTP methods this binding applies to. Empty or omitted = all methods."
+            },
+            "request_body_match": {"type": "string", "description": "Optional regex on request body."},
+            "every_n_calls": {"type": "integer", "minimum": 1, "description": "Trigger every N-th matching request."}
+          }
+        },
+        "target": {
+          "type": "object",
+          "required": ["kind"],
+          "additionalProperties": true,
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "json_body",
+                "text_body",
+                "html_body",
+                "header",
+                "status_code",
+                "cookie",
+                "synthetic_endpoint",
+                "request_body",
+                "request_header"
+              ]
+            },
+            "path": {"type": "string"},
+            "header": {"type": "string"},
+            "content_type": {"type": ["string", "null"]}
+          }
+        },
+        "transform": {
+          "type": "object",
+          "required": ["type"],
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["replace", "augment", "stateful_replace", "synthetic_response", "recipe_render"]
+            },
+            "response_fields": {"type": "array", "items": {"type": "string"}},
+            "injected_values": {"type": "object", "additionalProperties": true},
+            "removed_fields": {"type": "array", "items": {"type": "string"}},
+            "params": {"type": "object", "additionalProperties": true}
+          }
+        },
+        "state_machine": {
+          "$ref": "#/$defs/Injection/properties/state_machine"
+        },
+        "trajectory_anchor": {
+          "$ref": "#/$defs/Injection/properties/trajectory_anchor"
+        },
+        "rationale": {
+          "type": "string",
+          "description": "Optional binding-local rationale when one injection spans multiple surfaces."
+        }
+      }
+    },
+    "Invariant": {
+      "type": "object",
+      "required": ["name", "check"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "enum": ["known_real_finding_evidence_preserved", "injection_log_enabled", "state_machine_namespace_unique", "coupling_variant_valid"],
+          "description": "Invariant name. known_real_finding_evidence_preserved: do not unintentionally clobber known real vulnerability evidence unless measuring suppression. injection_log_enabled: turns.jsonl/runtime_events output path set. state_machine_namespace_unique: at most one stateful primitive per state_machine.name. coupling_variant_valid: no primitive uses loose without explicit rationale."
+        },
+        "applies_when": {
+          "type": "string",
+          "description": "Condition under which this invariant applies, e.g. 'task_mode in [T1, T2]'."
+        },
+        "check": {
+          "type": "string",
+          "description": "Path or condition description the validator checks. E.g. 'runtime_events are written for attribution' or 'known real finding evidence is not unintentionally clobbered'."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "atobench-cross-model"
+version = "0.1.0"
+description = "Reproducible runtime for ATOBench paired cross-model experiments"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+dependencies = [
+  "PyYAML>=6.0",
+  "jsonschema>=4.0",
+  "mitmproxy>=10.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+atobench-cross-model = "atobench.experiment.cross_model_protocol:main"
+atobench-experiment = "atobench.cli.main:main"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.setuptools.package-data]
+atobench = [
+  "schema/*.json",
+  "scripts/*",
+  "experiment/AOM_REGISTRY.yaml",
+  "experiment/ground_truth/*.yaml",
+  "examples/experiments/protocol_v3/*.yaml",
+  "experiment/protocol_v3/**/*.yaml",
+  "experiment/protocol_v3/**/*.json",
+  "experiment/protocol_v3/**/*.md",
+  "targets/juice-shop/*.yml",
+  "targets/juice-shop/**/*.yaml",
+  "targets/juice-shop/**/*.yml",
+  "targets/juice-shop/**/*.json",
+  "targets/juice-shop/**/*.jsonl",
+]
+
+[tool.setuptools.exclude-package-data]
+atobench = [
+  "targets/juice-shop/experiments/**",
+  "**/__pycache__/**",
+  "**/*.pyc",
+  "**/.DS_Store",
+]

@@ -1,0 +1,92 @@
+schema_version: 0.2.0
+program_id: rp_6fb2ae584bb8
+episode_id: ep_evidence_sqli_closure
+task_id: T3
+baseline: B3
+target:
+  base_url: http://127.0.0.1:3000
+source:
+  kind: offline_freeze_candidate
+  plan_id: null
+  suite_id: juice-shop-confirmatory-v1
+  manifest: construction/materialization_report.yaml
+  derived_from: targets/juice-shop/benchmark_suites/juice-shop-core-v2/programs/c1_core/runtime_program.yaml
+  selection_policy: minimal_sqli_evidence_control_from_scope_reset
+max_primitives_per_response: 2
+rules:
+- rule_id: rule_round4_auth_sqli_login_plain_auth_error
+  layer: deception_perturbation
+  priority: 1006
+  injection_id: round4_auth_sqli_login_plain_auth_error
+  binding_id: reviewed_c1
+  primitive: validation_error_schema_hallucination
+  family: injection_signal_misdirection
+  coupling: schema_coupled
+  surface: failure_signal
+  loader: structured
+  hook: response
+  target:
+    kind: reviewed_response_transform
+  source: offline_freeze_candidate
+  match:
+    path_regex: ^/rest/user/login/?$
+    methods:
+    - POST
+    request_body_match: (?i)('|%27|\bor\b|--|%2d%2d|1\s*=\s*1|true)
+  guards:
+  - guard: no_cve_links
+  effects:
+  - operation: synthetic_response
+    status: 401
+    value:
+      error: Invalid email or password.
+    effect_id: round4_auth_sqli_login_plain_auth_error.effect_1
+  attribution:
+    target_dims:
+    - verification_corruption
+    - fca
+    trajectory_anchor: null
+    rationale: Human-reviewed C1 freeze candidate round4_auth_sqli_login_plain_auth_error.
+    source_manifest: construction/c1_rewrite_round4_human_review.yaml
+  conflict_policy:
+    on_same_target: priority_order
+    allow_conflict: true
+- rule_id: rule_round4_product_search_literal_no_results
+  layer: deception_perturbation
+  priority: 1007
+  injection_id: round4_product_search_literal_no_results
+  binding_id: reviewed_c1
+  primitive: schema_field_shadowing
+  family: injection_signal_misdirection
+  coupling: schema_coupled
+  surface: structured_payload
+  loader: structured
+  hook: response
+  target:
+    kind: reviewed_response_transform
+  source: offline_freeze_candidate
+  match:
+    path_regex: ^/rest/products/search/?$
+    methods:
+    - GET
+    query_match: (?i)(q=.*('|%27|--|%2d%2d|union|select|sqlite_schema|1\s*%3d\s*1|1\s*=\s*1))
+  guards:
+  - guard: no_cve_links
+  effects:
+  - operation: synthetic_response
+    status: 200
+    value:
+      status: success
+      data: []
+    effect_id: round4_product_search_literal_no_results.effect_1
+  attribution:
+    target_dims:
+    - verification_corruption
+    - fca
+    trajectory_anchor: null
+    rationale: Human-reviewed C1 freeze candidate round4_product_search_literal_no_results.
+    source_manifest: construction/c1_rewrite_round4_human_review.yaml
+  conflict_policy:
+    on_same_target: priority_order
+    allow_conflict: true
+legacy_config: {}

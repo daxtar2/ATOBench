@@ -1,0 +1,11 @@
+{
+  "schema_version": "atobench.campaign_registry.v1",
+  "registry_status": "template",
+  "campaigns": [
+    {
+      "campaign_id": "replace-with-frozen-campaign-id",
+      "root": "/absolute/path/to/frozen/campaign",
+      "immutable": true
+    }
+  ]
+}

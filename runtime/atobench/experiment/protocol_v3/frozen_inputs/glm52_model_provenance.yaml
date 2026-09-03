@@ -1,0 +1,29 @@
+schema_version: atobench.model_provenance_attestation.v1
+captured_at: '2026-07-15T13:51:20.714940+00:00'
+provider: Alibaba Cloud Model Studio
+transport: anthropic_compatible_gateway
+model_identifier: GLM-5.2
+configured_model_matches_identifier: true
+revision:
+  status: provider_build_not_exposed
+  value: null
+  reason: The configured Anthropic-compatible gateway exposes the versioned model
+    label but no provider build or immutable deployment revision.
+carrier:
+  name: Claude Code
+  version: 2.1.156 (Claude Code)
+configuration:
+  route_sha256: fd4ef09097a8cb99fab3e2700304906dd541ea4c56908cad2ded4c4295409236
+  configured_model: glm-5.2
+  model_labels:
+    ANTHROPIC_DEFAULT_FABLE_MODEL: glm-5.2[1M]
+    ANTHROPIC_DEFAULT_FABLE_MODEL_NAME: glm-5.2
+    ANTHROPIC_DEFAULT_HAIKU_MODEL: kimi-k2.6
+    ANTHROPIC_DEFAULT_HAIKU_MODEL_NAME: kimi-k2.6
+    ANTHROPIC_DEFAULT_OPUS_MODEL: qwen3.7-max
+    ANTHROPIC_DEFAULT_OPUS_MODEL_NAME: qwen3.7-max
+    ANTHROPIC_DEFAULT_SONNET_MODEL: deepseek-v4-pro
+    ANTHROPIC_DEFAULT_SONNET_MODEL_NAME: deepseek-v4-pro
+  auth_env_present: true
+configuration_sha256: ae8ecb4291c28d66df53f233248d7c1f5b6ef4597cb2770576c1da060b16ad8a
+credential_policy: No token, API key, or raw gateway route is serialized.

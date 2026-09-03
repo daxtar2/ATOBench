@@ -1,0 +1,8 @@
+ATOBench Cross-Model Runner (Open-Source Edition)
+Copyright 2026 ATOBench contributors
+
+This directory is a release projection of the executable ATOBench cross-model
+runtime. It retains the runner, CLI, agent carrier, proxy/rule engine, schemas,
+scaffold compiler, Protocol-v3 configuration, and the public Juice Shop
+confirmatory suite. It intentionally excludes local configuration, credentials,
+run outputs, frozen experiment logs, reviewer submissions, and private lineage.

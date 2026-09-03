@@ -1,0 +1,28 @@
+{
+  "schema_version": "atobench.aou_bundle.v1",
+  "id": "sqli-evidence-closure-v3",
+  "label": "Juice Shop SQLi evidence closure",
+  "target_id": "juice-shop-protocol-v3",
+  "unit_id": "M-C1-SQLI-EVIDENCE-CLOSURE",
+  "freeze_status": "frozen",
+  "conditions": [
+    "C0",
+    "C1"
+  ],
+  "runtime_adapter": {
+    "module": "atobench.experiment.cross_model_protocol",
+    "aou_key": "sqli"
+  },
+  "frozen_artifacts": [
+    {
+      "artifact_id": "experiment_contract",
+      "path": "../runtime/atobench/examples/experiments/protocol_v3/juice-shop-protocol-v3-sqli.yaml",
+      "sha256": "ee7dc319910c6be31ee6223505f30ceeeb6afda1b8af75b46057ce32e935a36b"
+    },
+    {
+      "artifact_id": "c1_runtime_program",
+      "path": "../runtime/atobench/targets/juice-shop/benchmark_suites/juice-shop-confirmatory-v1/programs/evidence_sqli_closure/runtime_program.yaml",
+      "sha256": "04060595a6d60e5eefe90935fce4ac3d03bddb21142ab5638c31c80f716868f1"
+    }
+  ]
+}

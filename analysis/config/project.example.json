@@ -1,0 +1,14 @@
+{
+  "schema_version": "atobench.verification_resilience.project.v1",
+  "campaign_registry": "config/campaign_registry.yaml",
+  "session_roots": [
+    "/absolute/path/to/agent/session/logs"
+  ],
+  "workspace_root": "workspace",
+  "claude_executable": "claude",
+  "data_policy": {
+    "campaigns_are_immutable": true,
+    "real_data_requires_explicit_flag": true,
+    "completed_stages_are_not_overwritten": true
+  }
+}

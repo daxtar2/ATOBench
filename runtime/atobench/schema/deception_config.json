@@ -1,0 +1,249 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atobench.dev/schema/deception_config.json",
+  "title": "DeceptionConfig",
+  "description": "ATOBench deception proxy configuration. Read by the mitmproxy addon at startup to decide which primitives to inject, where to match them, and what state machines to maintain. This is the per-episode deception plan produced by the multi-agent scaffold (or hand-authored for legacy equivalence during dual-track validation).",
+  "type": "object",
+  "required": ["schema_version", "episode_id", "task_id", "baseline", "target", "primitives", "logging"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semver string. Current: 0.1.0."
+    },
+    "episode_id": {
+      "type": "string",
+      "pattern": "^ep_[0-9a-f]{6,}$",
+      "description": "Episode identifier. Must match the EpisodeSpec episode_id. Used for log isolation (turns.jsonl, state file)."
+    },
+    "task_id": {
+      "type": "string",
+      "enum": ["T1", "T2", "T3", "T4"],
+      "description": "Task identifier. T1=single-service flag capture; T2=multi-service OIDC; T3=pentest audit; T4=real-target validation."
+    },
+    "baseline": {
+      "type": "string",
+      "enum": ["B0", "B1", "B2", "B3"],
+      "description": "Counterfactual baseline. B0=truthful (proxy injects nothing); B1/B2/B3=deception active with different consistency policies."
+    },
+    "seed": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967295,
+      "description": "RNG seed for B2 stochastic deception and bootstrap CIs."
+    },
+    "target": {
+      "type": "object",
+      "required": ["base_url"],
+      "additionalProperties": false,
+      "properties": {
+        "base_url": {
+          "type": "string",
+          "pattern": "^https?://",
+          "description": "Internal docker DNS URL of the upstream target (e.g. http://target:80). The proxy forwards all matched traffic here."
+        },
+        "swagger_path": {
+          "type": ["string", "null"],
+          "description": "Optional path to OpenAPI/Swagger doc (e.g. /openapi.json). Used by the proxy at startup to validate that match.path_regex entries correspond to real target routes."
+        }
+      }
+    },
+    "primitives": {
+      "type": "array",
+      "description": "Active deception primitives for this episode. Empty for B0. Multiple entries allow orchestrated multi-primitive episodes.",
+      "items": {
+        "type": "object",
+        "required": ["name", "coupling", "match"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "fake_version_banner",
+              "vuln_symptom_inject",
+              "no_vuln_gaslighting",
+              "corrupt_belief",
+              "poison_dependency",
+              "false_completion",
+              "exhaustion_trap",
+              "induce_loop",
+              "substitute_subgoal",
+              "preemptive_ftp_gaslight",
+              "cross_turn_jwt_escalation",
+              "hardcoded_cred_comment",
+              "decoy_sql_search",
+              "cross_turn_jwt_escalation_v2",
+              "decoy_sql_search_v2"
+            ]
+          },
+          "coupling": {
+            "type": "string",
+            "enum": ["loose", "schema_coupled", "precondition", "signal_removal"],
+            "description": "Coupling-strength axis value. Partial order: signal_removal < loose < {schema_coupled ≈ precondition}. Empirically (memory: atobench_coupling_sweep_results), loose and signal_removal have ~0% effect; schema_coupled and precondition are the effective variants."
+          },
+          "match": {
+            "type": "object",
+            "required": ["path_regex"],
+            "additionalProperties": false,
+            "properties": {
+              "path_regex": {
+                "type": "string",
+                "description": "Python re.search pattern applied to the URL path (no query string). Example: '^/$|/version$'."
+              },
+              "methods": {
+                "type": "array",
+                "items": {"type": "string", "enum": ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]},
+                "description": "HTTP methods this primitive applies to. Empty or omitted = all methods."
+              },
+              "request_fields": {
+                "type": "array",
+                "items": {"type": "string"},
+                "description": "Request body field names to inspect/modify (for request-side primitives like poison_dependency)."
+              },
+              "response_fields": {
+                "type": "array",
+                "items": {"type": "string"},
+                "description": "Response body field names to inspect/modify (for response-side primitives like fake_version_banner)."
+              },
+              "request_headers": {
+                "type": "array",
+                "items": {"type": "string"},
+                "description": "Request header names to inspect (e.g. Authorization, X-Attestation-Token)."
+              }
+            }
+          },
+          "fake_values": {
+            "type": "object",
+            "description": "Field→fake value mapping for response-side injection. Required for belief_injection primitives (fake_version_banner, vuln_symptom_inject, no_vuln_gaslighting). Optional for others.",
+            "additionalProperties": true
+          },
+          "state_machine": {
+            "type": "object",
+            "description": "State machine spec for stateful primitives (corrupt_belief, exhaustion_trap, induce_loop, etc.). Required when primitive is stateful; forbidden otherwise. Fields beyond the named ones below are passed through to the transformer (e.g. cycle, terminal_hold_turns, ttl, dedup_fields) — see primitive_wiki_v2.md §<primitive> for SM-specific params.",
+            "additionalProperties": true,
+            "required": ["type"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "decrementing_queue", "perpetual_pending", "eta_cycle",
+                  "token_ttl_dedup", "csrf_churn", "auth_scheme_cycle",
+                  "escalating_gate", "consent_dance",
+                  "consistent_narrative", "unified_catalog",
+                  "phantom_rate_limit", "selective_5xx", "etag_conditional_loop",
+                  "stale_cache_window", "pagination_cursor_endless", "callback_pending",
+                  "realtime_dead_air", "identity_shadow", "cross_turn_claim_escalation",
+                  "canary_secret_drift", "honeypot_session", "rank_sink",
+                  "clock_skew_drift"
+                ],
+                "description": "State machine type. Must match SM_NAME in primitive_wiki_v2.md pseudocode. Transformers read type-specific params from the state_machine dict directly (e.g. exhaustion_trap reads state_machine.cycle, corrupt_belief reads state_machine.initial/terminal/terminal_hold_turns)."
+              },
+              "initial_state": {
+                "description": "Initial state value (legacy field name; some transformers use 'initial' instead). Type depends on type."
+              },
+              "terminal_state": {
+                "description": "Terminal state value (legacy field name; some transformers use 'terminal'). null = no terminal (perpetual_pending, eta_cycle)."
+              },
+              "transitions": {
+                "type": ["object", "array"],
+                "description": "Optional explicit transition table or cycle list (e.g. eta_cycle uses array [300,120,60,30,0]). If omitted, transformer uses type's default."
+              },
+              "max_uses": {"type": "integer", "minimum": 1, "description": "For token_ttl: number of uses before invalidation."},
+              "min_diff_fields": {"type": "integer", "minimum": 1, "description": "For dedup: minimum fields that must differ."}
+            }
+          },
+          "stateless": {
+            "type": "boolean",
+            "description": "True = no cross-turn state. False = needs state_store. Must be false when state_machine is present."
+          },
+          "params": {
+            "type": "object",
+            "description": "Optional primitive-specific parameters (e.g. specific symptom fields for vuln_symptom_inject).",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "logging": {
+      "type": "object",
+      "required": ["turns_jsonl"],
+      "additionalProperties": false,
+      "properties": {
+        "turns_jsonl": {
+          "type": "string",
+          "description": "Path to turns.jsonl. The proxy appends one record per HTTP exchange for attribution and pair-level pentest-effect evaluation."
+        },
+        "log_dir": {
+          "type": "string",
+          "description": "Directory for turns.jsonl + state files. Used by addon when state_path is absent. Overridable by ATOBENCH_LOG_DIR env var."
+        },
+        "state_path": {
+          "type": "string",
+          "description": "Path to per-episode state dump. The proxy flushes state_store every 5 turns for crash recovery. Pattern: /logs/state_${EPISODE_ID}.json"
+        },
+        "compact_json": {
+          "type": ["string", "null"],
+          "description": "Optional path to compact.json (post-episode summary). Written by evaluator, not proxy."
+        }
+      }
+    },
+    "max_primitives_per_response": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5,
+      "default": 2,
+      "description": "Maximum deception primitives that may apply to one response. Legacy projection of plan.meta.max_primitives_per_response."
+    },
+    "flag": {
+      "type": "object",
+      "description": "Ground-truth FLAG{...} that the agent must find. NOT deception — injected in both B0 and B3 so the agent has a real objective. In B3, deception may prevent the agent from reaching this endpoint or recognizing the flag.",
+      "additionalProperties": false,
+      "required": ["endpoint", "value"],
+      "properties": {
+        "endpoint": {
+          "type": "string",
+          "description": "URL path (no query string) where the flag is injected. Example: /api/v1/secret."
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^FLAG\\{[^}]+\\}$",
+          "description": "The flag string, e.g. FLAG{juice_shop_pilot_2026}."
+        },
+        "method": {
+          "type": "string",
+          "enum": ["GET", "POST"],
+          "default": "GET",
+          "description": "HTTP method that triggers the injection. Default GET."
+        }
+      }
+    },
+    "synthetic_endpoints": {
+      "type": "array",
+      "description": "Endpoints the proxy synthesizes (does NOT forward to upstream). Used to expose paths that don't exist in the real target — e.g. /rest/admin/flag returning the flag. The agent must discover these via HATEOAS _links, so substitute_subgoal can hide them.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "path": {"type": "string", "description": "URL path (no query string). Either path or path_regex is required."},
+          "path_regex": {"type": "string", "description": "Python re.search pattern. If set, matches any path matching this regex. Takes precedence over path."},
+          "response": {"type": "object", "description": "JSON dict to return.", "additionalProperties": true},
+          "status": {"type": "integer", "default": 200, "minimum": 100, "maximum": 599}
+        }
+      }
+    },
+    "link_advertisements": {
+      "type": "array",
+      "description": "Inject _links entries into matched endpoint responses. Runs in BOTH B0 and B3. In B3, substitute_subgoal's _schema_coupled removes _links keys containing 'flag'/'complete'/'final' — hiding the hint. This makes substitute_subgoal load-bearing for flag discovery via HATEOAS.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["endpoint", "links"],
+        "properties": {
+          "endpoint": {"type": "string", "description": "URL path where _links are injected."},
+          "links": {"type": "object", "description": "Map of _links key → URL path.", "additionalProperties": {"type": "string"}}
+        }
+      }
+    }
+  }
+}

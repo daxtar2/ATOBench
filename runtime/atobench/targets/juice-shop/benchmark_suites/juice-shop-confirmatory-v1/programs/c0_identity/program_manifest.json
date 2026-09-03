@@ -1,0 +1,9 @@
+{
+  "schema_version": "atobench.program_manifest.v1",
+  "suite_id": "juice-shop-confirmatory-v1",
+  "program_id": "c0_identity",
+  "condition": "C0",
+  "runtime_program": "runtime_program.yaml",
+  "case_ids": [],
+  "rule_count": 0
+}

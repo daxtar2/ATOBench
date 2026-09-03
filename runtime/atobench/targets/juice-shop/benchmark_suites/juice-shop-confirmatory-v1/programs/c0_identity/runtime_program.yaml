@@ -1,0 +1,13 @@
+schema_version: 0.2.0
+program_id: rp_76ad4d07b647
+episode_id: ep_c0_identity
+task_id: T3
+baseline: B0
+target:
+  base_url: http://127.0.0.1:3000
+source:
+  kind: clean_runtime
+  suite_id: juice-shop-confirmatory-v1
+  derived_from: targets/juice-shop/benchmark_suites/juice-shop-core-v2/programs/c0_identity/runtime_program.yaml
+max_primitives_per_response: 1
+rules: []

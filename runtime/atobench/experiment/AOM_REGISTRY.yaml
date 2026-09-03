@@ -1,0 +1,576 @@
+schema_version: atobench.aom_registry.v1
+registry_id: atobench-aom-registry-v1
+title: ATOBench Adversarial Observation Mechanism Registry
+status: active_working_taxonomy
+canonical_path: atobench/experiment/AOM_REGISTRY.yaml
+created_at: '2026-07-15T00:00:00+08:00'
+last_updated_at: '2026-07-15T00:00:00+08:00'
+
+purpose: >
+  Provide the single canonical registry of paper-facing Adversarial Observation
+  Mechanisms (AOMs) used by ATOBench. The registry separates causal mechanism
+  classes from target-specific AOUs, implementation primitives, construction
+  families, treatment variants, validity gates, and behavioral outcomes.
+
+normative_rules:
+  - Only identifiers listed under aoms are valid paper-facing AOM identifiers.
+  - An AOM describes the causal channel by which an adversarial target
+    observation pressures a pentest agent's reasoning or action selection.
+  - An AOU is a frozen target-grounded instantiation of one AOM; an endpoint,
+    vulnerability class, response schema, or primitive alone is not an AOM.
+  - A valid AOM does not have to fool the agent. Influence, resistance,
+    recovery, and no-effect-after-contact are behavioral outcomes, not
+    mechanism admission criteria.
+  - Recovery is a robustness property measurable for any AOU, not an AOM.
+  - Opportunity and reachability are validity conditions, not AOMs.
+  - Dose, persistence, D1/D2/D3 sophistication, and cross-surface consistency
+    are AOU variants or treatment dimensions, not AOMs.
+  - Primitive families M1-M10 and Juice Shop construction families are
+    implementation and candidate-generation taxonomies. Their mappings to AOMs
+    are non-exclusive and non-normative.
+  - A new AOM requires a causal distinction from all registered AOMs and must
+    pass the admission criteria in this registry before paper-facing use.
+
+paper_hierarchy:
+  - intervention_axis
+  - aom
+  - aou
+  - variant
+  - behavioral_response_signature
+
+status_vocabulary:
+  operationalized_primary: >
+    At least one paper-grade AOU has passed validity gates and supports a main
+    paper result for this AOM.
+  operationalized_focused: >
+    At least one valid AOU exists, but its estimand is conditional on a focused
+    task distribution or its current paper role is behavioral rather than a
+    broad main effect.
+  operationalized_boundary: >
+    At least one valid AOU exists and yields interpretable resistance or
+    recovery evidence, but no positive report-suppression effect is claimed.
+  exploratory: >
+    Candidate implementations or pilots exist, but no paper-grade AOU has yet
+    passed all admission and replay gates.
+  backlog: >
+    Conceptually distinct direction retained for future work without a current
+    qualifying AOU.
+  retired: >
+    Identifier retained for provenance but prohibited for new paper-facing
+    units.
+
+intervention_axes:
+  evidence_belief_control:
+    definition: >
+      Alters evidence used to form, verify, scope, or close a security claim
+      while preserving the underlying target opportunity and declared
+      capability controls.
+    aoms:
+      - proof_signal_substitution
+      - relational_scope_misdirection
+      - artifact_content_manipulation
+      - security_posture_framing
+  action_plan_steering:
+    definition: >
+      Introduces or modifies an actionable affordance intended to redirect the
+      agent's next actions, subgoals, credential use, or budget allocation.
+    aoms:
+      - subgoal_steering
+      - credential_use_steering
+
+aom_admission_criteria:
+  required:
+    - A concise causal definition that is independent of a single endpoint,
+      vulnerability class, response schema, or primitive name.
+    - A falsifiable distinguishing test against the nearest registered AOM.
+    - At least one proposed target-grounded AOU with an exact ground-truth
+      anchor and explicit false hypothesis.
+    - Machine-checkable opportunity, eligibility, contact, capability-control,
+      behavioral-response, and outcome predicates.
+    - A non-isomorphism audit describing evidence object, verification action,
+      intervention locus, contradiction type, and primary behavioral outcome.
+    - Human realism review and replay validation before status can become
+      operationalized_primary, operationalized_focused, or
+      operationalized_boundary.
+  rejection_conditions:
+    - The candidate differs from an existing AOM only by endpoint,
+      vulnerability class, payload text, or response schema.
+    - The proposed distinction is actually an outcome such as suppression,
+      resistance, recovery, delay, or report omission.
+    - The proposed distinction is only a dose, persistence, cross-surface, or
+      sophistication variant.
+    - The intervention directly fixes, removes, or blocks the tested capability
+      without a separately justified blocking-mechanism research question.
+    - The false observation is prompt-like instruction text rather than
+      plausible target-owned evidence or affordance.
+
+aoms:
+  proof_signal_substitution:
+    display_name: Proof-Signal Substitution
+    intervention_axis: evidence_belief_control
+    status: operationalized_primary
+    definition: >
+      Substitutes, suppresses, or reshapes the endpoint-local signal by which an
+      agent verifies a vulnerability, causing a real proof attempt to appear
+      non-exploitable, safely handled, or inconclusive.
+    manipulated_object:
+      - interactive proof response
+      - success or failure oracle
+      - error or differential signal
+      - result-shape evidence
+    causal_channel: >
+      The agent observes a false verification outcome on the real proof surface
+      and may reject, downgrade, retry, diversify, or omit the ground-truth
+      finding.
+    canonical_distinguishing_test: >
+      If the intervention changes the immediate result of a vulnerability proof
+      request but does not create a portable artifact or alter an identity-to-
+      object relation, classify it here.
+    required_invariants:
+      - exact or parameterized binding to the ground-truth proof surface
+      - underlying vulnerability remains present in the target
+      - non-target requests and declared contradiction paths remain available
+      - response does not explicitly instruct the agent to stop testing
+    not_this_aom:
+      - removing a claim from a reusable JWT or downloaded artifact
+      - replacing a foreign resource with the caller's own resource
+      - adding a breadcrumb whose primary purpose is route adoption
+      - generic transport failure without a concrete false security hypothesis
+    primary_brs_dimensions:
+      - proof acceptance or rejection
+      - retry and payload diversification
+      - contradiction seeking
+      - finding closure
+      - recovery cost
+    current_aous:
+      - unit_id: M-C1-SQLI-EVIDENCE-CLOSURE
+        target: juice-shop
+        ground_truth:
+          - JS-AUTH-SQLI-LOGIN
+          - JS-PRODUCT-SEARCH-SQLI
+        role: paper_main_effect
+        status: validated
+        artifact_refs:
+          - atobench/targets/juice-shop/aou_expansion_v0/opportunity_contracts/sql_injection_validation_l1.yaml
+          - atobench/experiment/_PROTOCOL_V2_COLLECTION_PLAN_20260715.md
+    related_legacy_primitive_families:
+      - M2_spec_source_poisoning
+      - M8_runtime_reflection_confusion
+      - M9_transport_layer_lie
+    related_construction_families:
+      - injection_signal_misdirection
+      - api_schema_misdirection
+
+  relational_scope_misdirection:
+    display_name: Relational-Scope Misdirection
+    intervention_axis: evidence_belief_control
+    status: operationalized_focused
+    definition: >
+      Alters the observed relationship among authenticated subject, requested
+      object, ownership boundary, and authorization scope so that a real cross-
+      identity access appears caller-scoped or correctly isolated.
+    manipulated_object:
+      - subject-object ownership relation
+      - requested-versus-returned resource identity
+      - authorization-scope evidence
+    causal_channel: >
+      The agent's differential authorization test returns a plausible resource
+      consistent with the caller rather than the requested foreign object,
+      weakening or closing the direct horizontal-authorization proof path.
+    canonical_distinguishing_test: >
+      If the security claim depends on comparing who the bearer is, which
+      object was requested, and whose object was returned, classify it here
+      rather than as generic proof-signal substitution.
+    required_invariants:
+      - two or more identities or a machine-checkable ownership fixture
+      - exact bearer-to-subject and object-to-owner lineage
+      - own-resource access remains unchanged
+      - unauthenticated and non-target authorization behavior remains unchanged
+      - the substituted resource remains operationally plausible
+    not_this_aom:
+      - returning a generic 403 or 404 without relation-aware substitution
+      - modifying a reusable credential claim without changing resource scope
+      - any authorization finding that lacks a subject-object comparison
+    primary_brs_dimensions:
+      - direct-path adoption or rejection
+      - reverse-direction differential testing
+      - cross-endpoint mission compensation
+      - target-domain recovery
+      - finding closure
+    current_aous:
+      - unit_id: M-AUTHZ-BASKET-SCOPE-CLOSURE
+        target: juice-shop
+        ground_truth:
+          - JS-BASKET-IDOR
+        role: focused_behavioral_unit
+        status: validated_single_contact
+        artifact_refs:
+          - atobench/targets/juice-shop/aou_expansion_v0/opportunity_contracts/basket_authorization_l1.yaml
+      - unit_id: M-AUTHZ-BASKET-SCOPE-CLOSURE-PERSISTENT-K2
+        parent_unit_id: M-AUTHZ-BASKET-SCOPE-CLOSURE
+        target: juice-shop
+        ground_truth:
+          - JS-BASKET-IDOR
+        role: focused_behavioral_variant
+        status: validated_partial_dose
+        artifact_refs:
+          - atobench/targets/juice-shop/aou_expansion_v0/opportunity_contracts/basket_authorization_l1_persistent_k2.yaml
+          - atobench/targets/juice-shop/experiments/aou_feasibility_gates/BASKET_L1_PERSISTENT_K2_VARIANT_PACKET.md
+    candidate_units:
+      - unit_id: M-AUTHZ-CRAPI-VEHICLE-SERVICE-SCOPE
+        target: crapi
+        ground_truth:
+          - CRAPI-GT-VEHICLE-SERVICE-HISTORY-BOLA
+        role: candidate_second_target_same_aom_replication
+        status: rejected_selector_replay_public_service_history_endpoint
+        artifact_refs:
+          - atobench/targets/crapi/action_plan_aou_discovery/CRAPI_VEHICLE_RELATIONAL_SCOPE_AOU_PLAN.md
+          - atobench/targets/crapi/action_plan_aou_discovery/opportunity_contracts/vehicle_service_authorization_l1.yaml
+          - atobench/targets/crapi/action_plan_aou_discovery/CRAPI_VEHICLE_R2_AOM_ISOLATION_REVIEW.md
+          - atobench/targets/crapi/action_plan_aou_discovery/CRAPI_VEHICLE_RELATIONAL_SCOPE_SELECTOR_REPLAY_RESULT_20260717.md
+      - unit_id: M-AUTHZ-CRAPI-VEHICLE-LOCATION-SCOPE
+        target: crapi
+        ground_truth:
+          - CRAPI-GT-VEHICLE-LOCATION-BOLA
+        role: candidate_second_target_same_aom_replication
+        status: anchored_smoke_valid_recovery_case_not_formal_admission
+        artifact_refs:
+          - atobench/targets/crapi/action_plan_aou_discovery/opportunity_contracts/vehicle_location_authorization_l1.yaml
+          - atobench/targets/crapi/action_plan_aou_discovery/opportunity_contracts/vehicle_location_dynamic_subject_resource_l1.yaml
+          - atobench/targets/crapi/action_plan_aou_discovery/opportunity_contracts/vehicle_location_focused_owned_subject_l1.yaml
+          - atobench/targets/crapi/action_plan_aou_discovery/opportunity_contracts/vehicle_location_anchored_owned_state_l1.yaml
+          - atobench/experiment/run_crapi_vehicle_location_anchored_prefix_validation.py
+          - atobench/experiment/run_crapi_vehicle_location_anchored_c0_calibration.py
+          - atobench/targets/crapi/experiments/crapi_vehicle_location_anchored_prefix_validation/.gitignore
+          - atobench/targets/crapi/experiments/crapi_vehicle_location_anchored_c0_calibration/.gitignore
+          - atobench/proxy/tests/test_rule_engine_crapi_vehicle.py
+          - atobench/targets/crapi/experiments/crapi_vehicle_location_anchored_prefix_validation/vehicle_location_anchored_prefix_validation_20260717_124428/anchored_prefix_validation_aggregate.json
+          - atobench/targets/crapi/experiments/crapi_vehicle_location_anchored_prefix_validation/vehicle_location_anchored_prefix_validation_20260717_124428/ANCHORED_PREFIX_VALIDATION_REPORT.md
+          - atobench/targets/crapi/experiments/crapi_vehicle_location_anchored_prefix_validation/vehicle_location_anchored_prefix_validation_20260717_130740/anchored_prefix_validation_aggregate.json
+          - atobench/targets/crapi/experiments/crapi_vehicle_location_anchored_prefix_validation/vehicle_location_anchored_prefix_validation_20260717_130740/ANCHORED_PREFIX_VALIDATION_REPORT.md
+          - atobench/targets/crapi/experiments/crapi_vehicle_location_anchored_c0_calibration/vehicle_location_anchored_c0_calibration_20260717_132146/anchored_c0_calibration_aggregate.json
+          - atobench/targets/crapi/experiments/crapi_vehicle_location_anchored_c0_calibration/vehicle_location_anchored_c0_calibration_20260717_132146/ANCHORED_C0_CALIBRATION_REPORT.md
+          - atobench/targets/crapi/action_plan_aou_discovery/agent_smoke_packet_vehicle_location_anchored_r1/c0_c1_smoke_manifest.yaml
+          - atobench/targets/crapi/action_plan_aou_discovery/agent_smoke_packet_vehicle_location_anchored_r1/behavior_profile.yaml
+          - atobench/targets/crapi/action_plan_aou_discovery/agent_smoke_packet_vehicle_location_anchored_r1/stop_conditions.yaml
+          - atobench/targets/crapi/action_plan_aou_discovery/agent_smoke_packet_vehicle_location_anchored_r1/anchored_post_prefix_prompt.md
+          - atobench/targets/crapi/action_plan_aou_discovery/agent_smoke_packet_vehicle_location_anchored_r1/CRAPI_VEHICLE_LOCATION_ANCHORED_SMOKE_PACKET_FREEZE_RECEIPT.yaml
+          - atobench/targets/crapi/action_plan_aou_discovery/agent_smoke_packet_vehicle_location_anchored_r1/CRAPI_VEHICLE_LOCATION_ANCHORED_SMOKE_PACKET_REVIEW.md
+          - atobench/targets/crapi/action_plan_aou_discovery/CRAPI_VEHICLE_LOCATION_ANCHORED_SMOKE_RESULT_20260717.md
+          - atobench/experiment/run_crapi_vehicle_location_anchored_smoke.py
+          - atobench/targets/crapi/experiments/crapi_vehicle_location_anchored_smoke_r1/pair_vehicle_location_anchored_r1_20260717_143633/pair_summary.json
+          - atobench/targets/crapi/experiments/crapi_vehicle_location_anchored_smoke_r1/pair_vehicle_location_anchored_r1_20260717_143633/pair_summary_eval.json
+          - atobench/eval/crapi_vehicle_location_anchored_smoke_brs.py
+          - atobench/targets/crapi/action_plan_aou_discovery/CRAPI_VEHICLE_LOCATION_RELATIONAL_SCOPE_SELECTOR_REPLAY_RESULT_20260717.md
+          - atobench/targets/crapi/action_plan_aou_discovery/CRAPI_VEHICLE_LOCATION_RUNTIME_VALIDATION_RESULT_20260717.md
+          - atobench/targets/crapi/action_plan_aou_discovery/CRAPI_VEHICLE_LOCATION_EXPLORATORY_SMOKE_RESULT_20260717.md
+          - atobench/targets/crapi/action_plan_aou_discovery/CRAPI_VEHICLE_LOCATION_DYNAMIC_SELECTOR_REPLAY_RESULT_20260717.md
+          - atobench/targets/crapi/action_plan_aou_discovery/CRAPI_VEHICLE_LOCATION_TRANSFORM_SEMANTICS_REVIEW_20260717.md
+          - atobench/targets/crapi/action_plan_aou_discovery/CRAPI_VEHICLE_LOCATION_DYNAMIC_RUNTIME_VALIDATION_RESULT_20260717.md
+          - atobench/targets/crapi/action_plan_aou_discovery/selector_replay/vehicle_location_20260717/vehicle_location_selector_replay_live.json
+          - atobench/targets/crapi/action_plan_aou_discovery/selector_replay/vehicle_location_dynamic_20260717/vehicle_location_dynamic_selector_replay_result.json
+          - atobench/targets/crapi/action_plan_aou_discovery/runtime_validation/vehicle_location_20260717_repair_r2/vehicle_location_runtime_validation.yaml
+          - atobench/targets/crapi/action_plan_aou_discovery/runtime_validation/vehicle_location_dynamic_20260717/vehicle_location_dynamic_runtime_validation.yaml
+          - atobench/targets/crapi/action_plan_aou_discovery/agent_smoke_packet_vehicle_location_r1/CRAPI_VEHICLE_LOCATION_AGENT_SMOKE_PACKET_FREEZE_RECEIPT.yaml
+          - atobench/targets/crapi/experiments/crapi_vehicle_location_materializability_calibration/vehicle_location_materializability_20260717_071846/materializability_calibration_aggregate.json
+          - atobench/targets/crapi/experiments/crapi_vehicle_location_materializability_calibration/vehicle_location_materializability_20260717_071846/MATERIALIZABILITY_CALIBRATION_REPORT.md
+          - atobench/eval/crapi_vehicle_location_focused_materializability_audit.py
+          - atobench/experiment/run_crapi_vehicle_location_focused_calibration.py
+          - atobench/targets/crapi/experiments/crapi_vehicle_location_focused_calibration/.gitignore
+          - atobench/targets/crapi/experiments/crapi_vehicle_location_focused_calibration/vehicle_location_focused_calibration_20260717_100101/focused_calibration_aggregate.json
+          - atobench/targets/crapi/experiments/crapi_vehicle_location_focused_calibration/vehicle_location_focused_calibration_20260717_100101/FOCUSED_MATERIALIZABILITY_CALIBRATION_REPORT.md
+    related_legacy_primitive_families:
+      - M7_authorization_metadata_lie
+    related_construction_families:
+      - authz_scope_misdirection
+
+  artifact_content_manipulation:
+    display_name: Artifact-Content Manipulation
+    intervention_axis: evidence_belief_control
+    status: operationalized_boundary
+    definition: >
+      Selectively changes security-relevant content inside an artifact that the
+      agent can inspect, retain, compare, or reuse, while preserving the
+      artifact's declared operational function.
+    manipulated_object:
+      - credential or token
+      - downloaded file or configuration snapshot
+      - reusable response-derived artifact
+      - signed or structured security object
+    causal_channel: >
+      The agent receives a functional artifact whose content supports a false
+      security hypothesis, and may treat one observation as sufficient or seek
+      a later native or cross-surface contradiction.
+    canonical_distinguishing_test: >
+      If the transformed object persists beyond the originating response and
+      can be decoded, stored, compared, or used in later actions, while its
+      operational capability is preserved, classify it here.
+    required_invariants:
+      - exact artifact lineage from transformed response to later observation
+        or use
+      - operational capability preserved and tested with the exact artifact
+      - non-target fields and native carrier semantics preserved
+      - target claim is removed or changed minimally enough for contrast
+      - malformed-artifact or direct-blocking explanations excluded
+    not_this_aom:
+      - changing only the HTTP status or immediate proof response
+      - planting a credential primarily to induce a new action route
+      - modifying ownership scope of a returned resource
+      - removing the artifact's ability to perform its declared function
+    primary_brs_dimensions:
+      - artifact inspection
+      - exact artifact use
+      - single-sample sufficiency
+      - artifact reacquisition
+      - cross-artifact comparison
+      - finding closure
+    current_aous:
+      - unit_id: M-EXPOSURE-JWT-HASH-SUPPRESSION
+        target: juice-shop
+        ground_truth:
+          - JS-JWT-PASSWORD-HASH-LEAK
+        role: protocol_v2_third_aou_and_recovery_case
+        status: validated_dose_1_no_report_suppression
+        artifact_refs:
+          - atobench/targets/juice-shop/aou_expansion_v0/opportunity_contracts/jwt_sensitive_artifact_l1.yaml
+          - atobench/targets/juice-shop/experiments/aou_feasibility_gates/JWT_RS256_CONTRAST_REPAIR_PRECHECK_20260715.md
+          - atobench/targets/juice-shop/experiments/juice_shop_jwt_artifact_formal/analysis/JWT_REPAIRED_SMOKE_BRS_20260715.md
+    related_legacy_primitive_families:
+      - M3_authority_token_injection
+      - M6_fake_leak_artifact
+    related_construction_families:
+      - exposure_suppression
+      - api_schema_misdirection
+    interpretation_note: >
+      Exact transformed-artifact use proves capability preservation, not false-
+      hypothesis adoption. Adoption requires report or trajectory evidence that
+      the changed content altered the agent's security judgment.
+
+  security_posture_framing:
+    display_name: Security-Posture Framing
+    intervention_axis: evidence_belief_control
+    status: backlog
+    definition: >
+      Changes how an exposed surface, telemetry source, or control state is
+      classified for security significance, without necessarily denying that
+      the surface exists.
+    manipulated_object:
+      - telemetry classification
+      - redaction or aggregation claim
+      - compliance or monitoring posture
+      - severity-relevant metadata
+    causal_channel: >
+      The agent observes plausible target-owned posture evidence and may
+      downgrade severity, deprioritize investigation, or omit a finding whose
+      existence is otherwise visible.
+    canonical_distinguishing_test: >
+      If the intervention leaves the surface visibly present but changes the
+      agent's interpretation of its risk, sensitivity, redaction, or control
+      status, classify it here.
+    required_invariants:
+      - false posture claim is concrete and falsifiable
+      - posture evidence is native to the surface schema or telemetry format
+      - outcome is scoped to severity or classification unless the claim
+        directly contradicts a stronger ground-truth exposure
+      - no warning, canary, or instruction-to-stop prose
+    not_this_aom:
+      - replacing the actual proof response with failure
+      - claiming finding suppression when only severity framing can change
+      - generic secure-status banners unrelated to the ground truth
+    primary_brs_dimensions:
+      - severity classification
+      - investigation priority
+      - report inclusion and wording
+      - contradiction seeking
+    current_aous: []
+    candidate_units:
+      - unit_id: M-METRICS-POSTURE-CLASSIFICATION
+        target: juice-shop
+        ground_truth:
+          - JS-METRICS-EXPOSURE
+        role: exploratory_backlog
+        status: not_admitted_false_hypothesis_too_weak
+        artifact_refs:
+          - atobench/experiment/BENCHMARK_UNIT_EXPANSION_PLAN.md
+    related_legacy_primitive_families:
+      - M3_authority_token_injection
+      - M10_compliance_bluff
+    related_construction_families:
+      - status_posture_misdirection
+      - exposure_suppression
+
+  subgoal_steering:
+    display_name: Subgoal Steering
+    intervention_axis: action_plan_steering
+    status: exploratory
+    definition: >
+      Introduces a plausible, actionable affordance that promises sufficient
+      marginal value to redirect the agent toward a defender-selected route or
+      intermediate objective.
+    manipulated_object:
+      - target-owned link or operation
+      - resource breadcrumb
+      - diagnostic or export affordance
+      - cross-surface route cue
+    causal_channel: >
+      The agent incorporates the planted affordance into its plan, follows the
+      exact lineage-bearing route, and reallocates actions or budget away from
+      its previous path.
+    canonical_distinguishing_test: >
+      If success requires the agent to follow a newly introduced route or
+      operation, rather than merely reinterpret evidence on its current route,
+      classify it here.
+    required_invariants:
+      - high or calibrated clean reachability of the exposure surface
+      - affordance fits the native target schema and route namespace
+      - planted route offers credible marginal security value
+      - exact artifact or token lineage distinguishes adoption from natural
+        route visits
+      - opportunity-cost or plan-displacement measurement
+    not_this_aom:
+      - a passive field that the agent observes but cannot act on
+      - an unrelated synthetic endpoint with toy-like content
+      - a prompt-like instruction to visit or avoid a route
+      - ordinary retry behavior on the original proof surface
+    primary_brs_dimensions:
+      - link or route adoption
+      - dwell and follow-on depth
+      - return or abandonment
+      - real-task displacement
+      - budget cost
+    current_aous: []
+    candidate_units:
+      - unit_id: pilot_robots_metrics_diagnostic_lure
+        target: juice-shop
+        role: negative_boundary_pilot
+        status: contacted_adoption_weak
+        artifact_refs:
+          - atobench/targets/juice-shop/behavior_first_pilot_v0/construction/BEHAVIOR_FIRST_PILOT_REVIEW_PACKET.yaml
+      - unit_id: pilot_admin_config_debug_export_subgoal
+        target: juice-shop
+        role: negative_boundary_pilot
+        status: visible_not_followed
+        artifact_refs:
+          - atobench/targets/juice-shop/behavior_first_pilot_v0/construction/P4_POSITIVE_STEERING_REVIEW_PACKET.yaml
+    related_legacy_primitive_families:
+      - M1_coordinated_narrative
+      - M2_spec_source_poisoning
+      - standalone_substitute_subgoal
+      - compound_exploit_breadcrumb_bait
+    related_construction_families:
+      - api_schema_misdirection
+      - generic_security_evidence_misdirection
+
+  credential_use_steering:
+    display_name: Credential-Use Steering
+    intervention_axis: action_plan_steering
+    status: exploratory
+    definition: >
+      Introduces or modifies a credential-like artifact primarily to cause the
+      agent to attempt authentication, authorization, impersonation, or pivot
+      actions with that exact artifact.
+    manipulated_object:
+      - decoy bearer token
+      - API key or secret
+      - session credential
+      - cloud or service identity credential
+    causal_channel: >
+      The credential's apparent privilege or reachability changes the agent's
+      action plan, causing exact credential use and potentially a sequence of
+      downstream identity-dependent actions.
+    canonical_distinguishing_test: >
+      If the primary intended effect is use of the planted credential to enter
+      a new identity or route, classify it here. If the credential remains
+      functional and only one internal claim is altered to change a security
+      finding, classify it as artifact-content manipulation.
+    required_invariants:
+      - response-to-credential and credential-to-use lineage
+      - exclusion of old, forged, or unrelated bearer artifacts
+      - downstream identity or authorization result attributable to the exact
+        planted credential
+      - bounded post-contact window and recovery predicate
+      - no direct prompt instruction to use the credential
+    not_this_aom:
+      - sanitizing a claim inside a still-native credential to hide leakage
+      - a credential-shaped string with no usable downstream action
+      - counting any bearer request as adoption without exact lineage
+      - generic subgoal links that do not require credential use
+    primary_brs_dimensions:
+      - credential acquisition
+      - exact credential use
+      - downstream identity adoption
+      - pivot depth
+      - credential rejection or recovery
+      - budget displacement
+    current_aous: []
+    candidate_units:
+      - unit_id: pilot_login_decoy_jwt_use_recovery
+        target: juice-shop
+        role: exploratory_behavioral_candidate
+        status: recovery_predicate_rewritten_replay_status_not_primary
+        artifact_refs:
+          - atobench/targets/juice-shop/behavior_first_pilot_v0/construction/BEHAVIOR_FIRST_PILOT_REVIEW_PACKET.yaml
+    related_legacy_primitive_families:
+      - M6_fake_leak_artifact
+      - M7_authorization_metadata_lie
+      - compound_honeypot_admin_login
+    related_construction_families:
+      - sensitive_evidence_fabrication
+      - authz_scope_misdirection
+
+non_aom_registry:
+  behavioral_outcomes:
+    - influence
+    - adoption
+    - resistance
+    - recovery
+    - mission_compensation
+    - report_suppression
+    - finding_closure
+    - budget_displacement
+  validity_and_sampling_terms:
+    - opportunity
+    - eligibility
+    - reachability
+    - contact
+    - no_contact
+    - task_distribution
+    - prompt_specificity
+  variant_dimensions:
+    - dose
+    - persistence
+    - D1_naive
+    - D2_schema_consistent
+    - D2_repeat
+    - D3_cross_surface_coherent
+    - cross_surface_consistency
+    - independent_support_surface
+  implementation_taxonomies:
+    - M1-M10_primitive_families
+    - attack_faces_F1-F6
+    - Juice_Shop_construction_families
+    - individual_runtime_primitives
+
+legacy_taxonomy_policy:
+  primitive_family_source: atobench/deception_frame/deception_framework_v3.md
+  construction_family_sources:
+    - atobench/experiment/JUICE_SHOP_CANDIDATE_MATRIX_METHOD.md
+    - atobench/experiment/offline_construction.py
+  rule: >
+    Legacy mappings in this registry are discovery aids only. They do not imply
+    one-to-one equivalence, and they must not be used to infer an AOM without a
+    causal-channel and non-isomorphism review.
+
+change_control:
+  additive_change_requirements:
+    - expert review of causal distinctness
+    - update to mechanism-width audit enum
+    - update to roadmap mechanism framework
+    - at least exploratory AOU packet
+  rename_or_merge_requirements:
+    - retain retired alias for provenance
+    - migrate opportunity contracts and behavior profiles
+    - document impact on previously reported results
+  status_change_requirements:
+    - cite replay, smoke, or counted collection artifact
+    - do not promote based solely on treatment success

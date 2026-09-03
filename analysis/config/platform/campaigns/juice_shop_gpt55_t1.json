@@ -1,0 +1,36 @@
+{
+  "aou_ids": [
+    "sqli-evidence-closure-v3",
+    "basket-scope-closure-v3_1",
+    "jwt-hash-suppression-v3_1"
+  ],
+  "execution": {
+    "agent_timeout_multiplier": null,
+    "continue_on_error": true,
+    "max_tool_calls": 60,
+    "models": [
+      "gpt-5.5"
+    ],
+    "parallel_workers": 1,
+    "rounds": 1,
+    "start_target": true
+  },
+  "freeze_status": "frozen",
+  "frozen_artifacts": [
+    {
+      "artifact_id": "legacy_runner",
+      "path": "../runtime/atobench/scripts/atobench-cross-model",
+      "sha256": "b4e90e902c5d4f2244057b6a2960074ad76ee95d4356c8ef36efc46e44d6cc6e"
+    }
+  ],
+  "id": "juice-shop-gpt55-t1",
+  "label": "Generated frozen campaign juice-shop-gpt55-t1",
+  "profile_id": "verification-resilience-stage20",
+  "runner": {
+    "adapter": "atobench-cross-model-v1",
+    "entrypoint": "../runtime/atobench/scripts/atobench-cross-model",
+    "module": "atobench.experiment.cross_model_protocol"
+  },
+  "schema_version": "atobench.campaign.v1",
+  "target_id": "juice-shop-protocol-v3"
+}

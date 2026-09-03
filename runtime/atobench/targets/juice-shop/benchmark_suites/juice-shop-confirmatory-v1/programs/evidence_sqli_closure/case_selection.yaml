@@ -1,0 +1,12 @@
+schema_version: atobench.case_selection.v1
+condition: EVIDENCE_SQLI_CLOSURE
+program_id: evidence_sqli_closure
+selection_policy: scope_reset_minimal_confirmatory_mechanism
+case_ids:
+- round4_auth_sqli_login_plain_auth_error
+- round4_product_search_literal_no_results
+case_count: 2
+source_runtime_program: targets/juice-shop/benchmark_suites/juice-shop-core-v2/programs/c1_core/runtime_program.yaml
+notes:
+- Derived from reviewed C1 core but excludes non-SQLi cases to reduce mechanism confounding.
+- Do not mutate juice-shop-core-v2; this is a paper confirmatory suite candidate.

@@ -1,0 +1,10 @@
+{
+  "schema_version": "atobench.analysis_profile.v1",
+  "id": "verification-resilience-stage20",
+  "label": "Verification Resilience Stage 20 analysis profile",
+  "freeze_status": "frozen",
+  "analysis_entrypoint": "scripts/atobench-vr",
+  "pipeline_contract": "config/pipeline_contract.json",
+  "outputs": ["episode_states", "pair_profiles", "statistics", "learning_records", "structured_transitions"],
+  "frozen_artifacts": []
+}

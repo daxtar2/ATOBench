@@ -1,0 +1,12 @@
+{
+  "schema_version": "atobench.campaign.v1",
+  "id": "replace-campaign-id",
+  "label": "Replace campaign label",
+  "target_id": "replace-target-id",
+  "aou_ids": ["replace-aou-id"],
+  "profile_id": "replace-profile-id",
+  "freeze_status": "frozen",
+  "runner": {"adapter": "atobench-cross-model-v1", "entrypoint": "relative/or/external/runner", "module": "replace.module"},
+  "execution": {"rounds": 1, "models": ["replace-model"], "parallel_workers": 1, "continue_on_error": true, "start_target": false},
+  "frozen_artifacts": [{"artifact_id": "runner", "path": "relative/or/external/runner", "sha256": "64-char-sha256"}]
+}

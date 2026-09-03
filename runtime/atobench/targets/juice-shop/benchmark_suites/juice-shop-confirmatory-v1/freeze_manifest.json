@@ -1,0 +1,53 @@
+{
+  "schema_version": "atobench.freeze_manifest.v1",
+  "suite_id": "juice-shop-confirmatory-v1",
+  "frozen_at": "2026-09-03T11:21:53.347063+00:00",
+  "suite_root": ".",
+  "construction_state": "scope_reset_confirmatory_materialized_pending_replay",
+  "standard_conditions": {
+    "C0": "programs/c0_identity/runtime_program.yaml",
+    "EVIDENCE_SQLI_CLOSURE": "programs/evidence_sqli_closure/runtime_program.yaml",
+    "RECOVERY_SEARCH_P3": "programs/recovery_search_p3/runtime_program.yaml"
+  },
+  "program_hashes": {
+    "C0": {
+      "runtime_program": "programs/c0_identity/runtime_program.yaml",
+      "program_id": "rp_76ad4d07b647",
+      "sha256": "04120a00e48dfdac008ba8c5f9fbba07102f32d9f5b340f78154fe481e1f2f60",
+      "rule_count": 0
+    },
+    "EVIDENCE_SQLI_CLOSURE": {
+      "runtime_program": "programs/evidence_sqli_closure/runtime_program.yaml",
+      "program_id": "rp_6fb2ae584bb8",
+      "sha256": "04060595a6d60e5eefe90935fce4ac3d03bddb21142ab5638c31c80f716868f1",
+      "rule_count": 2
+    },
+    "RECOVERY_SEARCH_P3": {
+      "runtime_program": "programs/recovery_search_p3/runtime_program.yaml",
+      "program_id": "rp_a221849fcfdd",
+      "sha256": "95856b53a747e8647732962e780dd0e3faefd7717f8d6742e6628667330e0a9a",
+      "rule_count": 1
+    }
+  },
+  "ignored_names": [
+    ".DS_Store"
+  ],
+  "files": {
+    "construction/materialization_report.yaml": "86c4c749a1f125a3924c3bbf8f2d7eff60a4fbd205b3084dbc1610be830e436b",
+    "profiles/behavior_profiles.source.yaml": "7bdf6736bf6b01bf1ce8f276a784bf295f9baaab56f243329b23d55a77328ec5",
+    "programs/c0_identity/program_manifest.json": "39935e8eb10fd655c8b849c1e95c908f664f641a6de3df1db8b6daf79666acd2",
+    "programs/c0_identity/runtime_program.yaml": "04120a00e48dfdac008ba8c5f9fbba07102f32d9f5b340f78154fe481e1f2f60",
+    "programs/evidence_sqli_closure/case_selection.yaml": "f9f5880088219fc669834aeddbb91ef72a14971ba19100f7a6a36cedaf93fead",
+    "programs/evidence_sqli_closure/program_manifest.json": "9dd83bf971c0832f3d530ba516df0d9788297df50253493ba3eac0e66fc71b39",
+    "programs/evidence_sqli_closure/runtime_program.yaml": "04060595a6d60e5eefe90935fce4ac3d03bddb21142ab5638c31c80f716868f1",
+    "programs/recovery_search_p3/case_selection.yaml": "e52994802541b429085baa99c27ccdf637a276c905509dcfa851addbfd224e5a",
+    "programs/recovery_search_p3/program_manifest.json": "44f6e4efe866d0423cfab7a3af36f6e4845debcdcdcbc551a8af8e961e604a2e",
+    "programs/recovery_search_p3/runtime_program.yaml": "95856b53a747e8647732962e780dd0e3faefd7717f8d6742e6628667330e0a9a",
+    "suite_manifest.yaml": "a0418a94eb336cb83e373426af799dd6404dd0428b1a5f6cc6393549a0cc19e0",
+    "target/ground_truth_cards.yaml": "4aba17e290643f853c504a93f698ca866e2368faf6539c778071d5dbe7777a5a",
+    "target/surface_inventory.jsonl": "ba3e7ea9929141e673ad313fbcdf55453cba2515cbf7b20d2290515768158844",
+    "target/surface_inventory_review.yaml": "ca44d7b27b5fce090f46dd725ca7e5d4f3fcfaa21f68318cb6821254d3f406dc",
+    "target/target_card.yaml": "f1ce4d885cf3ef951b9459ba5c5ade7ab3a2e2618027a567bc57771f66a56b3a"
+  },
+  "collection_status": "blocked_pending_replay_and_smoke"
+}

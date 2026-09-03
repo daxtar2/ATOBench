@@ -1,0 +1,11 @@
+{
+  "schema_version": "atobench.alignment_verifier_task_allowlist.v1",
+  "status": "draft_unauthorized",
+  "authorized_for_calls": false,
+  "selection_seed": "atobench-alignment-pilot-v1-canary-first-task",
+  "episode_count": 1,
+  "task_count": 1,
+  "reviewer_count": 2,
+  "max_calls": 2,
+  "task_ids": ["aln_051584c38e10fc7a133a"]
+}

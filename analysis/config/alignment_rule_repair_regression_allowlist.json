@@ -1,0 +1,15 @@
+{
+  "schema_version": "atobench.alignment_verifier_task_allowlist.v1",
+  "status": "calibration_regression",
+  "authorized_for_calls": true,
+  "selection_basis": "four true reviewer disagreements from 04e pilot",
+  "task_count": 4,
+  "reviewer_count": 2,
+  "max_calls": 8,
+  "task_ids": [
+    "aln_02602314ad3b7de119ad",
+    "aln_d133c7f5d1bed8b7803c",
+    "aln_374b1a1a4616af241394",
+    "aln_1aab67baccfd6ceee3d4"
+  ]
+}

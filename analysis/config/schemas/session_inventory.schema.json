@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "session_id", "source_path", "source_sha256", "is_subagent",
+    "record_count", "parse_error_count", "optional_sidecar_output_count",
+    "output_coverage_status", "missing_output_inferred", "engagement_ids"
+  ],
+  "properties": {
+    "optional_sidecar_output_count": {"type": "integer", "minimum": 0},
+    "output_coverage_status": {
+      "enum": ["canonical_jsonl_inline_only", "canonical_jsonl_with_optional_sidecar"]
+    },
+    "missing_output_inferred": {"const": false}
+  }
+}
+

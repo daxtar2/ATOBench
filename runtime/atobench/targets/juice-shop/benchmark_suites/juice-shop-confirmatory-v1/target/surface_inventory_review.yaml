@@ -1,0 +1,8 @@
+schema_version: atobench.surface_inventory_review.v1
+status: machine_imported_pending_review
+surface_count: 19
+review_required:
+- auth_preconditions
+- clean_response_hashes
+- eligible_loaders
+- exclusion_reasons

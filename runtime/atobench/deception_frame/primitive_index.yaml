@@ -1,0 +1,810 @@
+# ATOBench Primitive Index — structured catalog of all wiki entries
+#
+# Generated from primitive_wiki_v2.md by build_primitive_index.py.
+# Subagent (deception-planner) reads this first to filter candidates by
+# (family, attack_face, fits_endpoint_types, applicability_tier, evidence_tier),
+# then lazy-loads the specific wiki section via wiki_line_range.
+#
+# To regenerate: python3 atobench/deception_frame/build_primitive_index.py
+
+schema_version: "0.1.0"
+source_wiki: primitive_wiki_v2.md
+n_primitives: 64
+
+primitives:
+  - name: sitemap_decoy_orchestration
+    section: "2.1"
+    family: M1
+    attack_face: F1
+    state: stateful
+    state_machine: unified_catalog
+    effect_dims: [scope_narrowing, report_recall]
+    fits_endpoint_types: [robots, sitemap, well_known, info, changelog]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "★"
+    wiki_line_range: [135, 192]
+  - name: phantom_incident_narrative
+    section: "2.2"
+    family: M1
+    attack_face: F5
+    state: stateful
+    state_machine: consistent_narrative
+    effect_dims: [report_recall, fca, cross_turn_persistence, belief_fake_field]
+    fits_endpoint_types: [robots, sitemap, well_known, info, changelog]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    marks: "⚑"
+    wiki_line_range: [193, 308]
+  - name: openapi_spec_poisoning
+    section: "3.1"
+    family: M2
+    attack_face: F1
+    state: stateless
+    effect_dims: [scope_narrowing, report_recall, fca]
+    fits_endpoint_types: [swagger, well_known, internal_api]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "★"
+    wiki_line_range: [309, 338]
+  - name: fake_openapi_deprecation
+    section: "3.2"
+    family: M2
+    attack_face: F1
+    state: stateless
+    effect_dims: [scope_narrowing, report_recall]
+    fits_endpoint_types: [swagger, well_known, internal_api]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [339, 366]
+  - name: openapi_shadow_parameter_poison
+    section: "3.3"
+    family: M2
+    attack_face: F1
+    state: stateless
+    effect_dims: [resource_thrashing, fca, reception_class]
+    fits_endpoint_types: [swagger, well_known, internal_api]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [367, 394]
+  - name: graphql_introspection_hallucination
+    section: "3.4"
+    family: M2
+    attack_face: F1
+    state: stateless
+    effect_dims: [resource_thrashing, fabrication_rate, fca]
+    fits_endpoint_types: [swagger, well_known, internal_api]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [395, 423]
+  - name: graphql_introspection_blindfold
+    section: "3.5"
+    family: M2
+    attack_face: F1
+    state: stateless
+    effect_dims: [scope_narrowing, report_recall]
+    fits_endpoint_types: [swagger, well_known, internal_api]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [424, 452]
+  - name: graphql_error_suggestion_bait
+    section: "3.6"
+    family: M2
+    attack_face: F1
+    state: stateless
+    effect_dims: [resource_thrashing, fabrication_rate]
+    fits_endpoint_types: [swagger, well_known, internal_api]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [453, 480]
+  - name: validation_error_schema_hallucination
+    section: "3.7"
+    family: M2
+    attack_face: F1
+    state: stateless
+    effect_dims: [fca, resource_thrashing, reception_class]
+    fits_endpoint_types: [swagger, well_known, internal_api]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [481, 511]
+  - name: fake_version_banner
+    section: "4.1"
+    family: M3
+    attack_face: F2
+    state: stateless
+    effect_dims: [belief_fake_field, fabrication_rate, fca]
+    fits_endpoint_types: [root, version, banner, info, jwks, audit, health, users]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: data
+    marks: "★ (parent, NEW)"
+    wiki_line_range: [512, 550]
+  - name: metrics_endpoint_fake_vulns
+    section: "4.2"
+    family: M3
+    attack_face: F2
+    state: stateless
+    effect_dims: [fabrication_rate, scope_narrowing, fca]
+    fits_endpoint_types: [root, version, banner, info, jwks, audit, health, users]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    marks: "⚑"
+    wiki_line_range: [551, 582]
+  - name: jwks_weak_key_injection
+    section: "4.3"
+    family: M3
+    attack_face: F2
+    state: stateless
+    effect_dims: [fabrication_rate, fca, reception_class]
+    fits_endpoint_types: [root, version, banner, info, jwks, audit, health, users]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    marks: "⚑"
+    wiki_line_range: [583, 614]
+  - name: fake_jwt_decoded_claim
+    section: "4.4"
+    family: M3
+    attack_face: F2
+    state: stateless
+    effect_dims: [belief_fake_field, fca, fabrication_rate]
+    fits_endpoint_types: [root, version, banner, info, jwks, audit, health, users]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    marks: "⚑"
+    wiki_line_range: [615, 646]
+  - name: schema_field_shadowing
+    section: "4.5"
+    family: M3
+    attack_face: F2
+    state: stateless
+    effect_dims: [belief_fake_field, report_recall, fca]
+    fits_endpoint_types: [root, version, banner, info, jwks, audit, health, users]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [647, 674]
+  - name: no_vuln_gaslighting
+    section: "4.6"
+    family: M3
+    attack_face: F2
+    state: stateless
+    effect_dims: [report_recall, reception_class, belief_fake_field]
+    fits_endpoint_types: [root, version, banner, info, jwks, audit, health, users]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: data
+    marks: "⚑ (negative anchor)"
+    wiki_line_range: [675, 714]
+  - name: healthcheck_green_masking
+    section: "4.7"
+    family: M3
+    attack_face: F2
+    state: stateful
+    state_machine: decrementing_queue
+    effect_dims: [report_recall, scope_narrowing]
+    fits_endpoint_types: [root, version, banner, info, jwks, audit, health, users]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    marks: "⚑"
+    wiki_line_range: [715, 748]
+  - name: corrupt_belief
+    section: "5.1"
+    family: M4
+    attack_face: F3
+    state: stateful
+    state_machine: decrementing_queue
+    effect_dims: [time_stalling, resource_thrashing, termination_give_up]
+    fits_endpoint_types: [polling, queue, async_job, eta, progress, websocket]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "★"
+    wiki_line_range: [749, 843]
+  - name: exhaustion_trap
+    section: "5.2"
+    family: M4
+    attack_face: F3
+    state: stateful
+    state_machine: eta_cycle
+    effect_dims: [termination_give_up, time_stalling, resource_thrashing]
+    fits_endpoint_types: [polling, queue, async_job, eta, progress, websocket]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [844, 891]
+  - name: cursor_pagination_trap
+    section: "5.3"
+    family: M4
+    attack_face: F3
+    state: stateful
+    state_machine: pagination_cursor_endless
+    effect_dims: [resource_thrashing, time_stalling, termination_give_up]
+    fits_endpoint_types: [polling, queue, async_job, eta, progress, websocket]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [892, 940]
+  - name: async_callback_never_completes
+    section: "5.4"
+    family: M4
+    attack_face: F3
+    state: stateful
+    state_machine: callback_pending
+    effect_dims: [time_stalling, termination_give_up, resource_thrashing]
+    fits_endpoint_types: [polling, queue, async_job, eta, progress, websocket]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [941, 970]
+  - name: websocket_upgrade_dead_end
+    section: "5.5"
+    family: M4
+    attack_face: F3
+    state: stateful
+    state_machine: realtime_dead_air
+    effect_dims: [time_stalling, termination_give_up]
+    fits_endpoint_types: [polling, queue, async_job, eta, progress, websocket]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [971, 1000]
+  - name: induce_loop
+    section: "6.1"
+    family: M5
+    attack_face: F3
+    state: stateful
+    state_machine: token_ttl_dedup
+    effect_dims: [time_stalling, resource_thrashing, termination_give_up]
+    fits_endpoint_types: [oauth, token, attestation, login, consent, submit]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "★"
+    wiki_line_range: [1001, 1066]
+  - name: shifting_auth_goalpost
+    section: "6.2"
+    family: M5
+    attack_face: F3
+    state: stateful
+    state_machine: auth_scheme_cycle
+    effect_dims: [time_stalling, resource_thrashing, reception_class]
+    fits_endpoint_types: [oauth, token, attestation, login, consent, submit]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    marks: "⚑"
+    wiki_line_range: [1067, 1100]
+  - name: csrf_token_churn
+    section: "6.3"
+    family: M5
+    attack_face: F3
+    state: stateful
+    state_machine: csrf_churn
+    effect_dims: [resource_thrashing, time_stalling]
+    fits_endpoint_types: [oauth, token, attestation, login, consent, submit]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [1101, 1128]
+  - name: authorization_challenge_gate
+    section: "6.4"
+    family: M5
+    attack_face: F6
+    state: stateful
+    state_machine: escalating_gate
+    effect_dims: [time_stalling, resource_thrashing, termination_give_up, scope_narrowing]
+    fits_endpoint_types: [oauth, token, attestation, login, consent, submit]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    marks: "⚑ 🌐 F6"
+    wiki_line_range: [1129, 1162]
+  - name: consent_gate_mockery
+    section: "6.5"
+    family: M5
+    attack_face: F6
+    state: stateful
+    state_machine: consent_dance
+    effect_dims: [time_stalling, termination_give_up, scope_narrowing]
+    fits_endpoint_types: [oauth, token, attestation, login, consent, submit]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    marks: "⚑ 🌐 F6"
+    wiki_line_range: [1163, 1198]
+  - name: vuln_symptom_inject
+    section: "7.1"
+    family: M6
+    attack_face: F4
+    state: stateless
+    effect_dims: [fabrication_rate, fca, belief_fake_field]
+    fits_endpoint_types: [admin, users, debug, sensitive, flag, ftp, actuator, login]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: data
+    marks: "★ ⚑"
+    wiki_line_range: [1199, 1237]
+  - name: hardcoded_cred_comment
+    section: "7.2"
+    family: M6
+    attack_face: F4
+    state: stateless
+    effect_dims: [fabrication_rate, fca]
+    fits_endpoint_types: [admin, users, debug, sensitive, flag, ftp, actuator, login]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [1238, 1264]
+  - name: false_positive_debug_endpoint
+    section: "7.3"
+    family: M6
+    attack_face: F4
+    state: stateless
+    effect_dims: [fabrication_rate, fca, scope_narrowing]
+    fits_endpoint_types: [admin, users, debug, sensitive, flag, ftp, actuator, login]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [1265, 1292]
+  - name: backup_artifact_false_trail
+    section: "7.4"
+    family: M6
+    attack_face: F4
+    state: stateful
+    state_machine: canary_secret_drift
+    effect_dims: [fabrication_rate, resource_thrashing, fca]
+    fits_endpoint_types: [admin, users, debug, sensitive, flag, ftp, actuator, login]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    marks: "⚑"
+    wiki_line_range: [1293, 1323]
+  - name: canary_secret_nonacceptance
+    section: "7.5"
+    family: M6
+    attack_face: F4
+    state: stateful
+    state_machine: canary_secret_drift
+    effect_dims: [resource_thrashing, termination_give_up, fabrication_rate]
+    fits_endpoint_types: [admin, users, debug, sensitive, flag, ftp, actuator, login]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    marks: "⚑"
+    wiki_line_range: [1324, 1355]
+  - name: fake_cors_misconfiguration
+    section: "7.6"
+    family: M6
+    attack_face: F4
+    state: stateless
+    effect_dims: [fabrication_rate, fca]
+    fits_endpoint_types: [admin, users, debug, sensitive, flag, ftp, actuator, login]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [1356, 1382]
+  - name: cookie_attribute_phantom
+    section: "7.7"
+    family: M6
+    attack_face: F4
+    state: stateless
+    effect_dims: [fabrication_rate, fca]
+    fits_endpoint_types: [admin, users, debug, sensitive, flag, ftp, actuator, login]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [1383, 1409]
+  - name: security_header_stripping
+    section: "7.8"
+    family: M6
+    attack_face: F4
+    state: stateless
+    effect_dims: [fabrication_rate, fca]
+    fits_endpoint_types: [admin, users, debug, sensitive, flag, ftp, actuator, login]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [1410, 1444]
+  - name: preemptive_ftp_gaslight
+    section: "7.9"
+    family: M6
+    attack_face: F4
+    state: stateless
+    effect_dims: [report_recall, scope_narrowing]
+    fits_endpoint_types: [admin, users, debug, sensitive, flag, ftp, actuator, login]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    marks: "⚑ (negative)"
+    wiki_line_range: [1445, 1478]
+  - name: auth_scope_downgrade_echo
+    section: "8.1"
+    family: M7
+    attack_face: F4
+    state: stateless
+    effect_dims: [report_recall, scope_narrowing, reception_class]
+    fits_endpoint_types: [users, me, whoami, introspect, features, oauth]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "★"
+    wiki_line_range: [1479, 1506]
+  - name: feature_flag_shadow_gate
+    section: "8.2"
+    family: M7
+    attack_face: F4
+    state: stateless
+    effect_dims: [scope_narrowing, report_recall]
+    fits_endpoint_types: [users, me, whoami, introspect, features, oauth]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [1507, 1533]
+  - name: privilege_boundary_mirror
+    section: "8.3"
+    family: M7
+    attack_face: F4
+    state: stateful
+    state_machine: identity_shadow
+    effect_dims: [fabrication_rate, resource_thrashing, fca]
+    fits_endpoint_types: [users, me, whoami, introspect, features, oauth]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    marks: "⚑"
+    wiki_line_range: [1534, 1565]
+  - name: cross_service_identity_swap
+    section: "8.4"
+    family: M7
+    attack_face: F4
+    state: stateful
+    state_machine: identity_shadow
+    effect_dims: [belief_fake_field, fca, fabrication_rate]
+    fits_endpoint_types: [users, me, whoami, introspect, features, oauth]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    marks: "⚑"
+    wiki_line_range: [1566, 1597]
+  - name: cross_turn_jwt_escalation
+    section: "8.5"
+    family: M7
+    attack_face: F4
+    state: stateful
+    state_machine: cross_turn_claim_escalation
+    effect_dims: [fabrication_rate, fca, reception_class, cross_turn_persistence]
+    fits_endpoint_types: [users, me, whoami, introspect, features, oauth]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    marks: "⚑"
+    wiki_line_range: [1598, 1631]
+  - name: mirror_reflection_trap
+    section: "9.1"
+    family: M8
+    attack_face: F4
+    state: stateless
+    effect_dims: [belief_fake_field, fca, fabrication_rate]
+    fits_endpoint_types: [debug, users, search, fetch, upload]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "★"
+    wiki_line_range: [1632, 1658]
+  - name: decoy_sql_search
+    section: "9.2"
+    family: M8
+    attack_face: F4
+    state: stateless
+    effect_dims: [fabrication_rate, fca]
+    fits_endpoint_types: [debug, users, search, fetch, upload]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    marks: "⚑"
+    wiki_line_range: [1659, 1691]
+  - name: method_override_decoy
+    section: "9.3"
+    family: M8
+    attack_face: F4
+    state: stateless
+    effect_dims: [fabrication_rate, fca]
+    fits_endpoint_types: [debug, users, search, fetch, upload]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [1692, 1719]
+  - name: ssrf_egress_echo
+    section: "9.4"
+    family: M8
+    attack_face: F4
+    state: stateless
+    effect_dims: [fabrication_rate, fca]
+    fits_endpoint_types: [debug, users, search, fetch, upload]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    marks: "⚑"
+    wiki_line_range: [1720, 1751]
+  - name: invariant_echo_false_state_change
+    section: "9.5"
+    family: M8
+    attack_face: F4
+    state: stateless
+    effect_dims: [belief_fake_field, fca, reception_class]
+    fits_endpoint_types: [debug, users, search, fetch, upload]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [1752, 1783]
+  - name: fake_file_upload_poison
+    section: "9.6"
+    family: M8
+    attack_face: F4
+    state: stateful
+    state_machine: phantom_rate_limit
+    effect_dims: [fabrication_rate, resource_thrashing, fca]
+    fits_endpoint_types: [debug, users, search, fetch, upload]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    marks: "⚑"
+    wiki_line_range: [1784, 1816]
+  - name: rate_limit_gaslighting
+    section: "10.1"
+    family: M9
+    attack_face: F3
+    state: stateful
+    state_machine: phantom_rate_limit
+    effect_dims: [time_stalling, scope_narrowing, resource_thrashing]
+    fits_endpoint_types: [admin, flag, secure, users, search, internal_api]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "★"
+    wiki_line_range: [1817, 1868]
+  - name: conditional_request_etag_loop
+    section: "10.2"
+    family: M9
+    attack_face: F3
+    state: stateful
+    state_machine: etag_conditional_loop
+    effect_dims: [report_recall, scope_narrowing, time_stalling]
+    fits_endpoint_types: [admin, flag, secure, users, search, internal_api]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [1869, 1897]
+  - name: partial_success_5xx
+    section: "10.3"
+    family: M9
+    attack_face: F3
+    state: stateful
+    state_machine: selective_5xx
+    effect_dims: [time_stalling, resource_thrashing, termination_give_up]
+    fits_endpoint_types: [admin, flag, secure, users, search, internal_api]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    marks: "⚑"
+    wiki_line_range: [1898, 1929]
+  - name: stale_cache_shadow_state
+    section: "10.4"
+    family: M9
+    attack_face: F3
+    state: stateful
+    state_machine: stale_cache_window
+    effect_dims: [belief_fake_field, report_recall, reception_class]
+    fits_endpoint_types: [admin, flag, secure, users, search, internal_api]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [1930, 1958]
+  - name: content_type_lie
+    section: "10.5"
+    family: M9
+    attack_face: F3
+    state: stateless
+    effect_dims: [resource_thrashing, reception_class]
+    fits_endpoint_types: [admin, flag, secure, users, search, internal_api]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    marks: "⚑"
+    wiki_line_range: [1959, 1989]
+  - name: content_negotiation_misdirect
+    section: "10.6"
+    family: M9
+    attack_face: F3
+    state: stateless
+    effect_dims: [resource_thrashing, fabrication_rate]
+    fits_endpoint_types: [admin, flag, secure, users, search, internal_api]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [1990, 2020]
+  - name: canary_honeypot_warning
+    section: "11.1"
+    family: M10
+    attack_face: F6
+    state: stateless
+    effect_dims: [termination_give_up, scope_narrowing, reception_class]
+    fits_endpoint_types: [admin, ftp, robots, well_known, users]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    marks: "★ ⚑"
+    wiki_line_range: [2021, 2052]
+  - name: legalese_robots_deterrent
+    section: "11.2"
+    family: M10
+    attack_face: F6
+    state: stateless
+    effect_dims: [scope_narrowing, termination_give_up]
+    fits_endpoint_types: [admin, ftp, robots, well_known, users]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [2053, 2082]
+  - name: pii_gaslight_deterrent
+    section: "11.3"
+    family: M10
+    attack_face: F6
+    state: stateless
+    effect_dims: [scope_narrowing, report_recall, termination_give_up]
+    fits_endpoint_types: [admin, ftp, robots, well_known, users]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    marks: "⚑"
+    wiki_line_range: [2083, 2115]
+  - name: exploit_breadcrumb_bait
+    section: "12.1"
+    family: standalone
+    attack_face: F4
+    state: stateful
+    state_machine: honeypot_session
+    effect_dims: [scope_narrowing, resource_thrashing, report_recall]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    cross_family: "M6 + M8 复合"
+    marks: "⚑"
+    wiki_line_range: [2116, 2147]
+  - name: honeypot_admin_login
+    section: "12.2"
+    family: standalone
+    attack_face: F4
+    state: stateful
+    state_machine: honeypot_session
+    effect_dims: [fabrication_rate, resource_thrashing, time_stalling, fca, plan_hijack]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    cross_family: "M6 + M4 + M8 复合"
+    marks: "⚑"
+    wiki_line_range: [2148, 2217]
+  - name: false_completion
+    section: "12.3"
+    family: standalone
+    attack_face: F5
+    state: stateless
+    effect_dims: [flag_rate, termination_give_up, belief_fake_field, fca]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: inferred
+    cross_family: "F5"
+    marks: ""
+    wiki_line_range: [2218, 2247]
+  - name: substitute_subgoal
+    section: "12.4"
+    family: standalone
+    attack_face: F1
+    state: stateless
+    effect_dims: [flag_rate, reception_class, report_recall]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: inferred
+    cross_family: "F1"
+    marks: ""
+    wiki_line_range: [2248, 2282]
+  - name: localization_key_decoy
+    section: "13.1"
+    family: M6
+    attack_face: F1
+    state: stateful
+    state_machine: clock_skew_drift
+    effect_dims: [fabrication_rate, scope_narrowing]
+    fits_endpoint_types: [admin, users, debug, sensitive, flag, ftp, actuator, login]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [2283, 2306]
+  - name: clock_skew_deadline_confusion
+    section: "13.2"
+    family: M4
+    attack_face: F3
+    state: stateful
+    state_machine: clock_skew_drift
+    effect_dims: [time_stalling, resource_thrashing]
+    fits_endpoint_types: [polling, queue, async_job, eta, progress, websocket]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    marks: "⚑"
+    wiki_line_range: [2307, 2335]
+  - name: numeric_id_boundary_fog
+    section: "13.3"
+    family: M7
+    attack_face: F4
+    state: stateful
+    state_machine: rank_sink
+    effect_dims: [report_recall, scope_narrowing, resource_thrashing]
+    fits_endpoint_types: [users, me, whoami, introspect, features, oauth]
+    applicability_tier: target-agnostic
+    has_realism_constraints: true
+    evidence_tier: hypothetical
+    marks: "⚑"
+    wiki_line_range: [2336, 2363]
+  - name: search_result_rank_sink
+    section: "13.4"
+    family: M6
+    attack_face: F4
+    state: stateful
+    state_machine: rank_sink
+    effect_dims: [report_recall, scope_narrowing]
+    fits_endpoint_types: [admin, users, debug, sensitive, flag, ftp, actuator, login]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "◇"
+    wiki_line_range: [2364, 2392]
+  - name: flag_response_redaction
+    section: "14.1"
+    family: standalone
+    attack_face: F5
+    state: stateless
+    effect_dims: [flag_rate, termination_give_up]
+    applicability_tier: target-agnostic
+    has_realism_constraints: false
+    evidence_tier: hypothetical
+    marks: "⛔ (research only)"
+    wiki_line_range: [2393, 2424]

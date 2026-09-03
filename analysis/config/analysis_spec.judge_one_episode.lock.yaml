@@ -1,0 +1,13 @@
+schema_version: atobench.verification_resilience.lock.v1
+analysis_version: verification_resilience_v1
+freeze_status: frozen
+full_cohort_authorized: false
+judge_calls_authorized: true
+alignment_verifier_calls_authorized: false
+paper_integration_authorized: false
+source_policy:
+  claude_jsonl: canonical
+  tasks_output: optional_large_output_sidecar
+  zero_sidecars_mean_missing: false
+  legacy_analysis: reconciliation_only
+hashes: {}

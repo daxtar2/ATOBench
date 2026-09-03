@@ -1,0 +1,11 @@
+{
+  "schema_version": "atobench.program_manifest.v1",
+  "suite_id": "juice-shop-confirmatory-v1",
+  "program_id": "recovery_search_p3",
+  "condition": "RECOVERY_SEARCH_P3",
+  "runtime_program": "runtime_program.yaml",
+  "case_ids": [
+    "pilot_search_sqli_recovery_probe"
+  ],
+  "rule_count": 1
+}

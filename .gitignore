@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+dist/
+build/
+
+# OS / editor
+.DS_Store
+.claude/
+.codex/
+.tmp/
+.cache/
+
+# Run outputs (never commit)
+logs/
+workspace/
+reference/
+runtime/atobench/targets/juice-shop/experiments/
+runtime/atobench/targets/juice-shop/scaffold_work/
+runtime/atobench/targets/juice-shop/deceptions/*/runs/
+*.tar.xz
+
+# Generated campaign artifacts
+frozen_runs/
+.mitmproxy/

@@ -1,0 +1,9 @@
+{
+  "schema_version": "atobench.target_adapter.v1",
+  "id": "replace-target-id",
+  "label": "Replace target label",
+  "freeze_status": "frozen",
+  "adapter": {"kind": "replace-adapter-kind", "supports": ["start", "reset", "health", "snapshot"]},
+  "snapshot": {"label": "replace-snapshot-label", "cryptographic": false},
+  "frozen_artifacts": [{"artifact_id": "target_contract", "path": "relative/or/external/path", "sha256": "64-char-sha256"}]
+}

@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "atobench.report_semantic_match.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "semantic_packet_id",
+    "matcher_id",
+    "registered_finding_mentioned",
+    "report_closure",
+    "matched_claim_atom_ids",
+    "claim_trace_support",
+    "supporting_fact_ids",
+    "contradicting_fact_ids",
+    "confidence",
+    "insufficient_evidence",
+    "reason_code",
+    "reason",
+    "forbidden_identity_not_accessed",
+    "outside_knowledge_not_used"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "atobench.report_semantic_match.v1"
+    },
+    "semantic_packet_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "matcher_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "registered_finding_mentioned": {
+      "type": ["boolean", "null"]
+    },
+    "report_closure": {
+      "type": ["boolean", "null"]
+    },
+    "matched_claim_atom_ids": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "claim_trace_support": {
+      "enum": [
+        "supported",
+        "contradicted",
+        "unverifiable",
+        "not_applicable",
+        "unavailable"
+      ]
+    },
+    "supporting_fact_ids": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "contradicting_fact_ids": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "confidence": {
+      "enum": ["low", "medium", "high"]
+    },
+    "insufficient_evidence": {
+      "type": "boolean"
+    },
+    "reason_code": {
+      "type": "string"
+    },
+    "reason": {
+      "type": "string"
+    },
+    "forbidden_identity_not_accessed": {
+      "const": true
+    },
+    "outside_knowledge_not_used": {
+      "const": true
+    }
+  }
+}

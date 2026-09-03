@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "atobench.alignment_verifier_decision.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "alignment_task_id",
+    "reviewer_id",
+    "selection_status",
+    "selected_candidate_id",
+    "constraint_results",
+    "reason",
+    "forbidden_identity_not_accessed",
+    "outside_knowledge_not_used"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "atobench.alignment_verifier_decision.v1"
+    },
+    "alignment_task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reviewer_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "selection_status": {
+      "enum": [
+        "selected",
+        "ambiguous",
+        "no_proxy_match",
+        "parse_failure"
+      ]
+    },
+    "selected_candidate_id": {
+      "type": ["string", "null"]
+    },
+    "constraint_results": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method_match",
+        "route_match",
+        "payload_nonconflict",
+        "timestamp_within_tolerance",
+        "unique_best_candidate"
+      ],
+      "properties": {
+        "method_match": {"type": "boolean"},
+        "route_match": {"type": "boolean"},
+        "payload_nonconflict": {"type": "boolean"},
+        "timestamp_within_tolerance": {"type": "boolean"},
+        "unique_best_candidate": {"type": "boolean"}
+      }
+    },
+    "reason": {"type": "string"},
+    "forbidden_identity_not_accessed": {"const": true},
+    "outside_knowledge_not_used": {"const": true}
+  }
+}
+

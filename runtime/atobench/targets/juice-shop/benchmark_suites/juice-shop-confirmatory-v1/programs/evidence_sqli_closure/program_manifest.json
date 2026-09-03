@@ -1,0 +1,12 @@
+{
+  "schema_version": "atobench.program_manifest.v1",
+  "suite_id": "juice-shop-confirmatory-v1",
+  "program_id": "evidence_sqli_closure",
+  "condition": "EVIDENCE_SQLI_CLOSURE",
+  "runtime_program": "runtime_program.yaml",
+  "case_ids": [
+    "round4_auth_sqli_login_plain_auth_error",
+    "round4_product_search_literal_no_results"
+  ],
+  "rule_count": 2
+}

@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atobench.local/schema/leaderboard_agent_campaign_input.json",
+  "title": "ATOBench leaderboard agent campaign input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "benchmark_id",
+    "benchmark_version",
+    "agent_stack",
+    "qualification_policy",
+    "units"
+  ],
+  "properties": {
+    "schema_version": {"const": "atobench.leaderboard_agent_campaign_input.v1"},
+    "benchmark_id": {"type": "string", "minLength": 1},
+    "benchmark_version": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string"},
+    "agent_stack": {"$ref": "#/$defs/agent_stack"},
+    "qualification_policy": {"$ref": "#/$defs/qualification_policy"},
+    "provenance": {"type": "object", "additionalProperties": true},
+    "units": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/unit"}
+    }
+  },
+  "$defs": {
+    "nullable_boolean": {"type": ["boolean", "null"]},
+    "nullable_number": {"type": ["number", "null"]},
+    "agent_stack": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stack_id", "model_backend", "carrier", "harness"],
+      "properties": {
+        "stack_id": {"type": "string", "minLength": 1},
+        "display_name": {"type": "string"},
+        "model_backend": {"type": "string", "minLength": 1},
+        "provider": {"type": ["string", "null"]},
+        "route": {"type": ["string", "null"]},
+        "model_revision": {"type": ["string", "null"]},
+        "carrier": {"type": "string", "minLength": 1},
+        "carrier_revision": {"type": ["string", "null"]},
+        "harness": {"type": "string", "minLength": 1},
+        "harness_hash": {"type": ["string", "null"]},
+        "tool_schema_hash": {"type": ["string", "null"]},
+        "budget_profile": {"type": ["string", "null"]}
+      }
+    },
+    "qualification_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "minimum_valid_pairs_per_unit",
+        "minimum_opportunity_rate",
+        "minimum_clean_capability_rate",
+        "minimum_contact_rate",
+        "require_all_units_for_macro"
+      ],
+      "properties": {
+        "minimum_valid_pairs_per_unit": {"type": "integer", "minimum": 1},
+        "minimum_opportunity_rate": {"type": "number", "minimum": 0, "maximum": 1},
+        "minimum_clean_capability_rate": {"type": "number", "minimum": 0, "maximum": 1},
+        "minimum_contact_rate": {"type": "number", "minimum": 0, "maximum": 1},
+        "require_all_units_for_macro": {"type": "boolean"}
+      }
+    },
+    "condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["episode_id", "valid", "eligible", "report_closure"],
+      "properties": {
+        "episode_id": {"type": "string", "minLength": 1},
+        "valid": {"type": "boolean"},
+        "eligible": {"type": "boolean"},
+        "report_closure": {"$ref": "#/$defs/nullable_boolean"}
+      }
+    },
+    "treatment_condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["episode_id", "valid", "eligible", "report_closure", "contact"],
+      "properties": {
+        "episode_id": {"type": "string", "minLength": 1},
+        "valid": {"type": "boolean"},
+        "eligible": {"type": "boolean"},
+        "report_closure": {"$ref": "#/$defs/nullable_boolean"},
+        "contact": {"$ref": "#/$defs/nullable_boolean"},
+        "behavioral_influence": {"$ref": "#/$defs/nullable_boolean"},
+        "recovery_after_influence": {"$ref": "#/$defs/nullable_boolean"},
+        "native_contradiction": {"$ref": "#/$defs/nullable_boolean"},
+        "capability_demonstrated": {"$ref": "#/$defs/nullable_boolean"},
+        "strict_artifact_use": {"$ref": "#/$defs/nullable_boolean"},
+        "mission_continuation": {"$ref": "#/$defs/nullable_boolean"},
+        "budget_waste": {"$ref": "#/$defs/nullable_number"}
+      }
+    },
+    "pair": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pair_id", "c0", "c1"],
+      "properties": {
+        "pair_id": {"type": "string", "minLength": 1},
+        "c0": {"$ref": "#/$defs/condition"},
+        "c1": {"$ref": "#/$defs/treatment_condition"},
+        "metadata": {"type": "object", "additionalProperties": true}
+      }
+    },
+    "unit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unit_id",
+        "aom_id",
+        "ground_truth_id",
+        "primary_report_endpoint",
+        "required_for_macro",
+        "pairs"
+      ],
+      "properties": {
+        "unit_id": {"type": "string", "minLength": 1},
+        "aom_id": {"type": "string", "minLength": 1},
+        "ground_truth_id": {"type": "string", "minLength": 1},
+        "primary_report_endpoint": {"type": "string", "minLength": 1},
+        "required_for_macro": {"type": "boolean"},
+        "metric_contract": {"type": "object", "additionalProperties": true},
+        "pairs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/pair"}
+        }
+      }
+    }
+  }
+}

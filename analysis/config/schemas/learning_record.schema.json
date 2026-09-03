@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atobench.local/schemas/learning_record.v1.json",
+  "title": "ATOBench LearningRecord v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "record_id",
+    "view",
+    "identity",
+    "environment",
+    "split",
+    "provenance",
+    "training"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "atobench.learning_record.v1"
+    },
+    "record_id": {
+      "type": "string",
+      "minLength": 8
+    },
+    "view": {
+      "enum": [
+        "episode_summary",
+        "process_label",
+        "counterfactual_pair"
+      ]
+    },
+    "identity": {
+      "type": "object"
+    },
+    "environment": {
+      "type": "object",
+      "required": [
+        "target_id",
+        "target_snapshot_id",
+        "target_snapshot_is_cryptographic"
+      ],
+      "properties": {
+        "target_id": {
+          "type": "string"
+        },
+        "target_snapshot_id": {
+          "type": "string"
+        },
+        "target_snapshot_is_cryptographic": {
+          "type": "boolean"
+        }
+      }
+    },
+    "split": {
+      "type": "object",
+      "required": [
+        "name",
+        "group_id",
+        "group_basis",
+        "scope",
+        "cross_target_generalization"
+      ],
+      "properties": {
+        "name": {
+          "enum": [
+            "train",
+            "validation",
+            "test"
+          ]
+        },
+        "group_id": {
+          "type": "string"
+        },
+        "group_basis": {
+          "const": "target_snapshot+aou+unit_id+block_id"
+        },
+        "scope": {
+          "const": "within_target_block_holdout"
+        },
+        "cross_target_generalization": {
+          "const": false
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "raw_paths_removed",
+        "hidden_chain_of_thought_included"
+      ],
+      "properties": {
+        "raw_paths_removed": {
+          "const": true
+        },
+        "hidden_chain_of_thought_included": {
+          "const": false
+        }
+      }
+    },
+    "training": {
+      "type": "object"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "view": {
+            "const": "process_label"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "label"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "view": {
+            "const": "episode_summary"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "condition",
+          "outcomes",
+          "measurements",
+          "process_labels"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "view": {
+            "const": "counterfactual_pair"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "pairing",
+          "transitions",
+          "preference_candidates"
+        ]
+      }
+    }
+  ],
+  "additionalProperties": true
+}

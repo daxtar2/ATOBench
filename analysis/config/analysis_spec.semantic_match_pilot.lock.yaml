@@ -1,0 +1,17 @@
+schema_version: atobench.verification_resilience.semantic_match_lock.v1
+analysis_version: verification_resilience_v1
+freeze_status: frozen
+semantic_match_calls_authorized: true
+judge_calls_authorized: false
+alignment_verifier_calls_authorized: false
+packet_build_authorized: true
+pilot_selection_authorized: true
+offline_validation_authorized: true
+expected_full_episode_count: 430
+expected_pilot_pair_count: 12
+expected_pilot_episode_count: 24
+base_calls_per_episode: 2
+adjudication_policy: semantic_disagreement_only
+max_attempts_per_role: 2
+paper_integration_authorized: false
+hashes: {}

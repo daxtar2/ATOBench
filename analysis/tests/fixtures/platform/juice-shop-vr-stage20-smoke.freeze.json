@@ -1,0 +1,134 @@
+{
+  "binding": {
+    "aou_ids": [
+      "sqli-evidence-closure-v3",
+      "basket-scope-closure-v3_1",
+      "jwt-hash-suppression-v3_1"
+    ],
+    "artifacts": {
+      "aous": {
+        "basket-scope-closure-v3_1": [
+          {
+            "artifact_id": "experiment_contract",
+            "declared_path": "../runtime/atobench/examples/experiments/protocol_v3/juice-shop-protocol-v3_1-basket.yaml",
+            "external_by_design": true,
+            "sha256": "d8c450b7db43a11c6f9839f27eaa703e4088a76f2da0058abed24a551c055c11"
+          },
+          {
+            "artifact_id": "c1_runtime_program",
+            "declared_path": "../runtime/atobench/targets/juice-shop/aou_expansion_v0/programs/basket_scope_closure_persistent_k2/c1_treatment_runtime_program.yaml",
+            "external_by_design": true,
+            "sha256": "556b541e0e713f596c991666ec53208ff0ee1f7b22e7f38a46b9b6ceb62274f2"
+          }
+        ],
+        "jwt-hash-suppression-v3_1": [
+          {
+            "artifact_id": "experiment_contract",
+            "declared_path": "../runtime/atobench/examples/experiments/protocol_v3/juice-shop-protocol-v3_1-jwt.yaml",
+            "external_by_design": true,
+            "sha256": "6e6989f672e54283b202ae731f73bd595c25615f94150ceec0c1a60e45e5627b"
+          },
+          {
+            "artifact_id": "c1_runtime_program",
+            "declared_path": "../runtime/atobench/targets/juice-shop/aou_expansion_v0/programs/jwt_hash_suppression/runtime_program.yaml",
+            "external_by_design": true,
+            "sha256": "ed5de6857fdb98a5126aeebc624c95a8a78c3b41e91257b053e5c7fbeed382aa"
+          }
+        ],
+        "sqli-evidence-closure-v3": [
+          {
+            "artifact_id": "experiment_contract",
+            "declared_path": "../runtime/atobench/examples/experiments/protocol_v3/juice-shop-protocol-v3-sqli.yaml",
+            "external_by_design": true,
+            "sha256": "ee7dc319910c6be31ee6223505f30ceeeb6afda1b8af75b46057ce32e935a36b"
+          },
+          {
+            "artifact_id": "c1_runtime_program",
+            "declared_path": "../runtime/atobench/targets/juice-shop/benchmark_suites/juice-shop-confirmatory-v1/programs/evidence_sqli_closure/runtime_program.yaml",
+            "external_by_design": true,
+            "sha256": "04060595a6d60e5eefe90935fce4ac3d03bddb21142ab5638c31c80f716868f1"
+          }
+        ]
+      },
+      "campaign": [
+        {
+          "artifact_id": "legacy_runner",
+          "declared_path": "../runtime/atobench/scripts/atobench-cross-model",
+          "external_by_design": true,
+          "sha256": "b4e90e902c5d4f2244057b6a2960074ad76ee95d4356c8ef36efc46e44d6cc6e"
+        },
+        {
+          "artifact_id": "legacy_runner_protocol",
+          "declared_path": "../runtime/atobench/experiment/cross_model_protocol.py",
+          "external_by_design": true,
+          "sha256": "821d7dbb81d1814e47428d0487e309d635286804d329d76e4056ccea8f134833"
+        }
+      ],
+      "profile": [],
+      "target": [
+        {
+          "artifact_id": "target_state_contract",
+          "declared_path": "../runtime/atobench/targets/juice-shop/protocol_v3/target_state_contract.yaml",
+          "external_by_design": true,
+          "sha256": "f402059dfdb78531c4fdbe40fffacd0c3cb957fdfa163c7b541035cd94da53e6"
+        },
+        {
+          "artifact_id": "target_compose",
+          "declared_path": "../runtime/atobench/targets/juice-shop/docker-compose.yml",
+          "external_by_design": true,
+          "sha256": "3a4fb655f9d620170949059ed92d1760aac490bd05969ea3734d6dfc8e365f17"
+        }
+      ]
+    },
+    "campaign_id": "juice-shop-vr-stage20-smoke",
+    "manifest_hashes": {
+      "aous": {
+        "basket-scope-closure-v3_1": "46288577a22074f5fe7d4d92af65b9863fc5086183bf0e3a5bdad1f4f25b3653",
+        "jwt-hash-suppression-v3_1": "4b4febf0fdb23c2e63edc6c8cadcb4682ed5a9b81525b4a41eff4a47fa44872e",
+        "sqli-evidence-closure-v3": "64c7df86dadfd452d32379fde2cfd530051f3837817f6bb16533b0c39cedf366"
+      },
+      "campaign": "be79c826ce46264a9649df692997371113e06e08dffb6125765bc037eb624224",
+      "profile": "2d3ca116c59781ab974514ce0b0580a1ce5045806c1d1a3347c8ed18e464e89f",
+      "target": "bc291de3e40e1ca3ef169d8c11aaed7ccf22dfc9a8680fea6d573c4c34454926"
+    },
+    "model_calls_made": 0,
+    "network_accessed": false,
+    "profile_id": "verification-resilience-stage20",
+    "registry_sha256": "af060d4df25a0339db71d5594f11620f9ea5dd101e6da8069bc9f24ca3f4db2d",
+    "schema_version": "atobench.platform_validation.v1",
+    "status": "PASS_FROZEN_BINDING",
+    "target_id": "juice-shop-protocol-v3"
+  },
+  "campaign_id": "juice-shop-vr-stage20-smoke",
+  "command": [
+    "../runtime/atobench/scripts/atobench-cross-model",
+    "--campaign-id",
+    "juice-shop-vr-stage20-smoke",
+    "--rounds",
+    "1",
+    "--models",
+    "gpt-5.5",
+    "--aous",
+    "sqli",
+    "basket",
+    "jwt",
+    "--parallel-workers",
+    "1",
+    "--continue-on-error",
+    "--start-target",
+    "--agent-timeout-multiplier",
+    "1.5"
+  ],
+  "execution_performed": false,
+  "lock_id": "plock_beb62e690c61ecc19c0c",
+  "model_calls_made": 0,
+  "network_accessed": false,
+  "runner": {
+    "adapter": "atobench-cross-model-v1",
+    "entrypoint": "../runtime/atobench/scripts/atobench-cross-model",
+    "entrypoint_sha256": "b4e90e902c5d4f2244057b6a2960074ad76ee95d4356c8ef36efc46e44d6cc6e",
+    "module": "atobench.experiment.cross_model_protocol"
+  },
+  "schema_version": "atobench.platform_freeze.v1",
+  "status": "FROZEN_PLAN_ONLY"
+}

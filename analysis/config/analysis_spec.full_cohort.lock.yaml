@@ -1,0 +1,22 @@
+schema_version: atobench.verification_resilience.lock.v1
+analysis_version: verification_resilience_v1
+freeze_status: frozen
+engineering_pilot_authorized: true
+full_cohort_authorized: true
+judge_calls_authorized: true
+alignment_verifier_calls_authorized: false
+paper_integration_authorized: false
+measurement_resolution:
+  verification_control: retain_numeric_diagnostic
+  stop_decision: descriptor_first_numeric_demoted
+  report_grounding: retain_numeric_keep_band_definitions_demote_band_agreement_gate
+  report_grounding_primary_reliability_view: score_proximity
+source_policy:
+  claude_jsonl: canonical
+  tasks_output: optional_large_output_sidecar
+  zero_sidecars_mean_missing: false
+  legacy_analysis: reconciliation_only
+execution_scope:
+  stage: full_cohort_judge_analysis
+  paper_facing_results_authorized: false
+hashes: {}

@@ -1,0 +1,153 @@
+{
+  "schema_version": "atobench.verification_resilience.project_status.v1",
+  "release": "standalone-v1.6-runner-dependency-locking",
+  "status": "READY",
+  "canonical_analysis": {
+    "source_stage": "20_jwt_semantic_contract_repair_v1",
+    "episode_count": 450,
+    "pair_count": 225,
+    "model_count": 5,
+    "aou_count": 3,
+    "aous": [
+      "basket",
+      "jwt",
+      "sqli"
+    ],
+    "jwt_contract": "password-hash exposure in a decodable successful-login JWT",
+    "statistics_status": "PASS_INTERNAL_STATISTICS_AUDIT",
+    "paper_integration_authorized": false
+  },
+  "included": {
+    "framework_source": true,
+    "tests": true,
+    "frozen_configs_and_rubrics": true,
+    "latest_lightweight_cohort": true,
+    "latest_statistics_and_result_facts": true,
+    "latest_trajectory_results": true,
+    "learning_record_v1_candidate_export": true,
+    "learning_transition_v1_candidate_export": true,
+    "transition_audit_packet_selection_v1": true,
+    "generic_target_aou_profile_campaign_scaffold": true,
+    "juice_shop_legacy_runner_plan_bridge": true,
+    "guarded_execution_handoff_and_receipt": true,
+    "frozen_campaign_initializer": true
+  },
+  "external_by_design": {
+    "raw_agent_sessions": true,
+    "raw_campaign_directories": true,
+    "http_event_corpora": true,
+    "graph_nodes_jsonl": true,
+    "legacy_replacement_workspaces": true
+  },
+  "verification": {
+    "doctor": "PASS",
+    "offline_smoke": "PASS",
+    "python_compileall": "PASS",
+    "reference_statistics_reproduction": "PASS_10_OF_10_HASH_MATCH",
+    "tests": "PASS_117_OF_117",
+    "notes": [
+      "117 tests passed after v1.6 runner-dependency locking and budget-bridge changes",
+      "The complete suite was run outside the sandbox because three multiprocessing tests require macOS semaphore/socket creation"
+    ]
+  },
+  "research_direction": {
+    "positioning": "evidence-grounded trajectory compiler and learning-data infrastructure for cyber agents and adaptive defenders",
+    "current": "LearningRecord/transition data plane plus a manifest-driven Target/AOU/Profile/Campaign scaffold with runner-dependency locking, guarded legacy-runner execution and explicit invalid-run receipts",
+    "next": "select a currently routable model selector, create a new campaign rather than reusing invalid provider-route attempts, then freeze/prepare/execute it before human transition review, fact-to-turn linkage, AOU-specific reward mapping and downstream validation",
+    "rl_ready_today": false
+  },
+  "learning_data_v1": {
+    "status": "CANDIDATE_EXPORT_NOT_RL_READY",
+    "all_records": 8845,
+    "episode_records": 450,
+    "process_label_records": 8170,
+    "counterfactual_pair_records": 225,
+    "verifiable_process_label_candidates": 2338,
+    "pairs_with_preference_candidates": 102,
+    "split_group_count": 45,
+    "split_group_leakage_count": 0,
+    "absolute_path_leakage_count": 0,
+    "residual_sensitive_record_count": 0,
+    "hidden_chain_of_thought_included": false,
+    "numeric_reward_assigned": false,
+    "byte_identical_replay": "PASS_7_OF_7_OUTPUTS"
+  },
+  "learning_transitions_v1": {
+    "status": "CANDIDATE_EXPORT_NOT_DIRECT_RL_READY",
+    "transition_records": 23377,
+    "episodes_with_transitions": 450,
+    "graph_nodes_processed": 133308,
+    "split_group_count": 45,
+    "split_group_leakage_count": 0,
+    "absolute_path_leakage_count": 0,
+    "residual_sensitive_record_count": 0,
+    "request_and_response_values_included": false,
+    "identity_and_resource_values_included": false,
+    "hidden_chain_of_thought_included": false,
+    "generic_reward_assigned": false,
+    "direct_offline_rl_ready": false,
+    "byte_identical_replay": "PASS_5_OF_5_OUTPUTS"
+  },
+  "transition_audit_packets_v1": {
+    "status": "AWAITING_HUMAN_REVIEW",
+    "packet_count": 60,
+    "sample_per_aou_condition_stratum": 8,
+    "supplemental_coverage": [
+      "native_observation",
+      "evidence_event",
+      "intervention_event",
+      "target_aou_contact"
+    ],
+    "free_text_collected": false,
+    "reviewer_identity_collected": false,
+    "residual_sensitive_packet_count": 0,
+    "human_review_completed": false,
+    "byte_identical_replay": "PASS_4_OF_4_OUTPUTS"
+  },
+  "platform_scaffold_v1": {
+    "status": "CAMPAIGN_INITIALIZER_READY",
+    "registry_schema": "atobench.platform_registry.v1",
+    "target_count": 1,
+    "aou_count": 3,
+    "profile_count": 1,
+    "campaign_count": 4,
+    "current_target": "juice-shop-protocol-v3",
+    "current_campaign": "juice-shop-vr-stage20-smoke",
+    "prepared_campaign": {
+      "id": "juice-shop-glm52-t1-r1",
+      "status": "PARTIAL_COLLECTION_COMPLETE",
+      "freeze_lock": "workspace/platform-locks/juice-shop-glm52-t1-r1.freeze.json",
+      "handoff": "workspace/guarded-runs/juice-shop-glm52-t1-r1/execution_handoff.json",
+      "max_tool_calls": 60,
+      "execution_performed": true,
+      "planned_episode_count": 6,
+      "valid_episode_count": 5,
+      "complete_c0_c1_pairs": ["sqli", "jwt"],
+      "invalid_pair": "basket: C0 PARSE_FAIL; C1 completed",
+      "failure_class": "one Basket C0 Claude stream lacked a terminal JSON result event",
+      "analysis_eligible": false,
+      "analysis_eligibility_note": "The partial one-block collection is not a Stage-20 canonical cohort; retain SQLi/JWT as trace-valid pilot material and Basket C0/C1 as incomplete."
+    },
+    "runner_adapter": "atobench-cross-model-v1",
+    "platform_to_legacy_aou_mapping": {
+      "sqli-evidence-closure-v3": "sqli",
+      "basket-scope-closure-v3_1": "basket",
+      "jwt-hash-suppression-v3_1": "jwt"
+    },
+    "external_artifact_hash_validation": "PASS",
+    "external_artifact_authorization_required": true,
+    "campaign_initializer": "init-campaign validates registered frozen component artifacts and all loaded atobench-cross-model sources; default is unregistered and --register is required to mutate registry",
+    "execution_performed": false,
+    "real_execution_enabled": true,
+    "real_execution_requires": [
+      "current freeze lock",
+      "current external artifact validation",
+      "prepared execution handoff",
+      "allow-external-artifacts",
+      "allow-real-execution"
+    ],
+    "receipt_captures_stdout_or_agent_content": false,
+    "receipt_captures_raw_credentials": false,
+    "byte_identical_freeze_replay": "PASS_1_OF_1_OUTPUT"
+  }
+}

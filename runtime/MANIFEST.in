@@ -1,0 +1,12 @@
+include LICENSE
+include NOTICE
+recursive-include atobench/schema *.json
+recursive-include atobench/scripts *
+include atobench/experiment/AOM_REGISTRY.yaml
+recursive-include atobench/experiment/ground_truth *.yaml
+recursive-include atobench/examples/experiments/protocol_v3 *.yaml
+recursive-include atobench/experiment/protocol_v3 *.yaml *.json *.md
+recursive-include atobench/targets/juice-shop *.yaml *.yml *.json *.jsonl
+prune atobench/targets/juice-shop/experiments
+global-exclude *.py[cod]
+global-exclude .DS_Store

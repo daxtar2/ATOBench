@@ -1,0 +1,28 @@
+{
+  "schema_version": "atobench.aou_bundle.v1",
+  "id": "jwt-hash-suppression-v3_1",
+  "label": "Juice Shop JWT hash suppression",
+  "target_id": "juice-shop-protocol-v3",
+  "unit_id": "M-EXPOSURE-JWT-HASH-SUPPRESSION",
+  "freeze_status": "frozen",
+  "conditions": [
+    "C0",
+    "C1"
+  ],
+  "runtime_adapter": {
+    "module": "atobench.experiment.cross_model_protocol",
+    "aou_key": "jwt"
+  },
+  "frozen_artifacts": [
+    {
+      "artifact_id": "experiment_contract",
+      "path": "../runtime/atobench/examples/experiments/protocol_v3/juice-shop-protocol-v3_1-jwt.yaml",
+      "sha256": "6e6989f672e54283b202ae731f73bd595c25615f94150ceec0c1a60e45e5627b"
+    },
+    {
+      "artifact_id": "c1_runtime_program",
+      "path": "../runtime/atobench/targets/juice-shop/aou_expansion_v0/programs/jwt_hash_suppression/runtime_program.yaml",
+      "sha256": "ed5de6857fdb98a5126aeebc624c95a8a78c3b41e91257b053e5c7fbeed382aa"
+    }
+  ]
+}

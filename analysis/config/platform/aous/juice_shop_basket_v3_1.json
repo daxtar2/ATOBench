@@ -1,0 +1,28 @@
+{
+  "schema_version": "atobench.aou_bundle.v1",
+  "id": "basket-scope-closure-v3_1",
+  "label": "Juice Shop basket-scope closure",
+  "target_id": "juice-shop-protocol-v3",
+  "unit_id": "M-AUTHZ-BASKET-SCOPE-CLOSURE-PERSISTENT-K2",
+  "freeze_status": "frozen",
+  "conditions": [
+    "C0",
+    "C1"
+  ],
+  "runtime_adapter": {
+    "module": "atobench.experiment.cross_model_protocol",
+    "aou_key": "basket"
+  },
+  "frozen_artifacts": [
+    {
+      "artifact_id": "experiment_contract",
+      "path": "../runtime/atobench/examples/experiments/protocol_v3/juice-shop-protocol-v3_1-basket.yaml",
+      "sha256": "d8c450b7db43a11c6f9839f27eaa703e4088a76f2da0058abed24a551c055c11"
+    },
+    {
+      "artifact_id": "c1_runtime_program",
+      "path": "../runtime/atobench/targets/juice-shop/aou_expansion_v0/programs/basket_scope_closure_persistent_k2/c1_treatment_runtime_program.yaml",
+      "sha256": "556b541e0e713f596c991666ec53208ff0ee1f7b22e7f38a46b9b6ceb62274f2"
+    }
+  ]
+}

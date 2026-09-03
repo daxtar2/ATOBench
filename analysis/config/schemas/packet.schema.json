@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "packet_id", "packet_schema_version", "episode_pseudonym", "aou",
+    "dimension", "input_fact_ids", "input_message_ids", "input_event_ids",
+    "packet_sha256", "redaction_version", "prompt_version"
+  ],
+  "properties": {
+    "dimension": {"enum": ["verification_control", "stop_decision", "report_grounding"]},
+    "condition": false,
+    "model": false,
+    "pair_id": false,
+    "campaign_id": false
+  }
+}
+

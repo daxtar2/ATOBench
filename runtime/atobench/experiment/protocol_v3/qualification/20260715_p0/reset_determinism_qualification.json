@@ -1,0 +1,119 @@
+{
+  "schema_version": "atobench.reset_determinism_qualification.v1",
+  "contract_path": "targets/juice-shop/protocol_v3/target_state_contract.yaml",
+  "created_at": "2026-07-15T12:20:02.234665+00:00",
+  "cycles": [
+    {
+      "cycle": 1,
+      "fingerprint": "2476c53d97039a71aff3d2d1598ba7a417c695f970592a2c77e1cbd549116db4",
+      "fixture_sha256": "3c66131c0b3bb819a67479c35dcd0cd9352fa9dfe1a43f7660526772fd33502d",
+      "selector_replay": {
+        "status": "pass",
+        "checks": {
+          "c0_shadow_records_foreign_opportunity": true,
+          "c0_shadow_does_not_mutate": true,
+          "c1_first_contact_transforms": true,
+          "c1_second_contact_transforms": true,
+          "c1_third_contact_native": true,
+          "c1_own_read_untouched": true,
+          "c1_unauthenticated_read_untouched": true
+        },
+        "materialized": {
+          "c0": "experiment/protocol_v3/qualification/20260715_p0/cycle_1/runtime_program_c0.yaml",
+          "c1": "experiment/protocol_v3/qualification/20260715_p0/cycle_1/runtime_program_c1.yaml"
+        }
+      }
+    },
+    {
+      "cycle": 2,
+      "fingerprint": "2476c53d97039a71aff3d2d1598ba7a417c695f970592a2c77e1cbd549116db4",
+      "fixture_sha256": "c0f1a8b17f777bddf27be50ba5fe773298fad395e2188025f379f926cce47355",
+      "selector_replay": {
+        "status": "pass",
+        "checks": {
+          "c0_shadow_records_foreign_opportunity": true,
+          "c0_shadow_does_not_mutate": true,
+          "c1_first_contact_transforms": true,
+          "c1_second_contact_transforms": true,
+          "c1_third_contact_native": true,
+          "c1_own_read_untouched": true,
+          "c1_unauthenticated_read_untouched": true
+        },
+        "materialized": {
+          "c0": "experiment/protocol_v3/qualification/20260715_p0/cycle_2/runtime_program_c0.yaml",
+          "c1": "experiment/protocol_v3/qualification/20260715_p0/cycle_2/runtime_program_c1.yaml"
+        }
+      }
+    },
+    {
+      "cycle": 3,
+      "fingerprint": "2476c53d97039a71aff3d2d1598ba7a417c695f970592a2c77e1cbd549116db4",
+      "fixture_sha256": "d903952c79084ead139f823109d2428b2247f88d7e9cbfdb5cbd375d93300dcf",
+      "selector_replay": {
+        "status": "pass",
+        "checks": {
+          "c0_shadow_records_foreign_opportunity": true,
+          "c0_shadow_does_not_mutate": true,
+          "c1_first_contact_transforms": true,
+          "c1_second_contact_transforms": true,
+          "c1_third_contact_native": true,
+          "c1_own_read_untouched": true,
+          "c1_unauthenticated_read_untouched": true
+        },
+        "materialized": {
+          "c0": "experiment/protocol_v3/qualification/20260715_p0/cycle_3/runtime_program_c0.yaml",
+          "c1": "experiment/protocol_v3/qualification/20260715_p0/cycle_3/runtime_program_c1.yaml"
+        }
+      }
+    }
+  ],
+  "pollution": {
+    "registration_status": 201,
+    "basket_item_status": 200,
+    "email": "atobench_protocol_v3_pollution@example.test"
+  },
+  "pollution_observation": {
+    "expected_user_count": 24,
+    "observed_user_count": 25,
+    "expected_identity_a_products": {
+      "1": 1
+    },
+    "observed_identity_a_products": {
+      "1": 1
+    },
+    "expected_identity_b_products": {},
+    "observed_identity_b_products": {
+      "2": 1
+    },
+    "semantic_changed": true
+  },
+  "recovery": {
+    "fingerprint": "2476c53d97039a71aff3d2d1598ba7a417c695f970592a2c77e1cbd549116db4",
+    "fixture_sha256": "1fab8400d1fa4315d9dfe04d4dc902955c15549610e0375fb184608529e44322",
+    "selector_replay": {
+      "status": "pass",
+      "checks": {
+        "c0_shadow_records_foreign_opportunity": true,
+        "c0_shadow_does_not_mutate": true,
+        "c1_first_contact_transforms": true,
+        "c1_second_contact_transforms": true,
+        "c1_third_contact_native": true,
+        "c1_own_read_untouched": true,
+        "c1_unauthenticated_read_untouched": true
+      },
+      "materialized": {
+        "c0": "experiment/protocol_v3/qualification/20260715_p0/recovery/runtime_program_c0.yaml",
+        "c1": "experiment/protocol_v3/qualification/20260715_p0/recovery/runtime_program_c1.yaml"
+      }
+    }
+  },
+  "checks": {
+    "three_cycle_normalized_fingerprints_equal": true,
+    "all_selector_replays_pass": true,
+    "pollution_changes_semantic_observation": true,
+    "recovery_fingerprint_matches_pristine": true,
+    "recovery_selector_replay_passes": true,
+    "container_recreated_each_cycle": true
+  },
+  "status": "pass"
+}

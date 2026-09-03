@@ -1,0 +1,195 @@
+{
+  "schema_version": "atobench.resilience_statistics.lock.v1",
+  "analysis_version": "verification_resilience_v1",
+  "freeze_status": "frozen_authorized",
+  "statistics_authorized": true,
+  "paper_integration_authorized": false,
+  "paper_facing_results_authorized": false,
+  "canonical_inputs": {
+    "pair_profiles": "09_pairs/12_full_cohort_pair_profiles_semantic_v3/pair_resilience_profiles.jsonl",
+    "unblinded_episode_states": "09_pairs/12_full_cohort_pair_profiles_semantic_v3/unblinded_episode_states.jsonl",
+    "episode_fact_registry": "04_facts/05b_episode_fact_registry_v1/episode_fact_registry.jsonl"
+  },
+  "expected_structural_counts": {
+    "pair_count": 215,
+    "episode_count": 430,
+    "complete_state_pair_count": 92,
+    "incomplete_state_pair_count": 123,
+    "c0_grounded_pair_count": 79,
+    "c1_anchor_contact_positive_pair_count": 158,
+    "c1_anchor_contact_unavailable_pair_count": 57,
+    "capability_target_pair_count": 63,
+    "capability_outcome_observed_pair_count": 56,
+    "capability_outcome_missing_pair_count": 7
+  },
+  "availability_definition": {
+    "task_endpoint_observed": {
+      "positive": "measurement_status=positive and value=true",
+      "negative": "measurement_status=negative and value=false",
+      "unavailable": "every other combination"
+    },
+    "state_observed": "verification_resolution_state != state_unavailable",
+    "c1_anchor_contact_positive": "COMMON_TARGET_CONTACT measurement_status=positive and value=true",
+    "c1_anchor_contact_unavailable": "every other combination"
+  },
+  "analysis_populations": {
+    "full_frozen_pair_population": {
+      "membership": "every exact frozen eligible pair",
+      "expected_n": 215,
+      "uses": [
+        "task-endpoint availability transition",
+        "five-state marginal distributions including state_unavailable",
+        "missingness patterns by AOU and model"
+      ]
+    },
+    "complete_state_pair_population": {
+      "membership": "both C0 and C1 verification-resolution states are observed",
+      "expected_n": 92,
+      "uses": [
+        "complete C0-to-C1 verification-state transition matrix"
+      ],
+      "interpretation": "descriptive complete-pair subset, never relabeled as the full cohort"
+    },
+    "c0_capability_target_population": {
+      "membership": "C0 state is grounded_verification and C1 COMMON_TARGET_CONTACT is positive",
+      "expected_n": 63,
+      "uses": [
+        "Grounded Retention target population",
+        "ATO-Induced Loss target population"
+      ]
+    },
+    "c0_capability_observed_outcome_population": {
+      "membership": "c0_capability_target_population and C1 verification state is observed",
+      "expected_n": 56,
+      "uses": [
+        "observed Grounded Retention",
+        "observed ATO-Induced Loss"
+      ],
+      "required_sensitivity": [
+        "report 7 missing C1 outcomes separately",
+        "bound retention by treating every missing outcome as retained",
+        "bound retention by treating every missing outcome as lost"
+      ]
+    }
+  },
+  "primary_estimands": {
+    "endpoint_availability": {
+      "population": "full_frozen_pair_population",
+      "outputs": [
+        "paired C0/C1 availability transition counts",
+        "marginal observed proportions and C1-minus-C0 difference",
+        "exact paired discordance interval"
+      ]
+    },
+    "verification_state": {
+      "population": "full_frozen_pair_population",
+      "outputs": [
+        "five-state C0 and C1 distributions including state_unavailable",
+        "unavailable reason counts"
+      ]
+    },
+    "complete_state_transition": {
+      "population": "complete_state_pair_population",
+      "outputs": [
+        "four-by-four C0-to-C1 transition matrix",
+        "denominator and excluded-pair count"
+      ]
+    },
+    "grounded_retention": {
+      "target_population": "c0_capability_target_population",
+      "observed_population": "c0_capability_observed_outcome_population",
+      "retained_state": "grounded_verification",
+      "outputs": [
+        "observed retention proportion",
+        "observed loss proportion",
+        "missing-outcome count and proportion",
+        "worst-case and best-case retention bounds",
+        "uniform exact binomial interval for observed retention"
+      ]
+    }
+  },
+  "diagnostic_score_estimands": {
+    "verification_control": {
+      "role": "retained_numeric_diagnostic"
+    },
+    "stop_decision": {
+      "role": "descriptor_primary_numeric_engineering_provenance_only"
+    },
+    "report_grounding": {
+      "role": "retained_numeric_score_proximity_diagnostic"
+    },
+    "outputs": [
+      "dimension-specific C0/C1 numeric availability and paired numeric denominator",
+      "C0 and C1 median and IQR",
+      "paired median difference",
+      "paired mean difference with pair-bootstrap interval",
+      "probability C1 score is lower than C0",
+      "fixed-band transition counts",
+      "Judge score-range sensitivity"
+    ],
+    "prohibited": [
+      "convert a null score or band to zero or the lowest band",
+      "use an unpaired score in a paired delta",
+      "cross-dimension composite score",
+      "treating Stop Decision numeric score as its primary measurement",
+      "using band agreement as the primary reliability gate"
+    ],
+    "missingness_policy": {
+      "condition_distributions": "use every numeric score available in that condition and report its denominator",
+      "paired_differences": "use only pairs with numeric C0 and C1 scores for that dimension",
+      "band_transitions": "retain unavailable as an explicit fifth transition label",
+      "cross_dimension_complete_case_filter": "prohibited"
+    }
+  },
+  "stratification": {
+    "primary": "AOU",
+    "descriptive": "model within AOU",
+    "cross_aou_pooling": "prohibited_as_primary",
+    "small_cells": "report counts and intervals without significance language"
+  },
+  "uncertainty": {
+    "confidence_level": 0.95,
+    "bootstrap_replicates": 20000,
+    "bootstrap_unit": "frozen_pair",
+    "bootstrap_seed": 20260726,
+    "retain_pair_missingness_pattern": true,
+    "p_values_primary": false,
+    "multiple_testing": "no confirmatory p-value family in v1"
+  },
+  "judge_sensitivity_definitions": {
+    "low_confidence_episode_judgment": {
+      "adjudicated": "final adjudication base judgment confidence is low",
+      "not_adjudicated": "at least one contributing reviewer judgment confidence is low"
+    },
+    "low_confidence_pair": "either C0 or C1 episode judgment is low confidence for the dimension",
+    "major_disagreement_episode_judgment": "major when reviewer_score_difference >= 3, not_major when numeric and <3, unavailable when reviewer_score_difference is null",
+    "major_disagreement_pair": "major if either side is major; not_major only when both sides are not_major; otherwise unavailable",
+    "required_score_sensitivities": [
+      "all frozen pairs",
+      "exclude low-confidence pairs",
+      "exclude major-disagreement pairs and pairs whose disagreement status is unavailable",
+      "Judge score-range lower and upper contrasts"
+    ]
+  },
+  "post_open_uniform_uncertainty_amendment": {
+    "status": "frozen_after_degenerate_bootstrap_audit",
+    "trigger": "The all-zero SQLi retention sample makes a percentile pair-bootstrap interval degenerate at zero.",
+    "scope": "Apply the same two-sided Clopper-Pearson interval to observed retention in every AOU.",
+    "changes_population_or_point_estimand": false,
+    "changes_primary_denominator": false,
+    "replaces_bootstrap": false,
+    "purpose": "Separate finite-sample binary uncertainty from frozen missing-outcome bounds."
+  },
+  "prohibited_actions": [
+    "convert state_unavailable to unresolved_verification",
+    "drop unavailable pairs without reporting their pattern",
+    "rematch pairs",
+    "substitute retries or timeout runs",
+    "redefine AOU endpoints",
+    "change population membership after effect estimates are opened",
+    "read the paper for expected numerical results",
+    "export paper-facing claims before QA and author approval"
+  ],
+  "hash_gate_enabled": false,
+  "hashes": {}
+}

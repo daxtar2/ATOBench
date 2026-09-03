@@ -1,0 +1,7 @@
+services:
+  juice-shop:
+    image: bkimminich/juice-shop@sha256:e68144772ebaaca0ec117b38d44903af92416793230288ef7c5437fc4f26850a
+    container_name: atobench-target-juice-shop
+    ports:
+      - "3000:3000"
+    restart: unless-stopped

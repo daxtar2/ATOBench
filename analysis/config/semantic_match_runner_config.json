@@ -1,0 +1,21 @@
+{
+  "schema_version": "atobench.semantic_match_runner_config.v1",
+  "claude_executable": "claude",
+  "model": "glm-5.2",
+  "fallback_model": null,
+  "effort": "high",
+  "timeout_seconds": 900,
+  "max_budget_usd_per_call": null,
+  "permission_mode": "dontAsk",
+  "tools": ["Read"],
+  "no_session_persistence": true,
+  "disable_slash_commands": true,
+  "no_chrome": true,
+  "setting_sources": ["user", "project"],
+  "matcher_ids": ["semantic_matcher_a", "semantic_matcher_b"],
+  "max_attempts_per_role": 2,
+  "parallel_packets": true,
+  "temperature": "not_exposed_by_claude_code_cli",
+  "network_policy": "no_web_tools_exposed",
+  "filesystem_policy": "read_only_packet_workspace"
+}

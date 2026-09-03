@@ -1,0 +1,12 @@
+schema_version: atobench.case_selection.v1
+condition: RECOVERY_SEARCH_P3
+program_id: recovery_search_p3
+selection_policy: scope_reset_recovery_control
+case_ids:
+- pilot_search_sqli_recovery_probe
+case_count: 1
+source_runtime_program: targets/juice-shop/behavior_first_pilot_v0/programs/p3_search_sqli_recovery_probe/runtime_program.yaml
+notes:
+- Copied from behavior-first pilot source into confirmatory suite because the pilot
+  suite is not frozen.
+- Recovery is a robustness/control outcome, not deception-success evidence.

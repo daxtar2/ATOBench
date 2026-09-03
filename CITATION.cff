@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+title: >-
+  ATOBench: Tracing How Autonomous Penetration-Testing Agents Verify
+  Vulnerabilities When Target Evidence Lies
+message: >-
+  If you use ATOBench, please cite the paper and this repository.
+type: software
+authors:
+  - given-names: Qiyang
+    family-names: Chen
+  - given-names: Yixi
+    family-names: Li
+  - given-names: Fengwei
+    family-names: Zhang
+  - given-names: Junlin
+    family-names: Liu
+version: 0.1.0
+date: "2026-09-03"
+license: Apache-2.0
+repository-code: "https://github.com/daxtar2/ATOBench"
+abstract: >-
+  ATOBench is an evaluation framework that makes the verification process of
+  autonomous penetration-testing agents observable. It injects registered
+  response transformations at runtime and pairs each transformed episode with
+  a native episode under the same environment, aligning each pair at the
+  first affected response and reconstructing later actions, evidence
+  recovery, stopping, and report support.
+keywords:
+  - LLM agents
+  - penetration testing
+  - benchmark
+  - cyber deception
+  - trajectory evaluation

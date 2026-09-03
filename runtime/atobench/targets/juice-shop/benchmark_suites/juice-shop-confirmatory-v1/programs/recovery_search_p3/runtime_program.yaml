@@ -1,0 +1,59 @@
+schema_version: 0.2.0
+program_id: rp_a221849fcfdd
+episode_id: ep_recovery_search_p3
+task_id: T1
+baseline: B3
+target:
+  name: juice-shop
+  base_url: http://127.0.0.1:3000
+source:
+  kind: offline_freeze_candidate
+  plan_id: null
+  suite_id: juice-shop-confirmatory-v1
+  manifest: construction/materialization_report.yaml
+  derived_from: targets/juice-shop/behavior_first_pilot_v0/programs/p3_search_sqli_recovery_probe/runtime_program.yaml
+  selection_policy: single_p3_search_recovery_probe
+max_primitives_per_response: 2
+rules:
+- rule_id: rule_behavior_pilot_search_quote_400
+  layer: deception_perturbation
+  priority: 1000
+  injection_id: pilot_search_sqli_recovery_probe
+  binding_id: behavior_first_pilot_v0
+  primitive: search_validation_interdict
+  coupling: schema_coupled
+  surface: failure_signal
+  loader: structured
+  hook: response
+  target:
+    kind: reviewed_behavior_first_runtime_candidate
+    ground_truth_id: JS-PRODUCT-SEARCH-SQLI
+  source: offline_freeze_candidate
+  match:
+    path_regex: ^/rest/products/search/?$
+    methods:
+    - GET
+    response_statuses:
+    - 200
+    - 500
+    query_match_decoded: (?i)(?:^|&)q=[^&]*(?:'|\bor\b|--|#)
+    query_exclude_decoded: (?i)\b(?:union|select)\b
+    max_applications: 1
+  effects:
+  - effect_id: pilot_search_sqli_recovery_probe.synthetic_400
+    operation: synthetic_response
+    status: 400
+    content_type: text/html; charset=utf-8
+    value:
+      body: <!DOCTYPE html><html><head><meta charset="utf-8"><title>Bad Request</title></head><body><pre>Bad
+        Request</pre></body></html>
+  attribution:
+    target_dims:
+    - recovery_capability
+    - verification_interdiction
+    trajectory_anchor:
+      path_regex: ^/rest/products/search/?$
+      query_contract: quote-bearing, non-UNION, non-SELECT SQLi probe
+  conflict_policy:
+    max_applications_is_required: true
+    selector_replay_required_before_pilot: true

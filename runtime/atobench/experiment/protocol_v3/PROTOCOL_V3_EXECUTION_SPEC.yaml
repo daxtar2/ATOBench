@@ -286,49 +286,49 @@ exclusion_and_stop_rules:
 frozen_artifacts:
 - artifact_id: target_state_contract
   path: targets/juice-shop/protocol_v3/target_state_contract.yaml
-  sha256: ff760a6ef5dee2b5413f81d217220ddc4e0977d2c005ed8908457d186c3f4f0a
+  sha256: f402059dfdb78531c4fdbe40fffacd0c3cb957fdfa163c7b541035cd94da53e6
 - artifact_id: target_state_manager
   path: protocol/juice_shop_state.py
-  sha256: 3c577fd4438303ab4c550648725d9b21b20bdf8fd5d0b5868c0cc401bcea49d8
+  sha256: 38d16140a1a5285ba213217fa7338720255df51460c79dc2ccf03719bf29d4b5
 - artifact_id: target_state_fingerprint_schema
   path: schema/target_state_fingerprint.json
-  sha256: c6642d0b8a1e4f0d603cf7268e0d6e1e6910880bb513523e6c235374c32e78b6
+  sha256: 240b991bd949e6cac41f18e897c9cb36c6b075d9b161f9e294cb39c273ae2df9
 - artifact_id: target_state_schema_loader
   path: schema/loader.py
-  sha256: 537ee00bf5bae21f693258da5dc850869a79d3a2dd11e474260585b19b7ccf56
+  sha256: 7ab668860bbe950625bf3fefcb2d91cc7a06180000fcfabc4a29e6231373dbc3
 - artifact_id: basket_ownership_fixture_v2_schema
   path: schema/basket_ownership_fixture_v2.json
-  sha256: aab4104d222e2e4662065081fa8d7a7a8fee82850482c95c8bb40918e87be18d
+  sha256: 67792bbf2158a362edf13392792ca1b5dcc7eaec45089ccb2055f5ca6ad76e05
 - artifact_id: reset_determinism_qualification
   path: experiment/protocol_v3/qualification/20260715_p0/reset_determinism_qualification.json
-  sha256: efc4c73c172a0c11d5ad23be8d27026defc99f140dd45720c70ebfb083bedf1a
+  sha256: 6ada5a39dc064d3eff5498bbc06bf92d2fc9cd449883c51f11e368b0fa8391d4
 - artifact_id: aom_registry
   path: experiment/AOM_REGISTRY.yaml
-  sha256: b2957772b3fec7a68a9229a7164aa252831da9c9895586887969a0ba66ca3d91
+  sha256: dc1987700e9032cbecf61c5467dd21a3b7ca0fc970da7efcc30a94f9ad8dc4cb
 - artifact_id: ground_truth_cards
   path: experiment/ground_truth/juice_shop_ground_truth_cards.yaml
-  sha256: 2a25258924244d44b40fe8fa66adb3a6893727dadb6f6315883f7bc5048f895e
+  sha256: 0478224ae1b4608d27ad7ffdf526ff827b77ff798d8c14fb700e87462a6f992d
 - artifact_id: harness_prompt
   path: experiment/protocol_v3/frozen_inputs/atobench-harnessed-pentest.md
-  sha256: 5a630ad2071a7c5941a5752f47dd6e50aff3960450d261ee09a2505e64adcddf
+  sha256: 235d1a6b97be14a560f4e35f00e2c95ffd406270977c01ecd2eb34463ea1ac35
 - artifact_id: model_provenance_attestation
   path: experiment/protocol_v3/frozen_inputs/glm52_model_provenance.yaml
-  sha256: 399d56c9d8dc4208dfb13a9faac224b82f2dec13a9b2767f9da5c305d8890065
+  sha256: a1148330b67b063a17ec0ecb905aafdd539e8956f070e3a66d6db7017f6ce3a4
 - artifact_id: sqli_config
   path: examples/experiments/protocol_v3/juice-shop-protocol-v3-sqli.yaml
-  sha256: 56e1d3c3453796698dbb0994dcb8d07424df3c4ca6837186cf41a50716552700
+  sha256: ee7dc319910c6be31ee6223505f30ceeeb6afda1b8af75b46057ce32e935a36b
 - artifact_id: basket_config
   path: examples/experiments/protocol_v3/juice-shop-protocol-v3-basket.yaml
-  sha256: 995496a1cff8fb2b3353eeddd693f66f01a7f6932e29b7e50f72b30747951cff
+  sha256: 6605a1adfb2cb7ac90f03197a7ff4b7ff6b3b6f5844781f623992c23abe9c85f
 - artifact_id: jwt_config
   path: examples/experiments/protocol_v3/juice-shop-protocol-v3-jwt.yaml
-  sha256: 53a6fef4ad62076daadd07f0f8a35cca3e9a4f6b89193650d5c6fdd03aef8158
+  sha256: 6634d05e9b08a50544929fd7209f4ae22177c8fc81252f6ebf7f20327c7767da
 - artifact_id: sqli_c0_runtime
   path: targets/juice-shop/benchmark_suites/juice-shop-confirmatory-v1/programs/c0_identity/runtime_program.yaml
-  sha256: 92f6d884e7190fac04ad40fa66db5063feb4a5008607d3ded27c5df6ce7082c9
+  sha256: 04120a00e48dfdac008ba8c5f9fbba07102f32d9f5b340f78154fe481e1f2f60
 - artifact_id: sqli_c1_runtime
   path: targets/juice-shop/benchmark_suites/juice-shop-confirmatory-v1/programs/evidence_sqli_closure/runtime_program.yaml
-  sha256: 013040ad6b21eeee1e3b0a1e2a81371ab1d894f8bec2cf3262c7a72770f28955
+  sha256: 04060595a6d60e5eefe90935fce4ac3d03bddb21142ab5638c31c80f716868f1
 - artifact_id: basket_c0_runtime
   path: targets/juice-shop/aou_expansion_v0/programs/basket_scope_closure_persistent_k2/c0_shadow_runtime_program.yaml
   sha256: e00d2602de32e2cd33aca23a604dc3a56e1dbe4cd6cb8d0401895c5e4ae019e5
@@ -337,32 +337,32 @@ frozen_artifacts:
   sha256: 556b541e0e713f596c991666ec53208ff0ee1f7b22e7f38a46b9b6ceb62274f2
 - artifact_id: jwt_c0_runtime
   path: targets/juice-shop/aou_expansion_v0/programs/c0_identity/runtime_program.yaml
-  sha256: 556d573bbfcaed92c6dd5e7e71a42035d3aaa4b07e060a642d374ca31613f091
+  sha256: 3a80e8da2c35850ed4976907956e17049242131d4286d24fe37ea088ace26cd7
 - artifact_id: jwt_c1_runtime
   path: targets/juice-shop/aou_expansion_v0/programs/jwt_hash_suppression/runtime_program.yaml
   sha256: ed5de6857fdb98a5126aeebc624c95a8a78c3b41e91257b053e5c7fbeed382aa
 - artifact_id: proxy_runner
   path: agents/proxy_runner.py
-  sha256: 55caf62faae9193fdf58000ce6efb3511f5bf79a1347570e159154da0bb52e85
+  sha256: b07757446c476dd7113368ca6043cf3c65653bcf8b55647b6573ff8bd13ea1fc
 - artifact_id: experiment_config_loader
   path: experiment/config.py
-  sha256: 9f3ea040180613b9766166412c78e658ef6058beb3f4f8ebc18911d312ec36f7
+  sha256: ee6268bc0a676e77d5cc4f05f7621172cc496472d0d2638ed046bffba74a5544
 - artifact_id: experiment_cycle
   path: experiment/cycle.py
-  sha256: 88c25efcc3260a60e98a0af4d0072fa552e73e5c4dd8af149d314e1c840df910
+  sha256: 427b43c062e12683ed9ac292a610654ab47c77902db27b00f54562fc98d45928
 - artifact_id: protocol_v3_validator
   path: protocol/v3.py
-  sha256: e8b3e6f83ce2f5a44f177d461f5d8939667d6e6736ee2406d1b1c512b4fa049c
+  sha256: bc59c7e4c7b5321ee97ae112e39d6b589020e5c42a0bda110e0a615046ec0d0c
 - artifact_id: cli_entrypoint
   path: cli/main.py
-  sha256: d8d101e3b8ebe180ccdacc15d3469cf0e859816deb8978c07c195323932d31f6
+  sha256: 4944d138dc221712ce50519d82d459eab849fd0d5a26f89bef2a483f35fac50a
 - artifact_id: proxy_rule_engine
   path: proxy/rule_engine.py
-  sha256: 157d6b01b469011811d89aec4fb02f51f0f2e822fc843dea8c04babcf54dcb50
+  sha256: 11721bb2d0f9019375762422b7cde5855858478ba0868ecf8e8a3b14f6869957
 - artifact_id: runtime_program_schema
   path: schema/runtime_program.json
-  sha256: ffa49f981b73a085c5af7c6da0a2833f1f8896b29f07c31a3518fad80c3d32dd
+  sha256: 9a5240a1e40d19bb464331cef4cc6ff8afe8476258682ffc76d7b7f3f01b8d9f
 - artifact_id: target_compose
   path: targets/juice-shop/docker-compose.yml
-  sha256: 7ea1c6ea4d4b4e434b715b0542e460d2a1684d99df07cd343062214268f6a11a
+  sha256: 3a4fb655f9d620170949059ed92d1760aac490bd05969ea3734d6dfc8e365f17
 frozen_at: '2026-07-15T13:56:06.117132+00:00'

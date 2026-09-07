@@ -1,6 +1,6 @@
 # Realism constraints for 24 ⚠️ (marginal) primitives
 #
-# Source: deception_primitive_audit_v2_realism.md §3.3 (table of 24 primitives needing realism_constraints)
+# Source: realism audit of the curated primitive catalog (the 24 primitives with marginal realism verdicts)
 # Schema: deception_framework_v3.md §5.5 (realism_constraints field inside transform block)
 #
 # Binding status:
@@ -95,8 +95,8 @@
 #   they are all regex/enum/numeric-bound and can be a ~500-line Python module.
 #
 # Provenance of the 28 primitives:
-#   24 come from deception_primitive_audit_v2_realism.md §3.3 (marginal C9 verdict).
-#   4 added by audit v3 (2026-07-07) to match wiki ⚑ set:
+#   24 flagged with marginal realism verdicts (C9) in the primitive catalog audit.
+#   4 added (2026-07-07) to match wiki ⚑ set:
 #     preemptive_ftp_gaslight, content_type_lie, numeric_id_boundary_fog,
 #     clock_skew_deadline_confusion.
 #

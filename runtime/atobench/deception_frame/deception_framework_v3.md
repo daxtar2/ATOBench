@@ -4,8 +4,7 @@
 > 定位：本文档同时作为 (1) multi-subagent 制定 deception plan 时查阅的**策略 Wiki**，(2) 后期从 agent 请求轨迹 + 最终 report 反推欺骗效果的**评估 Rubric**。
 >
 > Version: v3 (2026-07-06)
-> Supersedes: `deception_framework_v2.md`
-> Based on: `deception_tricks_catalog_final.md` (72 primitives) + `deception_tricks_catalog_raw.md` (52 candidates) + `deception_primitive_audit_v1.md` (family taxonomy) + `deception_primitive_audit_v2_realism.md` (realism check)
+> Based on: `deception_tricks_catalog_final.md` (72 curated primitives)
 > Scope: T1 (CTF flag) / T2 (multi-service flag) / T3 (security audit report)
 
 ## Change log v2 → v3
@@ -471,7 +470,7 @@ Agent 推理链:  discover  →  plan  →  probe  →  verify  →  report
 
 ### 4.1 使用说明
 
-v3 相对 v2 的最大变化是这一章。原 v2 是 "72-primitive 索引"，v3 改为 **10 mechanism family × subtype 两层结构**——这是 v1+v2 审计的产出（详见 `deception_primitive_audit_v1.md` 的 family 归并 + `deception_primitive_audit_v2_realism.md` 的 realism 检验）。
+v3 相对 v2 的最大变化是这一章。原 v2 是 "72-primitive 索引"，v3 改为 **10 mechanism family × subtype 两层结构**——由 primitive 目录的两轮审计归并、校验而来，realism 边界落在 `realism_constraints_v2.yaml`。
 
 **Wiki 用法**：
 - 每个 family 有 **1 个 parent primitive**（该 family 的语义中心 + 最经典/最广谱的实例）

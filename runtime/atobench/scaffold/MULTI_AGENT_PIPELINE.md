@@ -371,8 +371,8 @@ atobench/deception_frame/                    # strategy KB (人读)
   ├── primitive_wiki_v2.md                # 51 primitive × 4 coupling 注入值模板
   ├── realism_constraints_v2.yaml         # 28 prim × 60 constraint realism 边界
   ├── deception_framework_v3.md           # §3 face × §4 family × §6 plan schema × §7 eval
-  ├── deception_tricks_catalog_final.md   # 历史来源（72 primitive 候选）
-  └── deception_primitive_audit_v2_realism.md  # audit 报告
+  ├── deception_tricks_catalog_final.md   # curated trick catalog（72 primitive）
+  └── build_primitive_index.py            # primitive_index.yaml 再生成脚本
 
 atobench/primitives/                         # registered primitive registry (机读)
   └── library.yaml                        # 9 个有 transformer 实现的 primitive

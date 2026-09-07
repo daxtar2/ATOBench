@@ -37,7 +37,7 @@ analysis/   evidence reconstruction + judging layer: trajectory compiler,
             semantic matching, resilience statistics, learning-data exports
 docs/       explanation and design docs: concept guide (CONCEPTS.md),
             architecture map (ARCHITECTURE.md), AOU contract standard,
-            cross-model campaign runbook
+            cross-model campaign runbook, AOU authoring guide
 ```
 
 ## Installation
@@ -87,6 +87,14 @@ atobench-cross-model \
 Treat a pair as invalid unless route attestation is present and both episodes
 show agent-originated work. The runner fails closed on route-attestation or
 provider errors.
+
+## Extending ATOBench
+
+To run ATOBench against your own target, or to author and register a new AOU
+(a new registered response transformation), follow
+[docs/AOU_AUTHORING.md](docs/AOU_AUTHORING.md). Design-level validity
+requirements are in
+[docs/AOU_OPPORTUNITY_CONTRACT_STANDARD.md](docs/AOU_OPPORTUNITY_CONTRACT_STANDARD.md).
 
 ## What is intentionally not in this repository
 

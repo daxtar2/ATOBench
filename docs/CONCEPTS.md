@@ -132,3 +132,5 @@ retention respectively — so missing episodes cannot flatter the result.
   — the standard an AOU must satisfy to be frozen.
 - [CROSS_MODEL_EVIDENCE_AOU_RUNBOOK.md](CROSS_MODEL_EVIDENCE_AOU_RUNBOOK.md)
   — running a paired campaign and auditing its artifacts.
+- [AOU_AUTHORING.md](AOU_AUTHORING.md) — engineering walkthrough for
+  onboarding your own target and creating a new AOU.

@@ -956,7 +956,7 @@ def cmd_sweep_proxy(args: argparse.Namespace) -> int:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="atobench",
-        description="ATOBench: Adversarial Deception against Long-Horizon LLM pentest agents.",
+        description="ATOBench: tracing how autonomous penetration-testing agents verify vulnerabilities when target evidence lies.",
     )
     sub = parser.add_subparsers(dest="cmd", required=True)
 

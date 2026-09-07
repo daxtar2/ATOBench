@@ -60,7 +60,7 @@ Protocol runner modules are all frozen because all three are loaded at runtime.
 - `juice-shop-protocol-v3` target adapter;
 - frozen SQLi, Basket and JWT AOU bundles;
 - `verification-resilience-stage20` profile;
-- the existing `../atobench/scripts/atobench-cross-model` runner.
+- the existing `../runtime/atobench/scripts/atobench-cross-model` runner.
 
 The platform IDs are intentionally stable and descriptive. The bridge maps
 them to the legacy runner keys `sqli`, `basket`, and `jwt` only at the adapter

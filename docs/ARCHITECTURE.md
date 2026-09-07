@@ -16,6 +16,35 @@ agent (claude -p) ──► mitmproxy addon ──► Juice Shop (docker)
                     analysis layer  ──►  statistics / exports
 ```
 
+## C0/C1 data flow
+
+One episode, end to end. The two conditions differ only at the proxy's
+response path; everything else is shared on purpose.
+
+```mermaid
+flowchart TB
+    subgraph EP ["One episode (C0 = native, C1 = ATO)"]
+        A["Claude Code agent<br/>(claude -p)"]
+        P["mitmproxy addon<br/>(active RuntimeProgram)"]
+        T["Juice Shop target<br/>(docker compose)"]
+        A -- "request" --> P
+        P -- "forwarded unchanged" --> T
+        T -- "response" --> P
+        P -- "C0: response as-is<br/>C1: registered transform applied" --> A
+        P -- "flow events +<br/>transform records" --> L
+        A -- "session transcript<br/>+ final report" --> L
+    end
+    L["episode output dir:<br/>turns.jsonl, logs, report"]
+    L --> EV["eval layer (deterministic):<br/>action traces, behavior audits,<br/>pentest-effect metrics per pair"]
+    L --> AN["analysis layer (atobench_vr):<br/>reconstruction, blinded judges,<br/>pair profiles, resilience statistics"]
+    EV --> AN
+    AN --> OUT["resilience numbers +<br/>learning-data exports"]
+```
+
+The paired schedule aligns a C0 and a C1 episode at the anchor (the first
+changed response), which is why the proxy records both the transformation
+contact and the matching native-selector contact.
+
 ## Two installable packages
 
 - **`runtime/`** — package `atobench` (+ legacy `proxy` JSONL logger).
@@ -45,7 +74,8 @@ agent (claude -p) ──► mitmproxy addon ──► Juice Shop (docker)
 
 ## Analysis: from episode output to resilience numbers
 
-The CLI is `analysis/scripts/atobench-vr` (module `atobench_vr.cli`), with a
+The CLI is `analysis/scripts/atobench-vr` (module `atobench_vr.cli`; the
+package source lives under `analysis/src/atobench_vr/`), with a
 registry of stage commands in `atobench_vr/cli.py`. Typical order:
 
 1. **Evidence reconstruction** — `atobench_vr/packets.py`,

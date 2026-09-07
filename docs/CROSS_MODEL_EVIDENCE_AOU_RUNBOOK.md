@@ -21,10 +21,14 @@ accidental multiline shell command without trailing `\` from silently starting
 the default three-model campaign. Always keep the backslash at the end of each
 continued line, or write the command on one line.
 
+Commands below invoke the `atobench-cross-model` console script installed by
+`pip install -e ./runtime` (see the top-level README); they run from any
+working directory.
+
 Dry-run one paired block for all three models and all three AOUs:
 
 ```bash
-atobench/scripts/atobench-cross-model \
+atobench-cross-model \
   --dry-run \
   --campaign-id cross_model_smoke_dryrun \
   --rounds 1 \
@@ -35,7 +39,7 @@ atobench/scripts/atobench-cross-model \
 Run the formal 15-pair campaign:
 
 ```bash
-atobench/scripts/atobench-cross-model \
+atobench-cross-model \
   --campaign-id cross_model_evidence_aou_v1 \
   --rounds 15 \
   --models glm-5.2 deepseek-v4-pro qwen3.7-max \
@@ -54,7 +58,7 @@ This schedules:
 Run a smaller smoke first:
 
 ```bash
-atobench/scripts/atobench-cross-model \
+atobench-cross-model \
   --campaign-id cross_model_smoke_v1 \
   --rounds 1 \
   --models glm-5.2 deepseek-v4-pro qwen3.7-max \
@@ -66,7 +70,7 @@ atobench/scripts/atobench-cross-model \
 Run the same smoke with one isolated worker per model:
 
 ```bash
-atobench/scripts/atobench-cross-model \
+atobench-cross-model \
   --campaign-id cross_model_smoke_parallel_v1 \
   --rounds 1 \
   --models glm-5.2 deepseek-v4-pro qwen3.7-max \
@@ -210,7 +214,7 @@ If cc-switch uses a different selector name from the attested provider model
 name, pass explicit mappings:
 
 ```bash
-atobench/scripts/atobench-cross-model \
+atobench-cross-model \
   --campaign-id cross_model_evidence_aou_v1 \
   --rounds 5 \
   --models glm-5.2 deepseek-v4-pro qwen3.7-max \
@@ -230,7 +234,7 @@ silently pooled into the wrong model.
 For campaign `cross_model_evidence_aou_v1`, outputs are written under:
 
 ```text
-targets/juice-shop/experiments/cross_model_evidence_aou_v1/
+runtime/atobench/targets/juice-shop/experiments/cross_model_evidence_aou_v1/
 ```
 
 Important files:
@@ -267,8 +271,8 @@ python3 -m atobench.experiment.cross_model_artifact_audit \
   --md-output runtime/atobench/targets/juice-shop/experiments/<campaign_id>/ARTIFACT_AUDIT.md
 ```
 
-Run this from the repository root (so the
-`runtime/` directory is on `PYTHONPATH` and the `atobench` package is importable.
+Run this after installing the runtime package (`pip install -e ./runtime`); the
+`atobench` module is then importable from any working directory.
 
 After the artifact audit passes, downstream processing (blinded judge
 packets, pair profiles, resilience statistics, and learning-data exports) is

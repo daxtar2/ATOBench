@@ -36,8 +36,9 @@ The frozen reference datasets (the Stage-20 cohort: 450 episodes / 225
 Native-ATO pairs / 5 models / 3 AOUs, plus derived learning-data exports) are
 **not shipped in this repository**. All export commands below operate on a
 frozen campaign directory and its pair profiles; run a campaign with
-`runtime/atobench-cross-model` first, or point the commands at your own
-frozen cohort.
+`atobench-cross-model` first (see the top-level README and
+[docs/CROSS_MODEL_EVIDENCE_AOU_RUNBOOK.md](../docs/CROSS_MODEL_EVIDENCE_AOU_RUNBOOK.md)),
+or point the commands at your own frozen cohort.
 
 Raw agent sessions and HTTP corpora remain external by design: exports emit
 structured records without request/response bodies, field values, identity or

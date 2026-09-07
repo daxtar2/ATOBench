@@ -128,6 +128,8 @@ retention respectively — so missing episodes cannot flatter the result.
 
 - [ARCHITECTURE.md](ARCHITECTURE.md) — how these concepts map to modules and
   the end-to-end data flow.
+- [EVALUATION_WORKFLOW.md](EVALUATION_WORKFLOW.md) — what happens to the
+  data after a campaign, from artifact audit to learning-data exports.
 - [AOU_OPPORTUNITY_CONTRACT_STANDARD.md](AOU_OPPORTUNITY_CONTRACT_STANDARD.md)
   — the standard an AOU must satisfy to be frozen.
 - [CROSS_MODEL_EVIDENCE_AOU_RUNBOOK.md](CROSS_MODEL_EVIDENCE_AOU_RUNBOOK.md)

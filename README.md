@@ -2,6 +2,8 @@
 
 **ATOBench: Tracing How Autonomous Penetration-Testing Agents Verify Vulnerabilities When Target Evidence Lies**
 
+English | [简体中文](README.zh-CN.md)
+
 ATOBench is an evaluation framework that makes the verification process of
 autonomous penetration-testing agents observable under *Adversarial Target
 Observation* (ATO). It injects registered response transformations at runtime

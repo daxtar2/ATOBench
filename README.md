@@ -90,10 +90,14 @@ provider errors.
 
 ## Extending ATOBench
 
-To run ATOBench against your own target, or to author and register a new AOU
-(a new registered response transformation), follow
-[docs/AOU_AUTHORING.md](docs/AOU_AUTHORING.md). Design-level validity
-requirements are in
+AOUs are designed by an agent, not only by hand: the shipped design loop
+(`experiment scaffold` → `make-deception` → `compile` → `freeze-suite`)
+has a Claude Code planning agent author `deception_plan.yaml` against your
+target, guided by a shipped deception-methodology corpus, with deterministic
+compile gates around every step. See
+[docs/AOU_AUTHORING.md](docs/AOU_AUTHORING.md) for both the agent-driven
+loop, the offline construction path, target onboarding, and manual
+authoring. Design-level validity requirements are in
 [docs/AOU_OPPORTUNITY_CONTRACT_STANDARD.md](docs/AOU_OPPORTUNITY_CONTRACT_STANDARD.md).
 
 ## What is intentionally not in this repository

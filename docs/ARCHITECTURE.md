@@ -33,6 +33,7 @@ agent (claude -p) ──► mitmproxy addon ──► Juice Shop (docker)
 | Single-episode lifecycle | `runtime/atobench/experiment/cycle.py` | `ExperimentCycle`: start target → run agent → attribute events → evaluate |
 | Episode CLI | `runtime/atobench/cli/main.py` | `atobench-experiment` entry point (`run-deception`, `run-clean`, ...) |
 | Frozen suites | `runtime/atobench/experiment/suite.py` | Loads `benchmark_suites/*`; `validate_frozen_suite` fails closed on any hash mismatch in `freeze_manifest.json` |
+| Deception design loop | `runtime/atobench/experiment/cycle.py` + `runtime/atobench/scaffold/` | `experiment` actions `scaffold` → `make-deception` (a Claude Code planning agent authors `deception_plan.yaml`) → `compile` (deterministic gate) → `freeze-suite`; the agent selects from the methodology corpus in `runtime/atobench/deception_frame/`; offline variant in `experiment/offline_construction.py` |
 | Agent carrier | `runtime/atobench/agents/proxy_runner.py` | Spawns `claude -p`, parses the JSON stream, captures route attestation; `agents/claude_code.py` is the `BaseAgent` reference adapter |
 | mitmproxy addon | `runtime/atobench/proxy/addon.py` | Reverse proxy in front of the target; applies the active RuntimeProgram |
 | Rule engine | `runtime/atobench/proxy/rule_engine.py` | `RuntimePipeline` executes a compiled RuntimeProgram against one flow: selectors → transformers → application rules |

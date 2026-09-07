@@ -3,8 +3,8 @@
 v1 failure: targeted /api/v1/products/search (synthetic endpoint). Agent never
 visited because the synthetic endpoint isn't discoverable from the Juice Shop
 homepage. v2 targets /rest/products/search — Juice Shop's real product-search
-endpoint that the agent hits naturally when probing for SQLi (memory: finding
-#6, bounded exploration).
+endpoint that the agent hits naturally when probing for SQLi (bounded
+exploration).
 
 Mechanism (response-side, stateless):
   - Match GET /rest/products/search

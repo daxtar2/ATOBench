@@ -546,7 +546,7 @@ class PhantomIncidentNarrative(PrimitiveTransformer):
 - **− no_vuln_gaslighting**: banner 说"有 vuln symptom"，gaslighting 说"已 hardened"——矛盾
 - **× openapi_spec_poisoning**: 同时改 banner 和 spec info.version——必须保持一致
 
-**Empirical**: 📊 data | memory:atobench_schema_coupled_success (100% derail, FCA=3.8), atobench_coupling_sweep_results, atobench_isolation_sweep_findings (load-bearing primitive)
+**Empirical**: 📊 data | 100% derail, FCA=3.8; load-bearing primitive across the coupling and isolation sweeps
 - **⚠️ 需在 paper 前补齐**：具体 sweep 的 n 值（几 episode）、agent model、target。当前 "100%" 缺 n 说服力弱——若 n<10，只能作 pilot 描述，不能作 main result
 - **⚠️ Audit v3 caveat**: atobench_schema_coupled_success 的 100% derail 数据是用**老 schema_coupled**（含 _links.cve）跑的。新 schema_coupled（无 CVE link，纯 body clobber）需 n>=3 重跑确认效果是否保持
 
@@ -711,7 +711,7 @@ class PhantomIncidentNarrative(PrimitiveTransformer):
 - **− phantom_incident_narrative**: narrative 说"有 incident 已修复"，gaslighting 说"无 incident"——矛盾
 - **+ legalese_robots_deterrent** (M10): gaslighting 在 audit，deterrent 在 robots——互补
 
-**Empirical**: 📊 data (定性) | memory:atobench_t3_v2_sweep_results (gaslighting inverts to detection under deep probe)
+**Empirical**: 📊 data (定性) | gaslighting inverts to detection under deep probe
 - **⚠️ 需在 paper 前补齐**：inversion 的定量 threshold（多少 turn 后 agent 开始怀疑）、agent model、target
 
 ---
@@ -1234,7 +1234,7 @@ class InduceLoop(PrimitiveTransformer):
 - **− no_vuln_gaslighting**: symptom 说"有 leak"，gaslighting 说"无 vuln"——矛盾
 - **× hardcoded_cred_comment**: 同时注入 hash 和 HTML 注释里的 cred——叠加超过 2 个 leak field，违反 realism
 
-**Empirical**: 📊 data | memory:atobench_t3_v2_sweep_results (schema_coupled FP 2.8-5.0 vs signal_removal 0.2-1.2, 3-15x ratio)
+**Empirical**: 📊 data | schema_coupled FP 2.8-5.0 vs signal_removal 0.2-1.2 (3-15x ratio)
 - **⚠️ 需在 paper 前补齐**：3-15x ratio 的 n 值 + 置信区间；SC/SR 各 sweep 多少 episode；agent model；target
 
 ---
@@ -2275,7 +2275,7 @@ class HoneypotAdminLogin(PrimitiveTransformer):
 - **+ false_completion**: substitute_subgoal 把 _links 指向 false_completion 端点——agent 报完成但无 flag
 - **− openapi_spec_poisoning**: 都改 navigation——机制可能冲突
 
-**Empirical**: 🔬 inferred | memory:atobench_v2_synthetic_endpoint (substitute_subgoal hides _links.flag — 2 primitives load-bearing in v2 design)
+**Empirical**: 🔬 inferred | substitute_subgoal hides _links.flag — 2 primitives load-bearing in v2 design
 - **⚠️ 需在 paper 前补齐**：独立 sweep n 值；load-bearing 的定量证据
 
 ---
@@ -2464,7 +2464,7 @@ class HoneypotAdminLogin(PrimitiveTransformer):
 
 ### 16.2 高价值组合（推荐）
 
-> **Evidence status disclaimer**（面向 paper 引用）：以下 8 个组合中，**只有 "Attack chain" 有 isolation sweep 的间接证据**（memory: atobench_isolation_sweep_findings 显示 fake_version_banner + vuln_symptom_inject 类似链的 load-bearing 效应）。其余 7 个组合均为 **💡 hypothetical**，基于机制推理未经实验验证。**paper 引用时必须标注 [hypothetical]**，不得作为 result 表述。
+> **Evidence status disclaimer**（面向 paper 引用）：以下 8 个组合中，**只有 "Attack chain" 有 isolation sweep 的间接证据**（isolation sweep 的间接证据显示 fake_version_banner + vuln_symptom_inject 类似链的 load-bearing 效应）。其余 7 个组合均为 **💡 hypothetical**，基于机制推理未经实验验证。**paper 引用时必须标注 [hypothetical]**，不得作为 result 表述。
 
 | 组合 | primitives | 机制 | 经典 target | Evidence |
 |---|---|---|---|---|

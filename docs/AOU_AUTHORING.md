@@ -83,8 +83,7 @@ corpus under `runtime/atobench/deception_frame/` and
 | `deception_frame/deception_tricks_catalog_final.md` | Trick catalog with prerequisites and coupling notes |
 | `deception_frame/deception_framework_v3.md` | The overall deception framework |
 | `deception_frame/realism_constraints_v2.yaml` | Realism constraints a plan must respect |
-| `primitives/library.yaml` | Primitive library |
-| `scaffold/ADAPTIVE_GENERATOR_DESIGN*.md`, `scaffold/MULTI_AGENT_PIPELINE*.md`, `scaffold/MULTI_LLM_GENERATOR_BENCHMARK_DESIGN.md` | Design docs for the generator pipelines that surround the planner |
+| `primitives/library.yaml` | Primitive strategy library (validated against `schema/primitive_library.json`) |
 | `deception_frame/build_primitive_index.py` | Rebuilds the primitive index |
 
 ## Path A — the agent-driven design loop

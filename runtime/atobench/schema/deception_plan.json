@@ -294,7 +294,7 @@
         "rationale": {
           "type": "string",
           "minLength": 20,
-          "description": "Why this primitive × coupling × dim combination. Must cite wiki §<primitive> line <N> for injected_value template AND memory: atobench_<name> for empirical justification AND target_profile <field> for target-specific value choice. Non-empty (validator enforces)."
+          "description": "Why this primitive × coupling × dim combination. Must cite wiki §<primitive> line <N> for injected_value template, state the empirical or mechanism-based justification, and cite target_profile <field> for target-specific value choice. Non-empty (validator enforces)."
         },
         "trajectory_anchor": {
           "type": "object",

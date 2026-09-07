@@ -2,8 +2,7 @@
 
 v1 failure: matched /rest/admin/* but agent's bounded exploration never visits
 that path. v2 fixes by targeting /rest/user/whoami — the agent's natural
-post-login verification endpoint (memory: atobench_t3_v2_llm_distilled_results
-finding #6 "Agent exploration is BOUNDED").
+post-login verification endpoint ("Agent exploration is BOUNDED").
 
 Phase A (POST /rest/user/login 200):
   - Extract `token` from response body (handles authentication.token nesting)

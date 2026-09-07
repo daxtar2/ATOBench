@@ -115,7 +115,7 @@
           },
           "empirical_notes": {
             "type": "string",
-            "description": "Optional. References to ATOBench memory entries with empirical results (e.g. 'memory:atobench_coupling_sweep_results — schema_coupled 100% derail')."
+            "description": "Optional. Free-text note recording the empirical observation that justifies the strategy claim."
           }
         }
       }

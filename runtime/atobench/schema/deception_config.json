@@ -80,7 +80,7 @@
           "coupling": {
             "type": "string",
             "enum": ["loose", "schema_coupled", "precondition", "signal_removal"],
-            "description": "Coupling-strength axis value. Partial order: signal_removal < loose < {schema_coupled ≈ precondition}. Empirically (memory: atobench_coupling_sweep_results), loose and signal_removal have ~0% effect; schema_coupled and precondition are the effective variants."
+            "description": "Coupling-strength axis value. Partial order: signal_removal < loose < {schema_coupled ≈ precondition}. Empirically, loose and signal_removal have ~0% effect; schema_coupled and precondition are the effective variants."
           },
           "match": {
             "type": "object",

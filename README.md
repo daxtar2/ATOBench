@@ -88,6 +88,31 @@ Treat a pair as invalid unless route attestation is present and both episodes
 show agent-originated work. The runner fails closed on route-attestation or
 provider errors.
 
+## Evaluate results
+
+After a pair of episodes (clean `c0` + ATO `c1`) has run, the `eval` layer
+reconstructs what the agent actually did and whether verification held up:
+
+```bash
+# redaction-safe HTTP action trace from an episode's turns.jsonl
+atobench-experiment extract-action-trace --turns <episode>/turns.jsonl
+
+# paired C0/C1 behavior audit over an explicit pair manifest
+atobench-experiment audit-behavior --pairs pairs.json --output behavior_audit.json
+
+# clean-relative deception effect metrics from paired run artifacts
+atobench-experiment pentest-effect --clean-turns c0/turns.jsonl \
+  --deception-turns c1/turns.jsonl --clean-report c0/final_report.txt ...
+
+# end-to-end pair workflow (infers workspace artifacts, writes pentest_effect.json)
+atobench-experiment evaluate-pair --clean-run-dir <c0-dir> --deception-run-dir <c1-dir>
+```
+
+`runtime/atobench/eval/PENTEST_EFFECT_METRICS.md` defines the metrics. The
+`analysis/` project is the research layer on top: evidence reconstruction,
+identity-blinded judging, and verification-resilience statistics over a
+campaign (see `analysis/README.md`).
+
 ## Extending ATOBench
 
 AOUs are designed by an agent, not only by hand: the shipped design loop

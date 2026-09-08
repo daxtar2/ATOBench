@@ -1,12 +1,11 @@
 # ATOBench
 
 **ATOBench: Tracing How Autonomous Penetration-Testing Agents Verify Vulnerabilities When Target Evidence Lies**
-（ATOBench：当目标证据被篡改时，自主渗透测试 Agent 如何验证漏洞）
 
 [English](README.md) | 简体中文
 
-ATOBench 是一个评测框架，让自主渗透测试 Agent 的验证过程在*对抗性目标观测*（Adversarial
-Target Observation，ATO）下变得可观测。它在运行时注入已注册的响应变换，并将每个被变换的
+ATOBench 是一个评测框架，让 Pentest Agent 的验证过程在*环境欺骗*（Adversarial
+Target Observation，ATO）下的轨迹变得可观测。它在运行时注入已注册的响应变换，并将每个被变换的
 episode 与同环境下的原生（Native）episode 配对。每一对在第一个受影响的响应处对齐，随后
 通过带来源链接的重建，追踪 Agent 后续的动作、证据恢复、停止决策与报告支撑。
 
@@ -22,7 +21,7 @@ episode 与同环境下的原生（Native）episode 配对。每一对在第一�
 传播到后续动作、证据恢复、停止与报告。完整概念指南见
 [docs/CONCEPTS.md](docs/CONCEPTS.md)。
 
-![ATOBench 总览](docs/figures/atobench_overview.png)
+![ATOBench 总览](docs/figures/overview.png)
 
 ## 核心设计
 
@@ -138,10 +137,7 @@ runtime/atobench/targets/juice-shop/experiments/qwen37plus-sqli-dryrun/
 └── source_snapshots/                          # 代码 + 冻结输入快照（tar.xz + manifest）
 ```
 
-## 运行一次授权内的冒烟测试
-
-只允许对随附的故意脆弱基准靶场（OWASP Juice Shop）或你明确获得授权测试的
-系统运行：
+## 运行一次测试
 
 ```bash
 atobench-cross-model \
@@ -187,7 +183,7 @@ atobench-experiment evaluate-pair --clean-run-dir <c0-dir> --deception-run-dir <
 
 ## 扩展 ATOBench
 
-AOU 由 Agent 来设计，而不只是手工编写：随附的设计闭环
+AOU 由 Agent 来设计：随附的设计闭环
 （`experiment scaffold` → `make-deception` → `compile` → `freeze-suite`）
 由一个 Claude Code 规划 Agent 针对你的靶场撰写 `deception_plan.yaml`，
 全程以随附的欺骗方法论语料为参考，每一步都有确定性编译门禁。
@@ -195,31 +191,10 @@ AOU 由 Agent 来设计，而不只是手工编写：随附的设计闭环
 离线构建路径、靶场接入与手工编写。设计层的有效性要求见
 [docs/AOU_OPPORTUNITY_CONTRACT_STANDARD.md](docs/AOU_OPPORTUNITY_CONTRACT_STANDARD.md)。
 
-## 参与贡献
+评测其他渗透测试 Agent 时，`command` driver 通过一个经过校验的配置文件接入
+任意 Agent CLI，并提供默认拒绝的环境隔离与 driver 中立的轨迹契约。
+见 [docs/AGENT_ADAPTATION.md](docs/AGENT_ADAPTATION.md)。
 
-见 [CONTRIBUTING.md](CONTRIBUTING.md)：三项本地门禁（两套测试 +
-全仓发布审计）、fail-closed 哈希固定策略，以及绝不入仓的内容清单。
-发布历史见 [CHANGELOG.md](CHANGELOG.md)。
-
-## 本仓库有意不包含的内容
-
-- **运行日志与 episode 产物。** 所有 campaign 运行数据（turns、mitmproxy
-  抓包、Agent 工作区、冻结运行产物）均不随仓库发布。
-- **冻结参考数据集。** 分析层的冻结队列导出（450-episode Stage-20 参考
-  数据）不随仓库发布。可以通过 `analysis/scripts/atobench-vr` 的导出命令
-  从冻结 campaign 重新生成。
-- **模型供应商配置。** 不包含任何 API key、token 或网关地址。Agent 载体与
-  分析层评判都通过 Claude Code CLI 调用，模型路由与凭据来自你自己的
-  Claude Code 配置（如标准 `ANTHROPIC_*` 设置项）；仓库内不存储任何
-  供应商相关内容。
-- 历史 provenance 清单（`*_collection_source.manifest.json`、构建产物的
-  freeze manifest）指向最初的冻结采集；其中记录的哈希描述当前发布树。
-
-## 安全与授权使用
-
-本项目的目的是*评测*防御方可控观测下的 Agent 渗透测试行为。随附靶场是
-运行在隔离容器中的故意脆弱应用 OWASP Juice Shop。请勿将本框架指向你不
-拥有、或未明确获得测试授权的系统。
 
 ## 引用
 
@@ -239,8 +214,6 @@ AOU 由 Agent 来设计，而不只是手工编写：随附的设计闭环
 }
 ```
 
-GitHub 也会根据 [CITATION.cff](CITATION.cff) 提供仓库级引用（"Cite this
-repository" 按钮）。
 
 ## 许可证
 

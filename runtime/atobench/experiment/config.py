@@ -36,6 +36,7 @@ class AgentConfig:
     defense_posture: str = "strong"
     max_tool_calls: int = 80
     calibration_focus: str | None = None
+    command_config: Path | None = None
 
 
 @dataclass
@@ -177,9 +178,12 @@ def load_experiment_config(path: str | Path) -> ExperimentConfig:
         defense_posture=str(agent_raw.get("defense_posture", "strong")),
         max_tool_calls=int(agent_raw.get("max_tool_calls", 80)),
         calibration_focus=agent_raw.get("calibration_focus"),
+        command_config=_path(agent_raw["command_config"], config_path.parent) if agent_raw.get("command_config") else None,
     )
     if agent.claude_effort and agent.claude_effort not in {"low", "medium", "high", "xhigh", "max"}:
         raise ValueError("agent.claude_effort must be one of low, medium, high, xhigh, max")
+    if agent.driver in {"command", "command-agent", "command_agent"} and agent.command_config is None:
+        raise ValueError("agent.driver 'command' requires agent.command_config (command_agent_config.v1 YAML)")
     subagents = SubagentConfig(
         executor=str(subagents_raw.get("executor", "prompt_files")),
         planning_mode=str(subagents_raw.get("planning_mode", "trajectory_aware")),

@@ -331,6 +331,7 @@ class ProxyEpisodeRunner:
         agent_max_tool_calls: int = 80,
         agent_calibration_focus: str | None = None,
         agent_workspace: Path | str | None = None,
+        command_config: Path | str | None = None,
     ) -> None:
         self.deception_config_path = Path(deception_config_path) if deception_config_path else None
         self.runtime_program_path = Path(runtime_program_path) if runtime_program_path else None
@@ -356,6 +357,7 @@ class ProxyEpisodeRunner:
         self.agent_calibration_focus = agent_calibration_focus
         self.agent_workspace = Path(agent_workspace).resolve() if agent_workspace else Path("/tmp")
         self._agent_workspace_isolated = agent_workspace is not None
+        self.command_config = Path(command_config) if command_config else None
 
         self.proxy_url = f"http://127.0.0.1:{proxy_port}"
         self._mitm_proc: subprocess.Popen | None = None
@@ -437,6 +439,8 @@ class ProxyEpisodeRunner:
             agent_result = self._spawn_curl_replay()
         elif self.driver == "agentic-pentest-benchmark":
             agent_result = self._spawn_agentic_pentest()
+        elif self.driver == "command":
+            agent_result = self._spawn_command_agent()
         else:
             agent_result = self._spawn_agent()
 
@@ -709,6 +713,7 @@ class ProxyEpisodeRunner:
             f"agent_done: flag={flag} steps={steps} token_cost={token_cost} "
             f"duration={duration:.1f}s session={out.get('session_id')} cost_usd={out.get('total_cost_usd')}"
         )
+        self._write_agent_session_json_result(out, returncode=proc.returncode, duration_s=duration)
 
         return {
             "flag": flag,
@@ -783,6 +788,11 @@ class ProxyEpisodeRunner:
             self.agent_workspace,
             stdout=proc.stdout,
             stderr=proc.stderr,
+        )
+        self._write_agent_session_from_stream(
+            proc.stdout,
+            returncode=proc.returncode,
+            duration_s=time.time() - t0,
         )
         if startup_timed_out:
             return {
@@ -929,44 +939,116 @@ class ProxyEpisodeRunner:
             "raw": {**out, "atobench_model_route": model_route},
         }
 
+    def _write_agent_session_from_stream(
+        self, stdout: str, *, returncode: int | None, duration_s: float
+    ) -> dict[str, Any] | None:
+        """Emit agent_session.jsonl from a Claude stream-json transcript.
+
+        Attestation mode is ``stream_verified``: every event is derived from
+        the agent's own structured stream. Raw stdout remains in
+        claude_stream.jsonl; the canonical file carries only the closed
+        event vocabulary.
+        """
+        if not self._agent_workspace_isolated:
+            return None
+        from atobench.agents.session_events import claude_stream_to_session_events, write_session_file
+
+        events = claude_stream_to_session_events(stdout)
+        writer = write_session_file(
+            self.agent_workspace / "agent_session.jsonl",
+            self.episode_id,
+            attestation_mode="stream_verified",
+            events=[(event["event_type"], event["payload"]) for event in events],
+        )
+        writer.append_session_end(returncode, duration_s)
+        return {"path": str(self.agent_workspace / "agent_session.jsonl"), "event_count": writer.event_count}
+
+    def _write_agent_session_json_result(
+        self, out: dict[str, Any], *, returncode: int | None, duration_s: float
+    ) -> dict[str, Any] | None:
+        """Emit agent_session.jsonl for non-streaming `claude -p --output-format json`.
+
+        Only the final result was observed, so attestation is
+        ``adapter_declared`` and the file carries session_start, the final
+        report, and session_end — no intermediate trajectory.
+        """
+        if not self._agent_workspace_isolated:
+            return None
+        from atobench.agents.session_events import SessionEventWriter
+
+        writer = SessionEventWriter(
+            self.agent_workspace / "agent_session.jsonl", self.episode_id, attestation_mode="adapter_declared"
+        )
+        writer.append("session_start", {"driver": "claude-code"})
+        writer.append_text_event("final_report", str(out.get("result", "") or ""))
+        writer.append_session_end(returncode, duration_s)
+        return {"path": str(self.agent_workspace / "agent_session.jsonl"), "event_count": writer.event_count}
+
+    def _spawn_command_agent(self) -> dict[str, Any]:
+        """Run a third-party agent CLI via its command-agent config."""
+        from atobench.agents.command_agent import CommandAgent
+        from proxy.jsonl_logger import orchestrator_log
+
+        if self.command_config is None:
+            return {
+                "flag": None,
+                "final_report_text": "PARSE_FAIL: driver 'command' requires --agent-command-config",
+                "steps": 0,
+                "token_cost": 0,
+                "raw": {"error": "missing_command_config", "driver": "command"},
+            }
+        orchestrator_log(
+            f"command_agent_start: config={self.command_config} cwd={self.agent_workspace} "
+            f"timeout={self.agent_timeout_s}s"
+        )
+        agent = CommandAgent(
+            episode_spec={
+                "episode_id": self.episode_id,
+                "task_id": self.task_id,
+                "target_url": self.target_url,
+            },
+            proxy_urls={"target": self.proxy_url},
+            command_config=self.command_config,
+            workspace=self.agent_workspace,
+            turns_path=self.log_dir / "turns.jsonl",
+            defense_posture=self.agent_defense_posture,
+            max_tool_calls=self.agent_max_tool_calls,
+            calibration_focus=self.agent_calibration_focus,
+            timeout_s=self.agent_timeout_s,
+            startup_timeout_s=self.agent_startup_timeout_s,
+        )
+        agent.reset({})
+        report = agent.run()
+        final_text = report.final_report_text
+        orchestrator_log(
+            f"command_agent_done: config={self.command_config} report_chars={len(final_text)} "
+            f"duration={report.duration_seconds:.1f}s returncode={report.raw_metadata.get('returncode')}"
+        )
+        return {
+            "flag": _extract_flag(final_text),
+            "final_report_text": final_text,
+            "steps": report.n_turns,
+            "token_cost": 0,
+            "raw": report.raw_metadata,
+        }
+
     def _run_agentic_with_startup_watchdog(
         self, cmd: list[str], agent_env: dict[str, str]
     ) -> tuple[subprocess.CompletedProcess[str] | None, bool]:
         """Stop a hung Claude startup before it can consume an entire episode budget."""
+        from atobench.agents.command_agent import run_with_startup_watchdog
 
-        turns_path = self.log_dir / "turns.jsonl"
-        initial_size = turns_path.stat().st_size if turns_path.exists() else 0
-        proc = subprocess.Popen(
+        proc, startup_timed_out, _ = run_with_startup_watchdog(
             cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            cwd=str(self.agent_workspace),
             env=agent_env,
-            start_new_session=True,
+            cwd=self.agent_workspace,
+            episode_id=self.episode_id,
+            turns_path=self.log_dir / "turns.jsonl",
+            startup_timeout_s=self.agent_startup_timeout_s,
+            timeout_s=self.agent_timeout_s,
         )
-        started = time.monotonic()
-        observed_action = False
-        while proc.poll() is None:
-            if not observed_action and turns_path.exists():
-                with turns_path.open("rb") as handle:
-                    handle.seek(initial_size)
-                    observed_action = self.episode_id.encode("utf-8") in handle.read()
-            if not observed_action and time.monotonic() - started >= self.agent_startup_timeout_s:
-                os.killpg(proc.pid, signal.SIGTERM)
-                try:
-                    stdout, stderr = proc.communicate(timeout=5)
-                except subprocess.TimeoutExpired:
-                    os.killpg(proc.pid, signal.SIGKILL)
-                    stdout, stderr = proc.communicate()
-                return subprocess.CompletedProcess(cmd, proc.returncode, stdout, stderr), True
-            if time.monotonic() - started >= self.agent_timeout_s:
-                os.killpg(proc.pid, signal.SIGKILL)
-                stdout, stderr = proc.communicate()
-                return subprocess.CompletedProcess(cmd, proc.returncode, stdout, stderr), False
-            time.sleep(0.5)
-        stdout, stderr = proc.communicate()
-        return subprocess.CompletedProcess(cmd, proc.returncode, stdout, stderr), False
+        return proc, startup_timed_out
+
 
 # ---------- helpers ----------
 

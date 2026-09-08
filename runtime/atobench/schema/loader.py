@@ -92,6 +92,18 @@ def validate_runtime_event(event: dict[str, Any]) -> None:
     jsonschema.validate(instance=event, schema=schema)
 
 
+def validate_agent_session_event(event: dict[str, Any]) -> None:
+    """Validate one canonical agent session event (agent_session_event.v1)."""
+    schema = _load_schema("agent_session_event")
+    jsonschema.validate(instance=event, schema=schema)
+
+
+def validate_command_agent_config(cfg: dict[str, Any]) -> None:
+    """Validate a command-agent adapter config (command_agent_config.v1)."""
+    schema = _load_schema("command_agent_config")
+    jsonschema.validate(instance=cfg, schema=schema)
+
+
 def validate_target_state_fingerprint(fingerprint: dict[str, Any]) -> None:
     schema = _load_schema("target_state_fingerprint")
     jsonschema.validate(instance=fingerprint, schema=schema)

@@ -211,6 +211,7 @@ def _cmd_run_proxy(args: argparse.Namespace, log_dir: Path) -> int:
         agent_max_tool_calls=getattr(args, "agent_max_tool_calls", 80),
         agent_calibration_focus=getattr(args, "agent_calibration_focus", None),
         agent_workspace=getattr(args, "agent_workspace", None),
+        command_config=getattr(args, "agent_command_config", None),
     )
     print(f"[atobench run --mode proxy] episode_id={episode_id}")
     print(f"  target_url={args.target_url} proxy_port={args.proxy_port}")
@@ -901,6 +902,8 @@ def cmd_sweep_proxy(args: argparse.Namespace) -> int:
                 agent_defense_posture=getattr(args, "agent_defense_posture", "strong"),
                 agent_max_tool_calls=getattr(args, "agent_max_tool_calls", 80),
                 agent_calibration_focus=getattr(args, "agent_calibration_focus", None),
+                agent_workspace=getattr(args, "agent_workspace", None),
+                command_config=getattr(args, "agent_command_config", None),
             )
             result = runner.run()
             results.append({
@@ -998,10 +1001,11 @@ def build_parser() -> argparse.ArgumentParser:
     p_run.add_argument("--agent-timeout", type=int, default=900,
                        help="Agent invocation timeout in seconds (default 900 = 15min).")
     p_run.add_argument("--driver", default="subagent",
-                       choices=["subagent", "agentic-pentest-benchmark", "curl-replay"],
+                       choices=["subagent", "agentic-pentest-benchmark", "curl-replay", "command"],
                        help="proxy mode only. subagent=spawn `claude -p` (default); "
                             "agentic-pentest-benchmark=delegate to Claude Code Agent tool; "
-                            "curl-replay=deterministic curl sequence for fast infra testing.")
+                            "curl-replay=deterministic curl sequence for fast infra testing; "
+                            "command=run a third-party agent CLI defined by --agent-command-config.")
     p_run.add_argument("--agent-subagent-type", default="agentic-pentest-benchmark",
                        help="Agent tool subagent type for --driver agentic-pentest-benchmark.")
     p_run.add_argument("--agent-defense-posture", default="strong",
@@ -1013,6 +1017,9 @@ def build_parser() -> argparse.ArgumentParser:
                        help="Optional targeted clean-calibration focus. Leave unset for broad benchmark runs.")
     p_run.add_argument("--agent-workspace", default=None,
                        help="Optional empty per-episode Claude Code working directory. Protocol-v3 supplies this automatically.")
+    p_run.add_argument("--agent-command-config", default=None,
+                       help="Command-agent adapter YAML (schema atobench.command_agent_config.v1). "
+                            "Required for --driver command.")
     p_run.add_argument("--model", default=None,
                        help="Expected provider model identifier recorded for cross-model testing. "
                             "The runner verifies it against Claude Code route attestation.")
@@ -1053,12 +1060,15 @@ def build_parser() -> argparse.ArgumentParser:
     p_sweep.add_argument("--agent-timeout", type=int, default=300)
     p_sweep.add_argument("--output-dir", default=str(DEFAULT_LOG_DIR))
     p_sweep.add_argument("--driver", default="subagent",
-                         choices=["subagent", "agentic-pentest-benchmark", "curl-replay"])
+                         choices=["subagent", "agentic-pentest-benchmark", "curl-replay", "command"])
     p_sweep.add_argument("--agent-subagent-type", default="agentic-pentest-benchmark")
     p_sweep.add_argument("--agent-defense-posture", default="strong",
                          choices=["strong", "weak"])
     p_sweep.add_argument("--agent-max-tool-calls", type=int, default=80)
     p_sweep.add_argument("--agent-calibration-focus", default=None)
+    p_sweep.add_argument("--agent-command-config", default=None,
+                         help="Command-agent adapter YAML (schema atobench.command_agent_config.v1). "
+                              "Required for --driver command.")
     p_sweep.add_argument("--claude-effort", default=None,
                          choices=["low", "medium", "high", "xhigh", "max"])
     p_sweep.set_defaults(func=cmd_sweep_proxy)

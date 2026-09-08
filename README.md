@@ -27,7 +27,7 @@ observations propagate through subsequent actions, evidence recovery,
 stopping, and reporting. See [docs/CONCEPTS.md](docs/CONCEPTS.md) for the
 full concept guide.
 
-![ATOBench overview](docs/figures/atobench_overview.png)
+![ATOBench overview](docs/figures/overview.png)
 
 ## Core design
 
@@ -160,9 +160,6 @@ runtime/atobench/targets/juice-shop/experiments/qwen37plus-sqli-dryrun/
 
 ## Run an authorized smoke test
 
-Only run this against the included intentionally vulnerable benchmark target
-(OWASP Juice Shop) or a system you are explicitly authorized to test:
-
 ```bash
 atobench-cross-model \
   --campaign-id qwen37plus-sqli-smoke \
@@ -218,37 +215,11 @@ loop, the offline construction path, target onboarding, and manual
 authoring. Design-level validity requirements are in
 [docs/AOU_OPPORTUNITY_CONTRACT_STANDARD.md](docs/AOU_OPPORTUNITY_CONTRACT_STANDARD.md).
 
-## Contributing
+To evaluate a different penetration-testing agent, the `command` driver wraps
+any agent CLI behind a validated config file — with deny-by-default
+environment isolation and a driver-neutral trajectory contract. See
+[docs/AGENT_ADAPTATION.md](docs/AGENT_ADAPTATION.md).
 
-See [CONTRIBUTING.md](CONTRIBUTING.md): the three local gates (both test
-suites and the whole-tree release audit), the fail-closed hash-pinning
-policy, and what must never enter the repository. Release history is in
-[CHANGELOG.md](CHANGELOG.md).
-
-## What is intentionally not in this repository
-
-- **Run logs and episode outputs.** All campaign run data (turns, mitmproxy
-  dumps, agent workspaces, frozen run outputs) is excluded.
-- **Frozen reference datasets.** The analysis layer's frozen cohort exports
-  (450-episode Stage-20 reference) are not shipped. They can be regenerated
-  from a frozen campaign with the `analysis/scripts/atobench-vr` export
-  commands.
-- **Provider configuration.** No API keys, tokens, or gateway routes. The
-  agent carrier and the analysis-layer judges invoke the Claude Code CLI,
-  which takes model routing and credentials from your own Claude Code
-  configuration (e.g. the standard `ANTHROPIC_*` settings); nothing
-  provider-specific is stored in this repository.
-- Historical provenance manifests (`*_collection_source.manifest.json`,
-  freeze manifests of construction artifacts) reference the original frozen
-  collection; recorded hashes describe the released tree.
-
-## Safety and authorized use
-
-This project exists to *evaluate* agentic penetration testing under
-defender-controlled observations. The bundled target is the intentionally
-vulnerable OWASP Juice Shop running in an isolated container. Do not point
-the harness at systems you do not own or are not explicitly authorized to
-test.
 
 ## Citation
 
@@ -267,10 +238,6 @@ If you use ATOBench in your research, please cite the paper:
   url           = {https://arxiv.org/abs/2608.12996}
 }
 ```
-
-GitHub also offers a ready-made citation for this repository via
-[CITATION.cff](CITATION.cff) (the "Cite this repository" button).
-
 ## License
 
 Apache-2.0. See [LICENSE](LICENSE) and [NOTICE](NOTICE).

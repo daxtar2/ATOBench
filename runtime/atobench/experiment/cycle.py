@@ -778,6 +778,8 @@ class ExperimentCycle:
         cmd.extend(["--agent-max-tool-calls", str(self.cfg.agent.max_tool_calls)])
         if self.cfg.agent.calibration_focus:
             cmd.extend(["--agent-calibration-focus", self.cfg.agent.calibration_focus])
+        if self.cfg.agent.command_config:
+            cmd.extend(["--agent-command-config", str(self.cfg.agent.command_config)])
         agent_workspace = self._protocol_v3_agent_workspace() if protocol_preflight else None
         if agent_workspace:
             cmd.extend(["--agent-workspace", str(agent_workspace)])
@@ -1703,6 +1705,8 @@ def _proxy_driver(driver: str) -> str:
         return "agentic-pentest-benchmark"
     if driver in {"claude-code", "claude_code", "subagent"}:
         return "subagent"
+    if driver in {"command", "command-agent", "command_agent"}:
+        return "command"
     return driver
 
 

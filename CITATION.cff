@@ -31,3 +31,10 @@ keywords:
   - benchmark
   - cyber deception
   - trajectory evaluation
+identifiers:
+  - type: doi
+    value: 10.48550/arXiv.2608.12996
+    description: The paper's arXiv DOI
+  - type: url
+    value: "https://arxiv.org/abs/2608.12996"
+    description: The paper on arXiv

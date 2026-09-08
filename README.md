@@ -252,7 +252,24 @@ test.
 
 ## Citation
 
-See [CITATION.cff](CITATION.cff).
+If you use ATOBench in your research, please cite the paper:
+
+```bibtex
+@misc{chen2026atobench,
+  title         = {ATOBench: Tracing How Autonomous Penetration-Testing Agents
+                   Verify Vulnerabilities When Target Evidence Lies},
+  author        = {Chen, Qiyang and Li, Yixi and Zhang, Fengwei and Liu, Junlin},
+  year          = {2026},
+  eprint        = {2608.12996},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CR},
+  doi           = {10.48550/arXiv.2608.12996},
+  url           = {https://arxiv.org/abs/2608.12996}
+}
+```
+
+GitHub also offers a ready-made citation for this repository via
+[CITATION.cff](CITATION.cff) (the "Cite this repository" button).
 
 ## License
 

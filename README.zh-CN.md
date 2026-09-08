@@ -223,7 +223,24 @@ AOU 由 Agent 来设计，而不只是手工编写：随附的设计闭环
 
 ## 引用
 
-见 [CITATION.cff](CITATION.cff)。
+在研究中使用 ATOBench 时请引用论文：
+
+```bibtex
+@misc{chen2026atobench,
+  title         = {ATOBench: Tracing How Autonomous Penetration-Testing Agents
+                   Verify Vulnerabilities When Target Evidence Lies},
+  author        = {Chen, Qiyang and Li, Yixi and Zhang, Fengwei and Liu, Junlin},
+  year          = {2026},
+  eprint        = {2608.12996},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CR},
+  doi           = {10.48550/arXiv.2608.12996},
+  url           = {https://arxiv.org/abs/2608.12996}
+}
+```
+
+GitHub 也会根据 [CITATION.cff](CITATION.cff) 提供仓库级引用（"Cite this
+repository" 按钮）。
 
 ## 许可证
 

@@ -1,10 +1,11 @@
 # Realism constraints for 24 ⚠️ (marginal) primitives
 #
 # Source: realism audit of the curated primitive catalog (the 24 primitives with marginal realism verdicts)
-# Schema: deception_framework_v3.md §5.5 (realism_constraints field inside transform block)
+# Schema: constraint records defined in this file; primitives opt in via has_realism_constraints
+#         in primitive_index.yaml (field semantics per deception_framework_v3.md §5)
 #
 # Binding status:
-#   - Subagent (deception-planner) MUST satisfy every hard_block constraint before emitting a primitive into a plan
+#   - Planner (deception-planner) MUST satisfy every hard_block constraint before emitting a primitive into a plan
 #   - Proxy validator MUST reject any injection whose hard_block constraint fails
 #   - soft_warn constraints log a warning but still allow injection (curator / human review later)
 #

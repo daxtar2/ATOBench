@@ -144,7 +144,7 @@ that leak forbidden anchors):
 |---|---|---|
 | `trajectory_aware` | Clean-run trajectory profile; injections must carry trajectory anchors | Adaptive/trajectory-conditioned AOU design |
 | `static_inventory` | Endpoint inventory only; trajectory anchors forbidden | Inventory-grounded design without clean-trajectory conditioning |
-| `non_contact` | Inventory only; bindings restricted to predeclared unvisited control paths | Control conditions |
+| `non_contact_control` | Inventory only; bindings restricted to predeclared unvisited control paths | Control conditions |
 
 ### Notes on the planner agent
 

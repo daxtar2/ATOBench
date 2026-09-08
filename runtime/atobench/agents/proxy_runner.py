@@ -296,7 +296,8 @@ class ProxyEpisodeRunner:
             fallback for legacy target/instrumentation fields.
         target_url: Upstream URL the proxy forwards to (e.g. http://127.0.0.1:3000).
         proxy_port: Port for mitmdump to listen on (e.g. 8000).
-        task_id: T1 / T2 / T3 (only T1 supported in proxy mode for now).
+        task_id: T1 / T2 / T3. T3 is the canonical pentest-audit mode used by
+            shipped suites; T1/T2 are legacy flag-task paths (FINAL_FLAG append).
         baseline: B0 / B3.
         episode_id: Canonical episode_id (used for log isolation + end_episode record).
         log_dir: Where turns.jsonl + episodes.jsonl are written.

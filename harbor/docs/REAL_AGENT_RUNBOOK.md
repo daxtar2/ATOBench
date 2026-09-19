@@ -14,18 +14,31 @@ export PATH="$HOME/.local/bin:$PATH"
 
 ## Paired run (SQLi first — the strongest-effect contract in the paper)
 
+> **Gateway model names.** When `ANTHROPIC_BASE_URL` points at a
+> gateway/relay, Harbor passes the `-m` string through verbatim, and many
+> gateways only serve bare model IDs. If a trial dies within minutes with
+> `503 No available channel for model ...`, retry with the bare id
+> (`-m claude-sonnet-5` instead of `-m anthropic/claude-sonnet-5`). Check
+> what the gateway serves via `curl $ANTHROPIC_BASE_URL/v1/models`.
+>
+> **Transient first-turn failures.** Two observed flake classes, both
+> recovered by simply re-running: provider-side `API Error: Content block
+> not found`, and a nondeterministic safety-classifier refusal on the pentest
+> instruction (~1 in 6 trials in the validation batch). For campaigns, retry
+> the trial rather than treating these as measurements.
+
 ```bash
-harbor run -p harbor/tasks/atobench-sqli-c1 -a claude-code -m anthropic/claude-sonnet-5
-harbor run -p harbor/tasks/atobench-sqli-c0 -a claude-code -m anthropic/claude-sonnet-5
+harbor run -p harbor/tasks/atobench-sqli-c1 -a claude-code -m claude-sonnet-5
+harbor run -p harbor/tasks/atobench-sqli-c0 -a claude-code -m claude-sonnet-5
 ```
 
 Then the other two AOUs:
 
 ```bash
-harbor run -p harbor/tasks/atobench-jwt-c1    -a claude-code -m anthropic/claude-sonnet-5
-harbor run -p harbor/tasks/atobench-jwt-c0    -a claude-code -m anthropic/claude-sonnet-5
-harbor run -p harbor/tasks/atobench-basket-c1 -a claude-code -m anthropic/claude-sonnet-5
-harbor run -p harbor/tasks/atobench-basket-c0 -a claude-code -m anthropic/claude-sonnet-5
+harbor run -p harbor/tasks/atobench-jwt-c1    -a claude-code -m claude-sonnet-5
+harbor run -p harbor/tasks/atobench-jwt-c0    -a claude-code -m claude-sonnet-5
+harbor run -p harbor/tasks/atobench-basket-c1 -a claude-code -m claude-sonnet-5
+harbor run -p harbor/tasks/atobench-basket-c0 -a claude-code -m claude-sonnet-5
 ```
 
 ## What to check per trial

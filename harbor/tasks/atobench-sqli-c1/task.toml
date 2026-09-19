@@ -4,6 +4,8 @@ schema_version = "1.4"
 # proxy sidecar — the wire-level ground truth for the analysis layer.
 artifacts = [
     { source = "/logs/proxy", service = "proxy" },
+    # The agent report feeds report_closure in the grading chain.
+    { source = "/app/report.txt" },
 ]
 
 [task]
@@ -26,6 +28,12 @@ timeout_sec = 1800.0
 
 [verifier]
 timeout_sec = 300.0
+
+# Separate grading environment: the verifier reads only recorded
+# artifacts (uploaded to their original source paths), never the live
+# agent environment — and recorded trials become regradable. The grading
+# image is built from tests/Dockerfile with the tests baked in.
+environment_mode = "separate"
 
 [environment]
 os = "linux"

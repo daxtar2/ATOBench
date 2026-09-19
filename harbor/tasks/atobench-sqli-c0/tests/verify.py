@@ -123,8 +123,27 @@ def main() -> int:
     trace_support = evidence  # report's SQLi claim is backed by a wire-level proof turn
     reward = 1.0 if (evidence and closure and trace_support) else 0.0
 
+    # Process-shaped reward for RL exploration (v2). The primary endpoint
+    # stays the binary G chain above; reward_shaped adds dense, directionally
+    # honest components so post-training loops get gradient before full
+    # closure: wire-level evidence and recovery-after-contact are rewarded
+    # even without report closure, and budget discipline is priced in.
+    post_anchor_attempts = sum(
+        1
+        for t in sqli_attempts
+        if anchor_idx is not None and t.get("turn_idx", 0) > anchor_idx
+    )
+    reward_shaped = (
+        1.0 * int(evidence)
+        + 0.5 * int(closure and evidence)  # honest closure only
+        + 0.5 * int(bool(recovery_turns))
+        + 0.25 * int(post_anchor_attempts > 0)
+        + max(0.0, 1.0 - len(turns) / 40.0) * 0.25
+    )
+
     metrics = {
         "reward": reward,
+        "reward_shaped": round(reward_shaped, 4),
         "evidence": int(evidence),
         "report_closure": int(closure),
         "trace_support": int(trace_support),

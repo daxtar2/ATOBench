@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atobench.dev/schema/writeup.json",
+  "title": "Writeup",
+  "description": "User-provided target description. Encodes the intended attack paths so the deception-planner subagent knows WHERE to place deception for maximum effect (on the path the agent will actually walk, not on unused endpoints). Required input to `atobench scaffold`.",
+  "type": "object",
+  "required": ["target", "attack_paths"],
+  "additionalProperties": false,
+  "properties": {
+    "target": {
+      "type": "object",
+      "required": ["name", "image"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Human-readable target name (e.g. 'OWASP Juice Shop')."
+        },
+        "image": {
+          "type": "string",
+          "description": "Docker image reference (e.g. bkimminich/juice-shop:latest)."
+        },
+        "swagger": {
+          "type": ["string", "null"],
+          "description": "Optional path to OpenAPI/Swagger doc (e.g. /api-docs). Used by deception-recon subagent for endpoint discovery."
+        },
+        "source_repo": {
+          "type": ["string", "null"],
+          "description": "Optional git URL. Used by deception-static-analyzer subagent for source-level endpoint discovery. Omit for closed-source targets."
+        },
+        "language": {
+          "type": ["string", "null"],
+          "description": "Primary implementation language (e.g. 'Node.js', 'PHP', 'Python'). Helps static-analyzer pick the right tool."
+        },
+        "port": {
+          "type": ["integer", "null"],
+          "description": "Internal port the target listens on (default 80). Used by docker-compose template.",
+          "default": 80,
+          "minimum": 1,
+          "maximum": 65535
+        }
+      }
+    },
+    "attack_paths": {
+      "type": "array",
+      "description": "Intended agent paths through the target. Each path is a sequence of endpoint visits. The deception-planner places primitives on key_endpoints of these paths.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "steps", "key_endpoints"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Path identifier (e.g. 'login_bypass_sqli')."
+          },
+          "difficulty": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 6,
+            "description": "Difficulty rating 1-6 (Juice Shop convention). Higher = more steps/indirection."
+          },
+          "steps": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["endpoint", "method", "intent"],
+              "additionalProperties": false,
+              "properties": {
+                "endpoint": {"type": "string", "description": "URL path (e.g. /rest/user/login)."},
+                "method": {"type": "string", "enum": ["GET", "POST", "PUT", "DELETE", "PATCH"]},
+                "intent": {"type": "string", "description": "What the agent is trying to do at this step (e.g. 'SQLi auth bypass')."}
+              }
+            }
+          },
+          "key_endpoints": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Endpoints where deception will be most effective (subset of steps' endpoints). The planner prioritizes these for primitive injection.",
+            "minItems": 1
+          }
+        }
+      }
+    },
+    "ground_truth": {
+      "type": "array",
+      "description": "Ground-truth vulnerabilities the agent is expected to find (or be deflected from). Used by deception-validator to compute false_positive_vuln and false_negative_vuln dimensions.",
+      "items": {
+        "type": "object",
+        "required": ["endpoint", "vuln", "expected_detection"],
+        "additionalProperties": false,
+        "properties": {
+          "endpoint": {"type": "string"},
+          "vuln": {"type": "string", "description": "Vulnerability type (e.g. SQLi, XSS, IDOR, CSRF)."},
+          "expected_detection": {"type": "boolean", "description": "True = agent should report this. False = agent should NOT report (deception should suppress)."}
+        }
+      }
+    },
+    "fake_value_sources": {
+      "type": "object",
+      "description": "Sources of plausible fake values. The planner picks from these when filling in primitive.fake_values. Helps the generated config look realistic.",
+      "additionalProperties": false,
+      "properties": {
+        "version_strings": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Plausible server version strings (e.g. Apache/2.4.49, nginx/1.20.0)."
+        },
+        "cve_references": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "CVE IDs to reference in fake banners (e.g. CVE-2021-41773)."
+        },
+        "fake_tokens": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Plausible fake tokens/hashes for vuln_symptom_inject."
+        }
+      }
+    }
+  }
+}

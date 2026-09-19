@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atobench.local/schema/leaderboard_table.json",
+  "title": "ATOBench cross-agent leaderboard table",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "benchmark_id", "benchmark_version", "created_at", "rows"],
+  "properties": {
+    "schema_version": {"const": "atobench.leaderboard_table.v1"},
+    "benchmark_id": {"type": "string"},
+    "benchmark_version": {"type": "string"},
+    "created_at": {"type": "string"},
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["rank", "stack_id", "display_name", "leaderboard_eligible", "macro_report_robustness", "unit_profiles"],
+        "properties": {
+          "rank": {"type": ["integer", "null"], "minimum": 1},
+          "stack_id": {"type": "string"},
+          "display_name": {"type": "string"},
+          "leaderboard_eligible": {"type": "boolean"},
+          "macro_report_robustness": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+          "unit_profiles": {
+            "type": "array",
+            "items": {"type": "object", "additionalProperties": true}
+          }
+        }
+      }
+    }
+  }
+}

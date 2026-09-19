@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atobench.dev/schema/runtime_event.json",
+  "title": "RuntimeEvent",
+  "description": "Canonical runtime event emitted by the rule engine. This is the attribution source of truth; legacy deception_tag is a projection.",
+  "type": "object",
+  "required": [
+    "event_id",
+    "episode_id",
+    "rule_id",
+    "injection_id",
+    "primitive",
+    "effect_id",
+    "operation",
+    "status",
+    "layer",
+    "target_dims",
+    "guard_results",
+    "details"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "event_id": {"type": "string", "pattern": "^evt_[0-9a-f]{16}$"},
+    "episode_id": {"type": "string"},
+    "turn_idx": {"type": ["integer", "null"], "minimum": 0},
+    "rule_id": {"type": "string"},
+    "injection_id": {"type": "string"},
+    "binding_id": {"type": ["string", "null"]},
+    "primitive": {"type": "string"},
+    "coupling": {"type": ["string", "null"]},
+    "surface": {
+      "type": ["string", "null"],
+      "enum": [
+        "metadata",
+        "structured_payload",
+        "document_text",
+        "failure_signal",
+        "discovery_document",
+        "enumeration_listing",
+        "progress_state",
+        "interactive_session",
+        null
+      ]
+    },
+    "loader": {"type": ["string", "null"], "enum": ["metadata", "document", "structured", "session", null]},
+    "hook": {"type": ["string", "null"], "enum": ["request", "response", null]},
+    "target": {"type": ["object", "null"], "additionalProperties": true},
+    "effect_id": {"type": "string"},
+    "operation": {
+      "type": "string",
+      "enum": [
+        "inject_flag",
+        "record_episode_token",
+        "record_match",
+        "set_json_field",
+        "sanitize_jwt_claims",
+        "remove_json_field",
+        "merge_json_object",
+        "replace_json_body",
+        "set_header",
+        "remove_header",
+        "append_text",
+        "remove_html_list_items",
+        "synthetic_response",
+        "stateful_response",
+        "legacy_transformer"
+      ]
+    },
+    "status": {"type": "string", "enum": ["matched", "applied", "blocked", "skipped", "error"]},
+    "layer": {"type": "string", "enum": ["environment_base", "instrumentation", "deception_perturbation"]},
+    "target_dims": {"type": "array", "items": {"type": "string"}},
+    "trajectory_anchor": {"type": ["object", "null"], "additionalProperties": true},
+    "matched_anchor": {"type": "object", "additionalProperties": true},
+    "before_ref": {},
+    "after_ref": {},
+    "guard_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["guard", "status"],
+        "additionalProperties": true,
+        "properties": {
+          "guard": {"type": "string"},
+          "status": {"type": "string", "enum": ["pass", "fail", "strip", "warn"]},
+          "message": {"type": "string"}
+        }
+      }
+    },
+    "details": {"type": "object", "additionalProperties": true}
+  }
+}

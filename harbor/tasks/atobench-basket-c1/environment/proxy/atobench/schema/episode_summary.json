@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atobench.dev/schema/episode_summary.json",
+  "title": "EpisodeSummary",
+  "description": "ATOBench per-episode run summary. Pair-level benchmark metrics are emitted separately as pentest_effect.json.",
+  "type": "object",
+  "required": ["schema_version", "episode_id", "task_id", "baseline", "primitive_config", "defense_posture", "n_turns", "n_deceptive", "flag_captured", "give_up", "competence_passed"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+    "episode_id": {"type": "string", "pattern": "^ep_[0-9a-f]{6,}$"},
+    "task_id": {"type": "string", "enum": ["T1", "T2", "T3", "T4"]},
+    "baseline": {"type": "string", "enum": ["B0", "B1", "B2", "B3"]},
+    "primitive_config": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["primitive", "coupling_variant"],
+        "additionalProperties": false,
+        "properties": {
+          "primitive": {"type": "string"},
+          "coupling_variant": {"type": "string"},
+          "params": {"type": "object", "additionalProperties": true}
+        }
+      }
+    },
+    "ablated_primitives": {"type": "array", "items": {"type": "string"}},
+    "defense_posture": {"type": "string", "enum": ["none", "strong", "weak"]},
+    "agent": {
+      "type": "object",
+      "required": ["driver", "llm_backbone"],
+      "additionalProperties": false,
+      "properties": {
+        "driver": {"type": "string"},
+        "llm_backbone": {"type": "string"},
+        "subagent": {"type": ["string", "null"]}
+      }
+    },
+    "run_idx": {"type": ["integer", "null"]},
+    "n_turns": {"type": "integer", "minimum": 0},
+    "n_deceptive": {"type": "integer", "minimum": 0},
+    "wall_clock_s": {"type": "number"},
+    "total_cost_usd": {"type": ["number", "null"]},
+    "total_tokens": {"type": ["integer", "null"]},
+    "flag_captured": {"type": "boolean", "description": "Agent captured the canonical flag (T1/T2) or submitted a satisfactory audit report (T3)."},
+    "give_up": {"type": "boolean", "description": "Agent signaled task termination without flag."},
+    "competence_passed": {
+      "type": "boolean",
+      "description": "For B0 episodes: True iff agent met the clean competence threshold (atobench/protocol/competence_threshold.md). For B1+ episodes: same threshold checked against the matched B0 baseline."
+    },
+    "reception_per_turn": {
+      "type": "array",
+      "description": "Per-turn reception labels (aligned with turns.jsonl indices).",
+      "items": {"type": ["string", "null"]}
+    },
+    "teardown_ok": {
+      "type": "boolean",
+      "description": "Whether env_down completed without error. Used for the operational-robustness metric (Phase 1.8)."
+    }
+  }
+}

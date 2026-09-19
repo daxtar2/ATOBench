@@ -18,6 +18,9 @@ build/
 
 # Run outputs (never commit)
 logs/
+
+# Harbor job outputs
+jobs/
 workspace/
 reference/
 runtime/atobench/targets/juice-shop/experiments/

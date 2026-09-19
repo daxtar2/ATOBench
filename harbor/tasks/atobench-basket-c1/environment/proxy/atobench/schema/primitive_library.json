@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atobench.dev/schema/primitive_library.json",
+  "title": "PrimitiveLibrary",
+  "description": "ATOBench primitive knowledge base. Read by the deception-planner subagent to decide which primitive to inject at which endpoint. Encodes the strategy space — subagents select within this space, they do not invent new primitives. This is where ATOBench's empirical know-how (which coupling works, which primitive fits which endpoint type) is sedimented.",
+  "type": "object",
+  "required": ["schema_version", "primitives"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "primitives": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "category", "fits_endpoint_types", "effect_dims", "coupling_variants", "when_to_use", "when_not_to_use"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "fake_version_banner",
+              "vuln_symptom_inject",
+              "no_vuln_gaslighting",
+              "corrupt_belief",
+              "poison_dependency",
+              "false_completion",
+              "exhaustion_trap",
+              "induce_loop",
+              "substitute_subgoal",
+              "preemptive_ftp_gaslight",
+              "cross_turn_jwt_escalation",
+              "hardcoded_cred_comment",
+              "decoy_sql_search",
+              "cross_turn_jwt_escalation_v2",
+              "decoy_sql_search_v2"
+            ]
+          },
+          "category": {
+            "type": "string",
+            "enum": ["belief_injection", "state_machine", "termination", "workflow_hijack", "request_validation"],
+            "description": "Primitive category. belief_injection: injects fake field values. state_machine: maintains cross-turn D_t. termination: causes agent to give up or false-complete. workflow_hijack: redirects HATEOAS _links. request_validation: rejects requests not matching imposed structure."
+          },
+          "fits_endpoint_types": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Endpoint type tags this primitive fits. Examples: root, version, banner, status, polling, async_job, login, oauth, flag, secure_api, admin, well_known. Used by planner to match against endpoint_inventory entries."
+          },
+          "effect_dims": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["time_stalling", "belief_fake_field", "termination_give_up", "false_positive_vuln_a", "false_positive_vuln_b", "false_negative_vuln", "resource_thrashing", "reception_class", "flag_rate", "fca"]
+            },
+            "description": "Pentest-effect dimensions this primitive targets. Used to predict which benchmark components will move when this primitive is active."
+          },
+          "requires": {
+            "type": "object",
+            "description": "What the target endpoint must expose for this primitive to be applicable.",
+            "additionalProperties": false,
+            "properties": {
+              "response_fields": {
+                "type": "array",
+                "items": {"type": "string"},
+                "description": "Response body fields the primitive reads/writes."
+              },
+              "request_fields": {
+                "type": "array",
+                "items": {"type": "string"},
+                "description": "Request body fields the primitive inspects."
+              },
+              "fake_value_source": {
+                "type": "string",
+                "enum": ["real_cve_database", "target_profile_fake_value_sources", "synthetic_hash", "none"],
+                "description": "Where the planner gets fake values from."
+              },
+              "cross_turn_state": {
+                "type": "boolean",
+                "description": "True if primitive needs state_store (stateful). False if stateless."
+              }
+            }
+          },
+          "coupling_variants": {
+            "type": "object",
+            "description": "4 entries (loose, schema_coupled, precondition, signal_removal). Each value is a string describing the variant's mechanism + empirical effectiveness note.",
+            "required": ["loose", "schema_coupled", "precondition", "signal_removal"],
+            "additionalProperties": false,
+            "properties": {
+              "loose": {"type": "string"},
+              "schema_coupled": {"type": "string"},
+              "precondition": {"type": "string"},
+              "signal_removal": {"type": "string"}
+            }
+          },
+          "when_to_use": {
+            "type": "string",
+            "description": "Markdown prose. When the planner should pick this primitive."
+          },
+          "when_not_to_use": {
+            "type": "string",
+            "description": "Markdown prose. Contraindications."
+          },
+          "example_match": {
+            "type": "object",
+            "description": "Concrete example of a match block for this primitive. Helps the planner write configs.",
+            "additionalProperties": false,
+            "properties": {
+              "path_regex": {"type": "string"},
+              "response_field": {"type": "string"},
+              "fake_value": {"type": "string"}
+            }
+          },
+          "empirical_notes": {
+            "type": "string",
+            "description": "Optional. Free-text note recording the empirical observation that justifies the strategy claim."
+          }
+        }
+      }
+    }
+  }
+}

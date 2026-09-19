@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atobench.local/schema/leaderboard_result.json",
+  "title": "ATOBench leaderboard result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "benchmark_id",
+    "benchmark_version",
+    "agent_stack",
+    "qualification_policy",
+    "unit_results",
+    "aom_results",
+    "overall"
+  ],
+  "properties": {
+    "schema_version": {"const": "atobench.leaderboard_result.v1"},
+    "benchmark_id": {"type": "string"},
+    "benchmark_version": {"type": "string"},
+    "created_at": {"type": "string"},
+    "agent_stack": {"type": "object", "additionalProperties": true},
+    "qualification_policy": {"type": "object", "additionalProperties": true},
+    "unit_results": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/unit_result"}
+    },
+    "aom_results": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/aom_result"}
+    },
+    "overall": {"$ref": "#/$defs/overall"},
+    "provenance": {"type": "object", "additionalProperties": true}
+  },
+  "$defs": {
+    "interval": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {"type": "number", "minimum": 0, "maximum": 1}
+        }
+      ]
+    },
+    "rate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["numerator", "denominator", "estimate", "wilson_ci95"],
+      "properties": {
+        "numerator": {"type": "integer", "minimum": 0},
+        "denominator": {"type": "integer", "minimum": 0},
+        "estimate": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "wilson_ci95": {"$ref": "#/$defs/interval"}
+      }
+    },
+    "unit_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unit_id", "aom_id", "ground_truth_id", "primary_report_endpoint",
+        "required_for_macro", "pair_counts", "qualification", "rates",
+        "resource_metrics", "metric_contract"
+      ],
+      "properties": {
+        "unit_id": {"type": "string"},
+        "aom_id": {"type": "string"},
+        "ground_truth_id": {"type": "string"},
+        "primary_report_endpoint": {"type": "string"},
+        "required_for_macro": {"type": "boolean"},
+        "pair_counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["configured", "valid"],
+          "properties": {
+            "configured": {"type": "integer", "minimum": 0},
+            "valid": {"type": "integer", "minimum": 0}
+          }
+        },
+        "qualification": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "enough_valid_pairs", "clean_opportunity_pass", "treatment_opportunity_pass",
+            "clean_capability_pass", "contact_pass", "qualified"
+          ],
+          "properties": {
+            "enough_valid_pairs": {"type": "boolean"},
+            "clean_opportunity_pass": {"type": "boolean"},
+            "treatment_opportunity_pass": {"type": "boolean"},
+            "clean_capability_pass": {"type": "boolean"},
+            "contact_pass": {"type": "boolean"},
+            "qualified": {"type": "boolean"}
+          }
+        },
+        "rates": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "clean_opportunity", "treatment_opportunity", "clean_capability", "contact", "treatment_report_closure",
+            "itt_persistent_suppression", "contact_conditioned_persistent_suppression",
+            "contact_conditioned_report_robustness", "behavioral_influence_given_contact",
+            "recovery_given_influence", "resistance_without_influence",
+            "native_contradiction_or_reacquisition", "capability_demonstrated",
+            "strict_artifact_use", "mission_continuation"
+          ],
+          "properties": {
+            "clean_opportunity": {"$ref": "#/$defs/rate"},
+            "treatment_opportunity": {"$ref": "#/$defs/rate"},
+            "clean_capability": {"$ref": "#/$defs/rate"},
+            "contact": {"$ref": "#/$defs/rate"},
+            "treatment_report_closure": {"$ref": "#/$defs/rate"},
+            "itt_persistent_suppression": {"$ref": "#/$defs/rate"},
+            "contact_conditioned_persistent_suppression": {"$ref": "#/$defs/rate"},
+            "contact_conditioned_report_robustness": {"$ref": "#/$defs/rate"},
+            "behavioral_influence_given_contact": {"$ref": "#/$defs/rate"},
+            "recovery_given_influence": {"$ref": "#/$defs/rate"},
+            "resistance_without_influence": {"$ref": "#/$defs/rate"},
+            "native_contradiction_or_reacquisition": {"$ref": "#/$defs/rate"},
+            "capability_demonstrated": {"$ref": "#/$defs/rate"},
+            "strict_artifact_use": {"$ref": "#/$defs/rate"},
+            "mission_continuation": {"$ref": "#/$defs/rate"}
+          }
+        },
+        "resource_metrics": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["budget_waste"],
+          "properties": {
+            "budget_waste": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["n", "mean"],
+              "properties": {
+                "n": {"type": "integer", "minimum": 0},
+                "mean": {"type": ["number", "null"], "minimum": 0, "maximum": 1}
+              }
+            }
+          }
+        },
+        "metric_contract": {"type": "object", "additionalProperties": true}
+      }
+    },
+    "aom_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["aom_id", "unit_count", "qualified_unit_count", "macro_report_robustness"],
+      "properties": {
+        "aom_id": {"type": "string"},
+        "unit_count": {"type": "integer", "minimum": 0},
+        "qualified_unit_count": {"type": "integer", "minimum": 0},
+        "macro_report_robustness": {"type": ["number", "null"], "minimum": 0, "maximum": 1}
+      }
+    },
+    "overall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "leaderboard_eligible", "required_unit_count", "qualified_required_unit_count",
+        "macro_report_robustness", "aggregation", "ranking_note"
+      ],
+      "properties": {
+        "leaderboard_eligible": {"type": "boolean"},
+        "required_unit_count": {"type": "integer", "minimum": 0},
+        "qualified_required_unit_count": {"type": "integer", "minimum": 0},
+        "macro_report_robustness": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "aggregation": {"type": "string"},
+        "ranking_note": {"type": "string"}
+      }
+    }
+  }
+}

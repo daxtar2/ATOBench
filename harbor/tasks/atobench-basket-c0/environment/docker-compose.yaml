@@ -1,0 +1,83 @@
+# ATOBench basket-AOU topology with a seed sidecar.
+#
+# The basket AOU is stateful: the RuntimeProgram must be materialized from its
+# frozen template against the ACTUAL seeded identities (concrete basket ids,
+# owner map, native responses). The legacy runner did this on the host via
+# protocol/juice_shop_state.py; here a short-lived `seed` service replicates it
+# inside the backend network before the proxy starts:
+#
+#   juice-shop (healthy) → seed (runs to completion, writes /program/) → proxy
+#
+# Network segmentation is unchanged: main reaches only the proxy; the target
+# and the seed live exclusively on the internal backend network.
+
+networks:
+  atobench_frontend:
+  atobench_backend:
+    internal: true
+
+services:
+  main:
+    depends_on:
+      proxy:
+        condition: service_healthy
+    networks:
+      - atobench_frontend
+    volumes:
+      - proxy_logs:/logs/proxy:ro
+
+  proxy:
+    build:
+      context: ./proxy
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+    environment:
+      # Materialized by the seed service, not baked into the image.
+      ATOBENCH_RUNTIME_PROGRAM: /program/runtime_program.yaml
+    networks:
+      - atobench_frontend
+      - atobench_backend
+    volumes:
+      - proxy_logs:/logs/proxy
+      - program:/program:ro
+    healthcheck:
+      # Bare TCP connect: proves mitmdump is listening without generating an
+      # HTTP flow, so the health probe never pollutes turns.jsonl.
+      test: ["CMD", "python", "-c", "import socket; s=socket.create_connection(('localhost',8080),timeout=2); s.close()"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+      start_period: 5s
+
+  seed:
+    build:
+      context: ./proxy
+    command: ["python", "/seed/seed.py"]
+    environment:
+      SEED_TEMPLATE: /seed/c0_shadow_template.yaml
+      SEED_EPISODE_ID: ep_basket_scope_l1_persistent_k2_c0_shadow
+    networks:
+      - atobench_backend
+    volumes:
+      - program:/program
+    depends_on:
+      juice-shop:
+        condition: service_healthy
+
+  juice-shop:
+    # Same pinned image as runtime/atobench/targets/juice-shop/docker-compose.yml.
+    image: bkimminich/juice-shop@sha256:e68144772ebaaca0ec117b38d44903af92416793230288ef7c5437fc4f26850a
+    networks:
+      - atobench_backend
+    healthcheck:
+      # Distroless image: node lives at /nodejs/bin/node (no shell, no wget).
+      test: ["CMD", "/nodejs/bin/node", "-e", "fetch('http://localhost:3000').then(r=>process.exit(r.status===200?0:1)).catch(()=>process.exit(1))"]
+      interval: 3s
+      timeout: 5s
+      retries: 40
+      start_period: 15s
+
+volumes:
+  proxy_logs:
+  program:

@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atobench.dev/schema/runtime_program.json",
+  "title": "RuntimeProgram",
+  "description": "Compiled ATOBench runtime IR consumed by the mitmproxy rule engine.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "program_id",
+    "episode_id",
+    "task_id",
+    "baseline",
+    "target",
+    "source",
+    "max_primitives_per_response",
+    "rules"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+    "program_id": {"type": "string", "pattern": "^rp_[0-9a-f]{12}$"},
+    "episode_id": {"type": "string"},
+    "task_id": {"type": "string", "enum": ["T1", "T2", "T3", "T4"]},
+    "baseline": {"type": "string", "enum": ["B0", "B1", "B2", "B3"]},
+    "target": {"type": "object", "additionalProperties": true},
+    "source": {
+      "type": "object",
+      "required": ["kind"],
+      "additionalProperties": true,
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "clean_runtime",
+            "deception_plan",
+            "legacy_config",
+            "offline_freeze_candidate",
+            "opportunity_contract"
+          ]
+        },
+        "plan_id": {"type": ["string", "null"]}
+      }
+    },
+    "max_primitives_per_response": {"type": "integer", "minimum": 1, "maximum": 5},
+    "rules": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/RuleSpec"}
+    },
+    "legacy_config": {"type": "object", "additionalProperties": true}
+  },
+  "$defs": {
+    "RuleSpec": {
+      "type": "object",
+      "required": ["rule_id", "layer", "priority", "injection_id", "primitive", "source", "match", "effects", "attribution"],
+      "additionalProperties": true,
+      "properties": {
+        "rule_id": {"type": "string"},
+        "layer": {"type": "string", "enum": ["environment_base", "instrumentation", "deception_perturbation"]},
+        "priority": {"type": "integer"},
+        "injection_id": {"type": "string"},
+        "binding_id": {"type": ["string", "null"]},
+        "primitive": {"type": "string"},
+        "coupling": {"type": "string"},
+        "surface": {
+          "type": ["string", "null"],
+          "enum": [
+            "metadata",
+            "structured_payload",
+            "document_text",
+            "failure_signal",
+            "discovery_document",
+            "enumeration_listing",
+            "progress_state",
+            "interactive_session",
+            null
+          ]
+        },
+        "loader": {
+          "type": ["string", "null"],
+          "enum": ["metadata", "document", "structured", "session", null]
+        },
+        "hook": {"type": ["string", "null"], "enum": ["request", "response", null]},
+        "target": {"type": ["object", "null"], "additionalProperties": true},
+        "source": {"type": "string"},
+        "match": {
+          "type": "object",
+          "required": ["path_regex"],
+          "additionalProperties": true,
+          "properties": {
+            "path_regex": {"type": "string"},
+            "methods": {"type": "array", "items": {"type": "string"}},
+            "response_statuses": {"type": "array", "items": {"type": "integer"}},
+            "max_applications": {"type": "integer", "minimum": 1},
+            "query_match": {"type": "string"},
+            "query_match_decoded": {"type": "string"},
+            "query_exclude_decoded": {"type": "string"}
+          }
+        },
+        "guards": {
+          "type": "array",
+          "items": {"type": "object", "additionalProperties": true}
+        },
+        "effects": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["effect_id", "operation"],
+            "additionalProperties": true,
+            "properties": {
+              "effect_id": {"type": "string"},
+              "operation": {
+                "type": "string",
+                "enum": [
+                  "inject_flag",
+                  "record_episode_token",
+                  "record_crapi_community_vehicle_sources",
+                  "record_crapi_subject_vehicle_inventory",
+                  "record_crapi_subject_location_payload",
+                  "record_match",
+                  "set_json_field",
+                  "sanitize_jwt_claims",
+                  "remove_json_field",
+                  "merge_json_object",
+                  "replace_json_body",
+                  "replace_with_crapi_subject_location_payload",
+                  "set_header",
+                  "remove_header",
+                  "append_text",
+                  "remove_html_list_items",
+                  "synthetic_response",
+                  "stateful_response",
+                  "legacy_transformer"
+                ]
+              },
+              "target": {"type": "string"},
+              "value": {},
+              "primitive_spec": {"type": "object", "additionalProperties": true}
+            }
+          }
+        },
+        "attribution": {
+          "type": "object",
+          "required": ["target_dims"],
+          "additionalProperties": true,
+          "properties": {
+            "target_dims": {"type": "array", "items": {"type": "string"}},
+            "trajectory_anchor": {"type": ["object", "null"], "additionalProperties": true}
+          }
+        },
+        "conflict_policy": {"type": "object", "additionalProperties": true}
+      }
+    }
+  }
+}

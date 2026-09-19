@@ -45,6 +45,11 @@ for task in atobench-basket-c0 atobench-basket-c1; do
 done
 find "$TASKS" -name "__pycache__" -type d -prune -exec rm -rf {} +
 
+# Shared reward core (atobench.reward.v2) into every task's tests/.
+for task in atobench-sqli-c0 atobench-sqli-c1 atobench-jwt-c0 atobench-jwt-c1 atobench-basket-c0 atobench-basket-c1; do
+    cp "$TASKS/_shared/reward_core.py" "$TASKS/$task/tests/reward_core.py"
+done
+
 # Frozen RuntimePrograms (static conditions).
 cp "$CONFIRMATORY/c0_identity/runtime_program.yaml" "$TASKS/atobench-sqli-c0/environment/proxy/runtime_program.yaml"
 cp "$CONFIRMATORY/evidence_sqli_closure/runtime_program.yaml" "$TASKS/atobench-sqli-c1/environment/proxy/runtime_program.yaml"

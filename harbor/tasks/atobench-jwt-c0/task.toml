@@ -21,10 +21,11 @@ aou = "jwt"
 unit_id = "JS-JWT-PASSWORD-HASH-LEAK"
 suite_id = "aou_expansion_v0"
 runtime_program = "c0_identity"
+reward_spec = "atobench.reward.v2"
 paired_task = "atobench/jwt-hash-suppression-c1"
 
 [agent]
-timeout_sec = 1800.0
+timeout_sec = 2400.0
 
 [verifier]
 timeout_sec = 300.0

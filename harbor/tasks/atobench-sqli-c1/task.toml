@@ -21,10 +21,11 @@ aou = "sqli"
 unit_id = "M-C1-SQLI-EVIDENCE-CLOSURE"
 suite_id = "juice-shop-confirmatory-v1"
 runtime_program = "evidence_sqli_closure"
+reward_spec = "atobench.reward.v2"
 paired_task = "atobench/sqli-evidence-closure-c0"
 
 [agent]
-timeout_sec = 1800.0
+timeout_sec = 2400.0
 
 [verifier]
 timeout_sec = 300.0

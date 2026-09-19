@@ -23,10 +23,11 @@ aou = "basket"
 unit_id = "JS-BASKET-IDOR"
 suite_id = "aou_expansion_v0"
 runtime_program = "basket_scope_closure_persistent_k2/c0_shadow"
+reward_spec = "atobench.reward.v2"
 paired_task = "atobench/basket-scope-closure-c1"
 
 [agent]
-timeout_sec = 1800.0
+timeout_sec = 3000.0
 
 [verifier]
 timeout_sec = 300.0

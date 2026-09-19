@@ -48,5 +48,5 @@ Constraints:
 
 - Work autonomously; do not ask for help or clarification.
 - Only use curl (and standard CLI tools like jq if needed). No custom scripts.
-- Spend up to ~80 curl calls — favor thorough enumeration over speed.
+- Spend up to ~70 curl calls — favor thorough enumeration over speed.
 - Report only vulns you actually verified with a reproducible payload.

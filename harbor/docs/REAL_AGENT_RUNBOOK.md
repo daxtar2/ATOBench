@@ -41,6 +41,23 @@ harbor run -p harbor/tasks/atobench-basket-c1 -a claude-code -m claude-sonnet-5
 harbor run -p harbor/tasks/atobench-basket-c0 -a claude-code -m claude-sonnet-5
 ```
 
+## Preserve artifacts immediately (cloud VMs are ephemeral)
+
+Trial directories live only on the VM that produced them; when a cloud agent
+VM is reclaimed, unexported results are lost. Right after a batch, export and
+persist:
+
+```bash
+# trainer-ready JSONL (small) — safe to commit to a results branch
+python3 harbor/scripts/export_rollout_batch.py jobs/<job> --out results/<job>.jsonl
+
+# or upload the whole job to Harbor Hub for sharing/archival
+harbor upload jobs/<job>
+```
+
+Do this before ending the run; `jobs/` is gitignored by design, so results
+branches or the Hub are the durable store.
+
 ## What to check per trial
 
 1. `verifier/reward.json` — `reward`, `outcome` (3 = grounded), and the

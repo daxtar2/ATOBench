@@ -23,6 +23,36 @@ episode 与同环境下的原生（Native）episode 配对。每一对在第一�
 
 ![ATOBench 总览](docs/figures/overview.png)
 
+## 新增：Harbor 执行层（评测 + Agentic RL）
+
+框架现在运行在 [Harbor](https://github.com/harbor-framework/harbor) 之上，
+由它负责容器化执行与评测调度——新的工作不再使用手写的 campaign 运行器。
+每个 episode 是一个 Harbor trial：agent 容器只能经由携带冻结
+RuntimeProgram 的 proxy sidecar 访问目标（网络分段从拓扑上强制），独立的
+评分环境仅依据线缆级轨迹计算确定性 reward。
+
+- **评测** —— 阶段链 `接触 → 察觉 → 适应 → 恢复 → 闭环 → 支撑`，按
+  （AOU、条件、难度）队列报告阶段条件概率；二元 grounded-verification
+  终点 `G = E ∧ C ∧ S` 保留为头条指标。见
+  [harbor/docs/EVALUATION_DESIGN.md](harbor/docs/EVALUATION_DESIGN.md)。
+- **难度阶梯** —— 欺骗强度是可调参数（剂量、耦合、选择器紧度），评测因此
+  是剂量-响应曲线，新难度级别由确定性回放控制准入。
+- **Agentic RL** —— trial 即 rollout：ATIF 轨迹 + 确定性、无 judge 的
+  reward（`reward` = G；`reward_shaped` = 阶段加权的过程奖励）。见
+  [harbor/docs/REWARD_SPEC.md](harbor/docs/REWARD_SPEC.md) 与
+  [harbor/docs/RL_ROLLOUT_CONTRACT.md](harbor/docs/RL_ROLLOUT_CONTRACT.md)。
+
+```bash
+pip install harbor
+harbor run -p harbor/tasks/atobench-sqli-c1 -a claude-code -m claude-sonnet-5
+python3 analysis/scripts/atobench-vr stage-chain jobs/<job...> --out out/ --allow-real-data
+```
+
+三个 AOU 的任务对（C0 原生 / C1 ATO，均经 oracle 验证）见
+[harbor/tasks/](harbor/tasks/)；完整的迁移验证报告见
+[harbor/README.md](harbor/README.md)。`runtime/` 下的传统宿主机运行器
+仍保留为论文复现路径。
+
 ## 核心设计
 
 1. **仅观测层的扰动。** ATO 条件下，已注册的变换在目标*执行完请求之后*、
@@ -52,7 +82,12 @@ ATOBench/
 ├── README.md, README.zh-CN.md     本指南（英文 / 简体中文）
 ├── LICENSE, NOTICE, CITATION.cff
 ├── docs/                          概念指南、架构地图、runbook、图示
-├── runtime/                       包 `atobench` —— 产出 episode 数据
+├── harbor/                        Harbor 执行层（当前）：任务、reward 合约、文档
+│   ├── tasks/                     每个 AOU 的自包含 Harbor 任务对（C0/C1 + 难度阶梯）
+│   │   └── _shared/reward_core.py 确定性 reward 核心（同步进每个任务）
+│   ├── docs/                      EVALUATION_DESIGN、REWARD_SPEC、RL_ROLLOUT_CONTRACT、runbook
+│   └── scripts/                   开发 VM 引导、rollout 批次导出
+├── runtime/                       包 `atobench` —— 产出 episode 数据（传统运行器）
 │   ├── atobench/
 │   │   ├── cli/                   `atobench-experiment` CLI：episode 生命周期 + 评测命令
 │   │   ├── experiment/            跨模型 campaign 运行器、Protocol-v3 配对、套件冻结/校验

@@ -29,6 +29,41 @@ full concept guide.
 
 ![ATOBench overview](docs/figures/overview.png)
 
+## New: Harbor execution layer (eval + Agentic RL)
+
+The framework now runs on [Harbor](https://github.com/harbor-framework/harbor)
+for containerized execution and evaluation scheduling — replacing the
+hand-rolled campaign runner for new work. Each episode is a Harbor trial:
+the agent container reaches the target only through a proxy sidecar carrying
+the frozen RuntimeProgram (network-segmented by construction), and a separate
+grading environment computes the deterministic reward from the wire-level
+trajectory alone.
+
+- **Evaluation** — the stage chain `contact → detect → adapt → recover →
+  close → support`, reported as stage-conditional probabilities per
+  (AOU, condition, difficulty) cohort; the binary grounded-verification
+  endpoint `G = E ∧ C ∧ S` is retained as the headline. See
+  [harbor/docs/EVALUATION_DESIGN.md](harbor/docs/EVALUATION_DESIGN.md).
+- **Difficulty ladder** — deception strength is a parameter (dose, coupling,
+  selector tightness), so evaluation is a dose-response curve and new rungs
+  are admitted by deterministic replay controls.
+- **Agentic RL** — trials are rollouts: ATIF trajectories plus a
+  deterministic, judge-free reward (`reward` = G; `reward_shaped` =
+  stage-weighted process reward). See
+  [harbor/docs/REWARD_SPEC.md](harbor/docs/REWARD_SPEC.md) and
+  [harbor/docs/RL_ROLLOUT_CONTRACT.md](harbor/docs/RL_ROLLOUT_CONTRACT.md).
+
+```bash
+pip install harbor
+harbor run -p harbor/tasks/atobench-sqli-c1 -a claude-code -m claude-sonnet-5
+python3 analysis/scripts/atobench-vr stage-chain jobs/<job...> --out out/ --allow-real-data
+```
+
+Task pairs for all three AOUs (C0 native / C1 ATO, oracle-verified) live in
+[harbor/tasks/](harbor/tasks/); the full spike report is in
+[harbor/README.md](harbor/README.md). The legacy host-side runner under
+`runtime/` remains the paper-reproduction path.
+
 ## Core design
 
 1. **Observation-only perturbation.** In the ATO condition the registered
@@ -67,7 +102,12 @@ ATOBench/
 ├── README.md, README.zh-CN.md     this guide (EN / 简体中文)
 ├── LICENSE, NOTICE, CITATION.cff
 ├── docs/                          concept guide, architecture map, runbooks, figures
-├── runtime/                       package `atobench` — produces episode data
+├── harbor/                        Harbor execution layer (current): tasks, reward contract, docs
+│   ├── tasks/                     self-contained Harbor task pairs per AOU (C0/C1 + ladder rungs)
+│   │   └── _shared/reward_core.py deterministic reward core (synced into every task)
+│   ├── docs/                      EVALUATION_DESIGN, REWARD_SPEC, RL_ROLLOUT_CONTRACT, runbook
+│   └── scripts/                   dev-VM bootstrap, rollout-batch export
+├── runtime/                       package `atobench` — produces episode data (legacy runner)
 │   ├── atobench/
 │   │   ├── cli/                   `atobench-experiment` CLI: episode lifecycle + eval commands
 │   │   ├── experiment/            cross-model campaign runner, Protocol-v3 pairing, suite freeze/validate

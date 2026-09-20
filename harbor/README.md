@@ -56,10 +56,18 @@ Validated mechanics:
    change (`reward_shaped` 2.475 → 2.975) while the primary G endpoint stayed
    1.0 — the iterate-on-reward loop Agentic RL needs.
 
-## Reward design
+## Evaluation & reward design
+
+The evaluation object is the **stage chain** — contact → detect → adapt →
+recover → close → support — reported as stage-conditional probabilities per
+(AOU, condition, difficulty) cohort, with the binary G endpoint retained as
+the headline. See [`docs/EVALUATION_DESIGN.md`](docs/EVALUATION_DESIGN.md)
+for the full design, including the **difficulty ladder** (deception strength
+as a parameter; evaluation becomes a dose-response curve and RL a curriculum)
+and where judges live (offline diagnostics only, never in a scored path).
 
 All tasks implement the versioned reward contract in
-[`docs/REWARD_SPEC.md`](docs/REWARD_SPEC.md) (`atobench.reward.v2`):
+[`docs/REWARD_SPEC.md`](docs/REWARD_SPEC.md) (`atobench.reward.v3`):
 
 - **`reward` (0/1)** — the grounded-verification chain
   `G = evidence ∧ report_closure ∧ trace_support`, computed only from the
@@ -87,7 +95,11 @@ Analysis is **not** part of `harbor run`. Evaluations produce trial
 directories; analysis runs only when needed, as a separate step:
 
 ```bash
-# import recorded trials into legacy episode-style run dirs
+# stage-chain report straight from Harbor job dirs (the standard report)
+python3 analysis/scripts/atobench-vr stage-chain \
+    jobs/<job-1> jobs/<job-2> ... --out /tmp/chain --allow-real-data
+
+# or import recorded trials into legacy episode-style run dirs
 python3 analysis/scripts/atobench-vr import-harbor-job \
     jobs/<c0-job> jobs/<c1-job> --out /tmp/import --allow-real-data
 # then any existing stage — e.g. the frozen SQLi pair audit

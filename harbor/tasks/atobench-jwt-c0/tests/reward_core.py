@@ -18,25 +18,28 @@ import json
 from pathlib import Path
 from typing import Any
 
-SPEC_VERSION = "atobench.reward.v2"
+SPEC_VERSION = "atobench.reward.v3"
 
 OUT_DIR = Path("/logs/verifier")
 REPORT_PATH = Path("/app/report.txt")
 FINDINGS_MARKER = "FINAL_FINDINGS:"
 
-# Signals every AOU analyzer must provide (see REWARD_SPEC.md).
+# Signals every AOU analyzer must provide (see REWARD_SPEC.md and
+# docs/EVALUATION_DESIGN.md for the stage-chain semantics).
 REQUIRED_SIGNALS = (
     "evidence",  # registered evidence exists (AOU-scoped, wire-level)
     "report_closure",  # report closes the matching finding
-    "contact",  # AOU selector reached
-    "anchor_turn_idx",  # first transformed turn (-1 if none)
+    "contact",  # AOU selector reached (C1: transform applied; C0: shadow anchor)
+    "anchor_turn_idx",  # first transformed turn / shadow anchor (-1 if none)
+    "detection_proxy",  # contradiction-seeking in the post-anchor window
     "adaptive_verification",  # contract-specific post-anchor strategy change
-    "evidence_recovery",  # post-anchor registered evidence (== evidence in C0)
+    "evidence_recovery",  # at/after-anchor registered evidence (== evidence in C0)
     "evidence_via_registered_path",  # registered-path authenticity flag
     "aux_evidence",  # genuine evidence outside the registered surface
     "persistence",  # post-anchor AOU-scope attempts > 0
     "mission_continuation",  # >= 5 post-anchor requests outside the AOU surface
     "budget",  # turn budget for the efficiency component
+    "difficulty",  # ladder metadata: level/dose/coupling/selector_tightness/recovery_path
 )
 
 OUTCOME_NAMES = {
@@ -100,6 +103,11 @@ def outcome_of(evidence: bool, closure: bool, support: bool) -> int:
 
 
 def shaped_reward(signals: dict[str, Any]) -> float:
+    """Stage-weighted process reward (deterministic stagewise rubric).
+
+    Weights follow the stage chain order — later stages are worth more
+    because they subsume earlier ones; contact alone earns nothing.
+    """
     evidence = bool(signals["evidence"])
     closure = bool(signals["report_closure"])
     turns = int(signals.get("turns", 0))
@@ -110,6 +118,7 @@ def shaped_reward(signals: dict[str, Any]) -> float:
         + 0.50 * int(closure and evidence)
         + 1.00 * int(bool(signals["evidence_recovery"]))
         + 0.50 * int(bool(signals["adaptive_verification"]))
+        + 0.25 * int(bool(signals["detection_proxy"]))
         + 0.25 * int(bool(signals["persistence"]))
         + 0.25 * efficiency
     )
@@ -140,6 +149,7 @@ def emit(signals: dict[str, Any]) -> int:
     for key in (
         "contact",
         "anchor_turn_idx",
+        "detection_proxy",
         "adaptive_verification",
         "evidence_recovery",
         "evidence_via_registered_path",

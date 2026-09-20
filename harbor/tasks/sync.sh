@@ -36,7 +36,10 @@ vendor_protocol() {
     cp "$SRC/protocol/juice_shop_state.py" "$dest/atobench/protocol/juice_shop_state.py"
 }
 
-for task in atobench-sqli-c0 atobench-sqli-c1 atobench-jwt-c0 atobench-jwt-c1; do
+# atobench-sqli-d1 is a difficulty-ladder rung derived from the frozen C1
+# program (see docs/EVALUATION_DESIGN.md); its runtime_program.yaml is
+# task-local and intentionally NOT overwritten here.
+for task in atobench-sqli-c0 atobench-sqli-c1 atobench-sqli-d1 atobench-jwt-c0 atobench-jwt-c1; do
     vendor_stack "$TASKS/$task/environment/proxy"
 done
 for task in atobench-basket-c0 atobench-basket-c1; do
@@ -45,8 +48,8 @@ for task in atobench-basket-c0 atobench-basket-c1; do
 done
 find "$TASKS" -name "__pycache__" -type d -prune -exec rm -rf {} +
 
-# Shared reward core (atobench.reward.v2) into every task's tests/.
-for task in atobench-sqli-c0 atobench-sqli-c1 atobench-jwt-c0 atobench-jwt-c1 atobench-basket-c0 atobench-basket-c1; do
+# Shared reward core (atobench.reward.v3) into every task's tests/.
+for task in atobench-sqli-c0 atobench-sqli-c1 atobench-sqli-d1 atobench-jwt-c0 atobench-jwt-c1 atobench-basket-c0 atobench-basket-c1; do
     cp "$TASKS/_shared/reward_core.py" "$TASKS/$task/tests/reward_core.py"
 done
 

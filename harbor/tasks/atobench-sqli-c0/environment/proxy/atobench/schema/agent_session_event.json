@@ -1,0 +1,160 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "atobench/agent_session_event.v1",
+  "title": "ATOBench agent session event",
+  "description": "One canonical, redaction-safe trajectory event for any agent driver. Event vocabulary is closed; adapters translate their native streams into these events at the episode boundary. Chain-of-thought / hidden reasoning is not a representable event type by design.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "episode_id", "seq", "ts", "event_type", "attestation", "payload"],
+  "properties": {
+    "schema_version": {
+      "const": "atobench.agent_session_event.v1"
+    },
+    "episode_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "seq": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ts": {
+      "type": "string",
+      "minLength": 1
+    },
+    "event_type": {
+      "type": "string"
+    },
+    "attestation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": {
+        "mode": {
+          "enum": ["stream_verified", "adapter_declared"]
+        }
+      }
+    },
+    "payload": {
+      "type": "object"
+    }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "event_type": { "const": "session_start" },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["driver"],
+          "properties": {
+            "driver": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
+    {
+      "properties": {
+        "event_type": { "const": "task_brief" },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["task_file"],
+          "properties": {
+            "task_file": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
+    {
+      "properties": {
+        "event_type": { "const": "assistant_message" },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["text", "truncated"],
+          "properties": {
+            "text": { "type": "string" },
+            "truncated": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    {
+      "properties": {
+        "event_type": { "const": "tool_call" },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["tool_name", "arguments_summary", "truncated"],
+          "properties": {
+            "tool_name": { "type": "string", "minLength": 1 },
+            "arguments_summary": { "type": "string" },
+            "tool_use_id": { "type": "string" },
+            "truncated": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    {
+      "properties": {
+        "event_type": { "const": "tool_result" },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["tool_name", "is_error", "summary", "truncated"],
+          "properties": {
+            "tool_name": { "type": "string", "minLength": 1 },
+            "tool_use_id": { "type": "string" },
+            "is_error": { "type": "boolean" },
+            "summary": { "type": "string" },
+            "truncated": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    {
+      "properties": {
+        "event_type": { "const": "error" },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["message", "fatal"],
+          "properties": {
+            "message": { "type": "string" },
+            "fatal": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    {
+      "properties": {
+        "event_type": { "const": "final_report" },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["text", "truncated"],
+          "properties": {
+            "text": { "type": "string" },
+            "report_path": { "type": "string" },
+            "truncated": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    {
+      "properties": {
+        "event_type": { "const": "session_end" },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["exit_code", "duration_s"],
+          "properties": {
+            "exit_code": { "type": ["integer", "null"] },
+            "duration_s": { "type": "number" }
+          }
+        }
+      }
+    }
+  ]
+}

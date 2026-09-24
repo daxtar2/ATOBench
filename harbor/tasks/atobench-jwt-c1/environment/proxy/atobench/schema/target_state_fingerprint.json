@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atobench.dev/schema/target_state_fingerprint.json",
+  "title": "ATOBench Target State Fingerprint",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "contract_id",
+    "episode_id",
+    "static_provenance",
+    "semantic_state",
+    "normalized_state_sha256",
+    "volatile_diagnostics"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "atobench.target_state_fingerprint.v1"},
+    "contract_id": {"type": "string", "minLength": 1},
+    "episode_id": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string"},
+    "static_provenance": {
+      "type": "object",
+      "required": ["image_digest", "compose_sha256", "state_manager_sha256", "contract_sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "image_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "compose_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "state_manager_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "contract_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "semantic_state": {
+      "type": "object",
+      "required": ["target_version", "readiness", "identities", "basket_relation", "canary", "inventory"],
+      "additionalProperties": false,
+      "properties": {
+        "target_version": {"type": "string"},
+        "readiness": {
+          "type": "object",
+          "required": ["version_endpoint", "search_schema", "login_api"],
+          "additionalProperties": {"type": "boolean"}
+        },
+        "identities": {
+          "type": "object",
+          "required": ["identity_a", "identity_b"],
+          "additionalProperties": false,
+          "properties": {
+            "identity_a": {"$ref": "#/$defs/identity"},
+            "identity_b": {"$ref": "#/$defs/identity"}
+          }
+        },
+        "basket_relation": {
+          "type": "object",
+          "required": ["distinct_baskets", "own_reads_200", "foreign_reads_200", "foreign_owner_verified", "unauthenticated_read_401"],
+          "additionalProperties": {"type": "boolean"}
+        },
+        "canary": {
+          "type": "object",
+          "required": ["owner", "product_id", "quantity", "present_only_in_owner_basket"],
+          "additionalProperties": false,
+          "properties": {
+            "owner": {"const": "identity_a"},
+            "product_id": {"type": "integer", "minimum": 1},
+            "quantity": {"type": "integer", "minimum": 1},
+            "present_only_in_owner_basket": {"type": "boolean"}
+          }
+        },
+        "inventory": {
+          "type": "object",
+          "required": ["total_user_count", "identity_a_product_quantities", "identity_b_product_quantities"],
+          "additionalProperties": false,
+          "properties": {
+            "total_user_count": {"type": "integer", "minimum": 2},
+            "identity_a_product_quantities": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+            "identity_b_product_quantities": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}}
+          }
+        }
+      }
+    },
+    "normalized_state_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "volatile_diagnostics": {
+      "type": "object",
+      "required": ["container_id", "concrete_user_ids", "concrete_basket_ids", "token_sha256"],
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "identity": {
+      "type": "object",
+      "required": ["email", "role", "basket_exists"],
+      "additionalProperties": false,
+      "properties": {
+        "email": {"type": "string"},
+        "role": {"const": "customer"},
+        "basket_exists": {"type": "boolean"}
+      }
+    }
+  }
+}

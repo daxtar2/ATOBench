@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atobench.dev/schema/primitive_template.json",
+  "title": "PrimitiveTemplate",
+  "description": "Open-ended deception primitive proposal format. LLMs fill this template freely; the validator checks structural soundness; the translator maps (archetype, transform.type, state_machine.type, coupling.strength, response_fields) to one of the 15 registered primitive names in deception_config.json. Proposals that don't map are flagged as 'novel form' (logged for paper §7, dropped from running config — no transformer to run them).",
+  "type": "object",
+  "required": ["name", "archetype", "match", "transform", "coupling", "rationale", "self_confidence"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "description": "LLM-generated snake_case name. Should be descriptive (e.g. 'fake_apache_banner_on_root', 'jwt_token_ttl_trap_on_refresh'). Does NOT need to match a registered primitive name — the translator fills mapped_primitive_name."
+    },
+    "archetype": {
+      "type": "string",
+      "enum": [
+        "belief_injection",
+        "state_corruption",
+        "link_injection",
+        "signal_suppression",
+        "decoy_endpoint",
+        "credential_bait",
+        "stateful_escalation",
+        "termination",
+        "request_validation"
+      ],
+      "description": "High-level primitive archetype. The 9 v1 primitives map onto these archetypes as follows: belief_injection (fake_version_banner, vuln_symptom_inject, no_vuln_gaslighting); state_corruption (corrupt_belief, exhaustion_trap); link_injection (substitute_subgoal); signal_suppression (preemptive_ftp_gaslight); decoy_endpoint (decoy_sql_search); credential_bait (hardcoded_cred_comment); stateful_escalation (cross_turn_jwt_escalation, induce_loop); termination (false_completion); request_validation (poison_dependency)."
+    },
+    "match": {
+      "type": "object",
+      "required": ["path_regex"],
+      "additionalProperties": false,
+      "properties": {
+        "path_regex": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Python re.search pattern applied to URL path. Must compile."
+        },
+        "methods": {
+          "type": "array",
+          "items": {"type": "string", "enum": ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]},
+          "description": "HTTP methods. Empty or omitted = all methods."
+        },
+        "response_fields": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Response body field names to inspect/modify. Used by translator to disambiguate archetype → primitive mapping (e.g. 'server' → fake_version_banner, 'password_hash' → vuln_symptom_inject)."
+        },
+        "request_fields": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Request body field names (for request-side primitives like poison_dependency)."
+        }
+      }
+    },
+    "transform": {
+      "type": "object",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["replace", "augment", "stateful_replace", "synthetic_response"],
+          "description": "replace = overwrite existing fields; augment = add new fields without removing existing; stateful_replace = replace with cross-turn state (requires state_machine); synthetic_response = proxy generates response without forwarding (decoy_endpoint)."
+        },
+        "fields_to_modify": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["field", "action"],
+            "additionalProperties": false,
+            "properties": {
+              "field": {"type": "string", "description": "Field name to modify."},
+              "action": {"type": "string", "enum": ["set", "remove", "append"]},
+              "value": {"description": "Value for set/append. Ignored for remove. Any JSON type."}
+            }
+          },
+          "description": "Field-level modifications. For 'set' action, value is the fake value. For 'remove', value is ignored (used for signal_removal). For 'append', value is appended to existing array/string."
+        },
+        "state_machine": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type"],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["none", "decrementing_queue", "perpetual_pending", "eta_cycle", "token_ttl", "dedup"],
+              "description": "none = stateless. Others must match an existing transformer's state machine: decrementing_queue=corrupt_belief; perpetual_pending=corrupt_belief alt; eta_cycle=exhaustion_trap; token_ttl=induce_loop; dedup=cross_turn_jwt_escalation."
+            },
+            "initial_state": {"description": "Initial state. Type depends on state_machine.type."},
+            "terminal_state": {"description": "Terminal state. null = no terminal."},
+            "transitions": {"type": "object", "description": "Optional explicit transition table."},
+            "max_uses": {"type": "integer", "minimum": 1, "description": "For token_ttl."},
+            "min_diff_fields": {"type": "integer", "minimum": 1, "description": "For dedup."}
+          }
+        }
+      }
+    },
+    "coupling": {
+      "type": "object",
+      "required": ["strength"],
+      "additionalProperties": false,
+      "properties": {
+        "strength": {
+          "type": "string",
+          "enum": ["loose", "schema_coupled", "precondition", "signal_removal"],
+          "description": "Coupling strength. loose=decorative field (rejected by coupling_enforcer — 0% effect); schema_coupled=required field + _links rewrite (100% derail); precondition=auth/header gated; signal_removal=strip real signal."
+        },
+        "required_field_rewrites": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["field"],
+            "additionalProperties": false,
+            "properties": {
+              "field": {"type": "string"},
+              "required": {"type": "boolean", "description": "True = field is required in response schema."},
+              "_links_rewrite": {"type": "boolean", "description": "True = _links entry injected pointing to fake endpoint."}
+            }
+          },
+          "description": "For schema_coupled: list of fields that become required, with optional _links rewrite."
+        },
+        "signal_removal_targets": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "For signal_removal: list of fields/headers to strip from response."
+        }
+      }
+    },
+    "fake_values": {
+      "type": "object",
+      "description": "Concrete fake values. LLM may leave empty for the content_generator to fill. For stateful primitives, may include state_machine initial_state override.",
+      "additionalProperties": true
+    },
+    "rationale": {
+      "type": "string",
+      "maxLength": 300,
+      "description": "≤2 sentences explaining why this primitive at this endpoint exploits an audit-specific behavior."
+    },
+    "self_confidence": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "LLM's confidence this proposal will cause measurable pentest-effect delta. Used as fallback tiebreaker when convergence filter finds no convergent group."
+    },
+    "avoid_pattern": {
+      "type": "string",
+      "description": "Optional. Pattern the LLM would NOT try, and why. Used to seed the next round's prompt with prior dead-ends."
+    }
+  }
+}

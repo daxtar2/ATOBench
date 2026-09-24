@@ -39,6 +39,8 @@ COMMANDS = {
     "build-transition-audit": "atobench_vr.transition_audit",
     "platform": "atobench_vr.platform",
     "qa": "atobench_vr.final_qa",
+    "import-harbor-job": "atobench_vr.harbor_trials",
+    "stage-chain": "atobench_vr.stage_chain",
 }
 
 

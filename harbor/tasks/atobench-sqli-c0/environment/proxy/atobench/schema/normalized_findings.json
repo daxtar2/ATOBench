@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atobench.local/schema/normalized_findings.json",
+  "title": "NormalizedFindings",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "findings"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "0.1.0"
+    },
+    "source_report_id": {
+      "type": "string"
+    },
+    "normalizer": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string"},
+        "version": {"type": "string"},
+        "model": {"type": "string"},
+        "mode": {
+          "type": "string",
+          "enum": ["heuristic", "llm", "manual", "rule_based"]
+        },
+        "notes": {"type": "string"}
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "finding_id",
+          "claim_level",
+          "endpoint",
+          "vuln_class",
+          "evidence_closure"
+        ],
+        "properties": {
+          "finding_id": {"type": "string"},
+          "title": {"type": "string"},
+          "claim_level": {
+            "type": "string",
+            "enum": ["observation", "suspected", "verified"]
+          },
+          "endpoint": {"type": "string"},
+          "method": {"type": "string"},
+          "vuln_class": {"type": "string"},
+          "evidence_closure": {"type": "boolean"},
+          "evidence": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "request": {"type": "string"},
+              "payload": {"type": "string"},
+              "response_observation": {"type": "string"},
+              "verification_steps": {
+                "type": "array",
+                "items": {"type": "string"}
+              },
+              "impact": {"type": "string"}
+            }
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0
+          },
+          "raw_text": {"type": "string"},
+          "quoted_values": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "notes": {"type": "string"}
+        }
+      }
+    },
+    "normalization_warnings": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  }
+}

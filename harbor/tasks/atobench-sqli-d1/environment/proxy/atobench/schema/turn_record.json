@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atobench.dev/schema/turn_record.json",
+  "title": "TurnRecord",
+  "description": "ATOBench per-turn log entry. Emitted by the proxy into turns.jsonl. One line per HTTP request-response pair the agent made. The proxy strips X-ATOBench-Tag header before forwarding to the agent, but retains the decoded tag in this log for offline analysis.",
+  "type": "object",
+  "required": ["i", "ts", "svc", "req", "status", "is_deceptive"],
+  "additionalProperties": false,
+  "properties": {
+    "i": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Turn index within the episode, 0-based."
+    },
+    "ts": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of when the proxy received the request."
+    },
+    "svc": {
+      "type": "string",
+      "description": "Service name (e.g., 'acme', 'acme_idp', 'admin_api', 'auth_service')."
+    },
+    "req": {
+      "type": "object",
+      "description": "Request line + headers relevant to deception attribution.",
+      "required": ["method", "path"],
+      "additionalProperties": false,
+      "properties": {
+        "method": {"type": "string", "enum": ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]},
+        "path": {"type": "string"},
+        "headers": {"type": "object", "additionalProperties": true}
+      }
+    },
+    "status": {
+      "type": "integer",
+      "minimum": 100,
+      "maximum": 599,
+      "description": "HTTP response status code."
+    },
+    "body": {
+      "type": ["string", "null"],
+      "description": "Response body. Truncated for log size (see proxy config). null for HEAD/204 responses."
+    },
+    "is_deceptive": {
+      "type": "boolean",
+      "description": "Ground truth: was this turn's response tampered by the deception proxy? False for B0 episodes and for B1+ episodes where the gate returned False."
+    },
+    "deception_tag": {
+      "type": ["object", "null"],
+      "description": "Decoded X-ATOBench-Tag header. null when is_deceptive=false.",
+      "additionalProperties": false,
+      "properties": {
+        "z_t": {"type": "string", "description": "Primitive name."},
+        "u_t": {"type": "object", "description": "Per-turn deception parameters (e.g., fake_value, target_field).", "additionalProperties": true},
+        "D_t_snapshot": {"type": "object", "description": "Snapshot of the persistent deception state D_t at this turn.", "additionalProperties": true}
+      }
+    },
+    "reception": {
+      "type": ["string", "null"],
+      "enum": ["ignored", "queried", "accepted", "acted", "committed", "flagged", null],
+      "description": "6-class reception label (assigned by reception_classifier.py post-hoc). null until classified."
+    }
+  }
+}

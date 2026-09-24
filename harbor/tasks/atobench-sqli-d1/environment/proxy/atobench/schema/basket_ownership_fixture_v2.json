@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atobench.dev/schema/basket_ownership_fixture_v2.json",
+  "title": "Protocol-v3 Basket Ownership Fixture",
+  "type": "object",
+  "required": ["schema_version", "fixture_id", "contract_id", "status", "seeded_credentials", "identities", "owner_by_basket_id", "canary", "probe_results", "native_basket_responses", "fixture_sha256_scope"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "atobench.basket_ownership_fixture.v2"},
+    "fixture_id": {"type": "string"},
+    "contract_id": {"type": "string"},
+    "created_at": {"type": "string"},
+    "status": {"const": "verified"},
+    "seeded_credentials": {
+      "type": "object",
+      "required": ["password", "security_question_id", "security_answer"],
+      "additionalProperties": false,
+      "properties": {
+        "password": {"type": "string"},
+        "security_question_id": {"type": "integer"},
+        "security_answer": {"type": "string"}
+      }
+    },
+    "identities": {
+      "type": "object",
+      "required": ["identity_a", "identity_b"],
+      "additionalProperties": false,
+      "properties": {
+        "identity_a": {"$ref": "#/$defs/identity"},
+        "identity_b": {"$ref": "#/$defs/identity"}
+      }
+    },
+    "owner_by_basket_id": {"type": "object", "minProperties": 2, "additionalProperties": {"enum": ["identity_a", "identity_b"]}},
+    "canary": {
+      "type": "object",
+      "required": ["owner", "product_id", "quantity"],
+      "additionalProperties": false,
+      "properties": {
+        "owner": {"const": "identity_a"},
+        "product_id": {"type": "integer"},
+        "quantity": {"type": "integer"}
+      }
+    },
+    "probe_results": {"type": "object", "additionalProperties": true},
+    "native_basket_responses": {
+      "type": "object",
+      "required": ["identity_a_own", "identity_b_own", "identity_a_foreign", "identity_b_foreign"],
+      "additionalProperties": true
+    },
+    "fixture_sha256_scope": {"type": "string"}
+  },
+  "$defs": {
+    "identity": {
+      "type": "object",
+      "required": ["email", "user_id", "role", "basket_id", "known_existing"],
+      "additionalProperties": false,
+      "properties": {
+        "email": {"type": "string"},
+        "user_id": {"type": "integer"},
+        "role": {"const": "customer"},
+        "basket_id": {"type": "integer"},
+        "known_existing": {"const": true}
+      }
+    }
+  }
+}

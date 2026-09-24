@@ -1,0 +1,63 @@
+# ATOBench sidecar topology for the SQLi AOU.
+#
+# Network segmentation is the point: the agent (main) sits only on
+# `atobench_frontend` and can reach nothing but the proxy. The juice-shop
+# target sits only on `atobench_backend` (internal), shared exclusively with
+# the proxy. Every byte the agent exchanges with the target therefore
+# traverses the RuntimeProgram — the observation-intervention contract cannot
+# be bypassed by construction.
+#
+# Harbor merges this file on top of its base compose (which defines `main`);
+# task-authored networking on `main` is respected by the merge.
+
+networks:
+  atobench_frontend:
+  atobench_backend:
+    internal: true
+
+services:
+  main:
+    depends_on:
+      proxy:
+        condition: service_healthy
+      juice-shop:
+        condition: service_healthy
+    networks:
+      - atobench_frontend
+    volumes:
+      # Verifier (running in main) reads the proxy trajectory from here.
+      - proxy_logs:/logs/proxy:ro
+
+  proxy:
+    build:
+      context: ./proxy
+    networks:
+      - atobench_frontend
+      - atobench_backend
+    volumes:
+      - proxy_logs:/logs/proxy
+    healthcheck:
+      # Bare TCP connect: proves mitmdump is listening without generating an
+      # HTTP flow, so the health probe never pollutes turns.jsonl.
+      test: ["CMD", "python", "-c", "import socket; s=socket.create_connection(('localhost',8080),timeout=2); s.close()"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+      start_period: 5s
+
+  juice-shop:
+    # Same pinned image as runtime/atobench/targets/juice-shop/docker-compose.yml.
+    image: bkimminich/juice-shop@sha256:e68144772ebaaca0ec117b38d44903af92416793230288ef7c5437fc4f26850a
+    networks:
+      - atobench_backend
+    healthcheck:
+      # Direct hit on the target (not through the proxy): no trajectory pollution.
+      # Distroless image: node lives at /nodejs/bin/node (no shell, no wget).
+      test: ["CMD", "/nodejs/bin/node", "-e", "fetch('http://localhost:3000').then(r=>process.exit(r.status===200?0:1)).catch(()=>process.exit(1))"]
+      interval: 3s
+      timeout: 5s
+      retries: 40
+      start_period: 15s
+
+volumes:
+  proxy_logs:

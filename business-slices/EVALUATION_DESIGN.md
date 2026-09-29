@@ -9,7 +9,8 @@
 
 - `/cursor/stores/self/business-slice-target-research.md` — 场景选品与交付形态  
 - `/cursor/stores/self/dms-slice-boundary-test-report.md` — 当前薄切片边界测试  
-- `business-slices/data-change-approval/` — 首个切片骨架（C0 路径 oracle，非最终保真度）
+- `business-slices/data-change-approval/` — 首个切片骨架（C0 路径 oracle，非最终保真度）  
+- [DECEPTION_DECISION_RUBRIC.md](./DECEPTION_DECISION_RUBRIC.md) — 借鉴 TraceDance 的 deception 决策点续写与专属 rubric（B3 点位仪）
 
 ---
 

@@ -70,3 +70,16 @@ BuildSpec
 4. 一个 **tiny synthetic** fixture 跑通 validate（不含阿里云内部语义）
 
 下一讨论再定：原料从哪来（trace 反建、模板库、半自动 LLM 扩面）——那部分若含内部知识，只进 `_private/` 或 store。
+
+---
+
+## 4. 可执行 Plan（v0.2）
+
+阶段化合同见 **[ENV_BUILD_PLAN.md](./ENV_BUILD_PLAN.md)**（P0 Spec → P1 Factory → P2 金牌 → P3 Gate → P4 Expand → P5 消费）。
+
+调查全文（GLM / MiMo / Agent-World / SETA / X 等）仅在 store：
+
+- `/cursor/stores/self/env-pipeline/SURVEY_FRONTIER_ENV_BUILD.md`
+- `/cursor/stores/self/env-pipeline/ENV_BUILD_PLAN.md`（含修订对照表）
+
+硬规则（调查强制）：**Verifier Gate（oracle / no-op / unsolved / shortcuts / leak_scan）绿之前禁止默认 expand。**

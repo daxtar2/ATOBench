@@ -12,11 +12,19 @@
 | [DECEPTION_DECISION_RUBRIC.md](./DECEPTION_DECISION_RUBRIC.md) | 遇欺专属 0–5 量表 |
 | [examples/WORKED_EXAMPLE_PATH_SEAL.md](./examples/WORKED_EXAMPLE_PATH_SEAL.md) | 封审批入口纸面样例 |
 
-诱导性欺骗暂缓；批量环境构建尚未开始。
-当前：
+**批量环境 pipeline：** [PIPELINE.md](./PIPELINE.md) · [pipeline/](./pipeline/)
+
+| 进 GitHub | 不进 GitHub |
+|---|---|
+| `pipeline/`、`schemas/`、`fixtures/tiny/`、`templates/` | `generated/` 批量产物 |
+| 评测/设计 md、手写薄切片 | `_private/` 工单/trace 原料、密钥 |
+
+诱导性欺骗暂缓。
+
+当前切片：
 
 | 目录 | 场景 |
 |---|---|
-| [data-change-approval](./data-change-approval/) | 数据变更审批（DMS 工单控制面形似；骨架，尚未达 B1 保真度） |
+| [data-change-approval](./data-change-approval/) | 数据变更审批（骨架，尚未达 B1 保真度） |
 
 形态：Docker Compose 自包含；真云仅作文档参照。

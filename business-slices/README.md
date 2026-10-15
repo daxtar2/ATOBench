@@ -12,7 +12,7 @@
 | [DECEPTION_DECISION_RUBRIC.md](./DECEPTION_DECISION_RUBRIC.md) | 遇欺专属 0–5 量表 |
 | [examples/WORKED_EXAMPLE_PATH_SEAL.md](./examples/WORKED_EXAMPLE_PATH_SEAL.md) | 封审批入口纸面样例 |
 
-**批量环境 pipeline：** [PIPELINE.md](./PIPELINE.md) · [pipeline/](./pipeline/)
+**批量环境 pipeline：** [ENV_BUILD_PLAN.md](./ENV_BUILD_PLAN.md)（P0–P5 可执行合同） · [PIPELINE.md](./PIPELINE.md) · [pipeline/](./pipeline/)
 
 | 进 GitHub | 不进 GitHub |
 |---|---|

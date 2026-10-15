@@ -2,9 +2,17 @@
 
 独立于 Harbor / ATOBench 任务目录的**业务工作流薄切片**沙箱。
 
-**评测标准（先读）：** [EVALUATION_DESIGN.md](./EVALUATION_DESIGN.md) — 能力阶梯 B0–B4、Grader 分层、主终点 B1@C0 / B2@C1；诱导性欺骗暂缓。  
-**点位行为仪：** [DECEPTION_DECISION_RUBRIC.md](./DECEPTION_DECISION_RUBRIC.md) — 遇欺决策点续写 + 专属 rubric（不替代机检主终点）。
+**评测框架（先读）：**
 
+| 文档 | 内容 |
+|---|---|
+| [METRICS_CARD.md](./METRICS_CARD.md) | **冻结指标卡** `metrics.v1`：主终点 B1/B2，诊断 PDR |
+| [INSTANCE_SPEC.md](./INSTANCE_SPEC.md) | DDC/PDR 实例 schema `instance.v1` |
+| [EVALUATION_DESIGN.md](./EVALUATION_DESIGN.md) | 能力阶梯与 grader 分层总述 |
+| [DECEPTION_DECISION_RUBRIC.md](./DECEPTION_DECISION_RUBRIC.md) | 遇欺专属 0–5 量表 |
+| [examples/WORKED_EXAMPLE_PATH_SEAL.md](./examples/WORKED_EXAMPLE_PATH_SEAL.md) | 封审批入口纸面样例 |
+
+诱导性欺骗暂缓；批量环境构建尚未开始。
 当前：
 
 | 目录 | 场景 |

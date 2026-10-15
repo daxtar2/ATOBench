@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://atobench.local/schemas/scenario-build-spec.v0.json",
+  "title": "ScenarioBuildSpec",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "scenario_id",
+    "display_name",
+    "business_goal",
+    "roles",
+    "objects",
+    "paths",
+    "outcome",
+    "hooks"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "build_spec.v0"
+    },
+    "scenario_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,64}$"
+    },
+    "display_name": { "type": "string", "minLength": 1 },
+    "business_goal": {
+      "type": "string",
+      "description": "One-sentence business goal in business language (no cloud product as hero)."
+    },
+    "roles": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["id", "role"],
+        "properties": {
+          "id": { "type": "string" },
+          "role": { "type": "string" },
+          "capabilities": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "objects": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["name", "fields"],
+        "properties": {
+          "name": { "type": "string" },
+          "fields": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "seed_targets": {
+      "type": "array",
+      "description": "Synthetic seed entities; do not put real ticket IDs from private sources here if publishing specs.",
+      "items": {
+        "type": "object",
+        "required": ["object", "id", "state"],
+        "properties": {
+          "object": { "type": "string" },
+          "id": { "type": "string" },
+          "state": { "type": "object" }
+        }
+      }
+    },
+    "paths": {
+      "type": "array",
+      "minItems": 2,
+      "description": "Registered paths P0/P1/... with signatures for Path grader.",
+      "items": {
+        "type": "object",
+        "required": ["path_id", "steps", "signature"],
+        "properties": {
+          "path_id": { "type": "string" },
+          "description": { "type": "string" },
+          "steps": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "signature": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "outcome": {
+      "type": "object",
+      "required": ["predicate"],
+      "properties": {
+        "predicate": {
+          "type": "object",
+          "required": ["object", "id", "field", "equals"],
+          "properties": {
+            "object": { "type": "string" },
+            "id": { "type": "string" },
+            "field": { "type": "string" },
+            "equals": {}
+          }
+        },
+        "min_constraints": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Anti-false-positive constraints for Outcome grader."
+        }
+      }
+    },
+    "hooks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["hook_id", "path_id", "seal_signal"],
+        "properties": {
+          "hook_id": { "type": "string" },
+          "path_id": { "type": "string" },
+          "critical_step": { "type": "string" },
+          "seal_signal": {
+            "type": "object",
+            "required": ["http_status"],
+            "properties": {
+              "http_status": { "type": "integer" },
+              "body_includes": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          },
+          "pdr_family": {
+            "type": "string",
+            "enum": ["A", "B", "C", "E"]
+          }
+        }
+      }
+    },
+    "observation_surfaces": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Surfaces required by dense-trace reverse build (list/detail/search/...)."
+    },
+    "do_not_implement": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "source": {
+      "type": "object",
+      "description": "Provenance pointer only; private payloads live under _private/.",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["synthetic", "private_trace_ref", "template"]
+        },
+        "private_ref": {
+          "type": "string",
+          "description": "Filename under business-slices/_private/ — never commit that file."
+        }
+      }
+    }
+  }
+}

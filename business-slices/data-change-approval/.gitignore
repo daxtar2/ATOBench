@@ -1,0 +1,5 @@
+# Ignore local runtime data
+*.db
+__pycache__/
+.pytest_cache/
+.venv/

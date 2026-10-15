@@ -1,0 +1,17 @@
+# 本地 / 生成物 — 勿提交
+generated/
+_private/
+**/.env
+**/.env.*
+**/credentials*
+**/*secret*
+**/*.pem
+**/terraform.tfstate*
+**/*.db
+**/__pycache__/
+**/.venv/
+**/.pytest_cache/
+**/node_modules/
+**/_private/**
+**/*.private.md
+**/*-INTERNAL.md

@@ -105,14 +105,21 @@ pair identity are hidden from judges):
 
 1. **Deterministic reconstruction** — proxy events, AOU records, agent
    actions, and returned artifacts are linked to produce the registered
-   evidence label. No model is involved.
-2. **Agent-as-Judge** — identity-blinded judge instances evaluate report
-   closure and claim–trace support, with independent evidence verifiers
-   rechecking every cited pointer against the packet allowlist.
+   evidence label. No model is involved. Harbor `reward = G` stays on this
+   layer only (no LLM on any scored path).
+2. **Agent-as-Judge / semantic matchers** — identity-blinded tasks for
+   report-side closure semantics where needed, with independent evidence
+   verifiers rechecking every cited pointer against the packet allowlist.
 3. **Trajectory judges** — separate blinded tasks localize *where* the
    verification chain changes: **Verification Control**, **Stop Decision**
    (reported as `ready-supported`, `ready-not-supported`, `not-ready`, or
-   `internally-conflicted`), and **Report Grounding**.
+   `internally-conflicted`), and **Report Grounding**. These are offline
+   diagnostics, never the task-success definition.
+
+Judge metrology (κ vs raw agreement, same-model replicate vs multi-model
+panel, Expert–Judge, injection probes): see
+[JUDGE_METROLOGY_REFINEMENT.md](./JUDGE_METROLOGY_REFINEMENT.md) and
+[LLM_JUDGE_GUIDE.md](./LLM_JUDGE_GUIDE.md).
 
 ## Resilience
 

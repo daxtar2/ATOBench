@@ -100,6 +100,7 @@ regradable without re-running the agent (`harbor job regrade`).
 |---|---|
 | Concepts & vocabulary (ATO, AOU, anchors, the three shipped contracts) | [docs/CONCEPTS.md](docs/CONCEPTS.md) |
 | Evaluation design: stage chain, difficulty ladder, judge boundary | [harbor/docs/EVALUATION_DESIGN.md](harbor/docs/EVALUATION_DESIGN.md) |
+| LLM-judge guide + ATOBench metrology refinement | [docs/LLM_JUDGE_GUIDE.md](docs/LLM_JUDGE_GUIDE.md) · [docs/JUDGE_METROLOGY_REFINEMENT.md](docs/JUDGE_METROLOGY_REFINEMENT.md) |
 | Reward contract (per-episode metrics, shaped reward) | [harbor/docs/REWARD_SPEC.md](harbor/docs/REWARD_SPEC.md) |
 | RL rollout contract & stability validation | [harbor/docs/RL_ROLLOUT_CONTRACT.md](harbor/docs/RL_ROLLOUT_CONTRACT.md) |
 | Real-agent runbook (providers, flakes, artifact persistence) | [harbor/docs/REAL_AGENT_RUNBOOK.md](harbor/docs/REAL_AGENT_RUNBOOK.md) |

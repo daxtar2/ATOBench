@@ -67,6 +67,10 @@ class JudgePilotTests(unittest.TestCase):
     def test_agreement_summary(self) -> None:
         rows = [
             {
+                "score_a": 5,
+                "score_b": 6,
+                "band_a": "limited",
+                "band_b": "limited",
                 "exact_score_agreement": False,
                 "within_one_point": True,
                 "band_agreement": True,
@@ -74,6 +78,10 @@ class JudgePilotTests(unittest.TestCase):
                 "adjudication_trigger": "review_assertion_not_fully_entailed",
             },
             {
+                "score_a": 8,
+                "score_b": 8,
+                "band_a": "good",
+                "band_b": "good",
                 "exact_score_agreement": True,
                 "within_one_point": True,
                 "band_agreement": True,
@@ -85,6 +93,9 @@ class JudgePilotTests(unittest.TestCase):
         self.assertEqual(summary["within_one_point_rate"], 1.0)
         self.assertEqual(summary["exact_score_agreement_rate"], 0.5)
         self.assertEqual(summary["verifier_status_counts"]["entailed"], 3)
+        self.assertEqual(
+            summary["metrology"]["reviewer_panel_kind"], "same_model_replicate"
+        )
 
     def test_stop_decision_descriptor_projection(self) -> None:
         with tempfile.TemporaryDirectory() as raw:

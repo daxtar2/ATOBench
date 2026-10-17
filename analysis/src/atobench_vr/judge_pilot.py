@@ -16,6 +16,7 @@ from .common import (
     utc_now,
     write_json,
 )
+from .judge_agreement import agreement_block, imbalance_warning
 from .judge_episode import DIMENSIONS
 from .judge_runner import run_packet
 from .stop_descriptors import derive_stop_descriptors
@@ -114,6 +115,8 @@ def _result_row(
         "call_duration_seconds": receipt["call_duration_seconds"],
         "score_a": score_a,
         "score_b": score_b,
+        "band_a": reviews[0].get("band"),
+        "band_b": reviews[1].get("band"),
         "score_difference": abs(float(score_a) - float(score_b))
         if both_scores
         else None,
@@ -140,14 +143,37 @@ def _agreement_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
         status for row in rows for status in row["verifier_statuses"]
     )
     trigger_counts = Counter(str(row["adjudication_trigger"]) for row in rows)
-    return {
+    scores_a = [row.get("score_a") for row in rows]
+    scores_b = [row.get("score_b") for row in rows]
+    # Band labels are optional on older pilot rows; derive from exact flags when absent.
+    bands_a = [row.get("band_a") for row in rows]
+    bands_b = [row.get("band_b") for row in rows]
+    if all(value is None for value in bands_a + bands_b):
+        # Fall back: treat band_agreement boolean rows without explicit bands.
+        bands_a = None
+        bands_b = None
+    metrology = agreement_block(
+        scores_a,
+        scores_b,
+        bands_a,
+        bands_b,
+        reviewer_panel_kind="same_model_replicate",
+    )
+    warning = imbalance_warning(
+        [label for label in scores_a + scores_b if label is not None]
+    )
+    summary = {
         "packet_count": len(rows),
         "exact_score_agreement_rate": _rate(rows, "exact_score_agreement"),
         "within_one_point_rate": _rate(rows, "within_one_point"),
         "band_agreement_rate": _rate(rows, "band_agreement"),
         "verifier_status_counts": dict(sorted(verifier_counts.items())),
         "trigger_counts": dict(sorted(trigger_counts.items())),
+        "metrology": metrology,
     }
+    if warning is not None:
+        summary["metrology_warning"] = warning
+    return summary
 
 
 def _stop_decision_descriptor_projection(

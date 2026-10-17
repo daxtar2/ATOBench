@@ -19,6 +19,10 @@
   "parallel_reviewers": true,
   "temperature": "not_exposed_by_claude_code_cli",
   "reviewer_semantics": "isolated_replicate_reviewers_same_model_revision",
+  "metrology": {
+    "reviewer_panel_kind": "same_model_replicate",
+    "notes": "Two reviewer_ids are isolated replicates of the same model+prompt. High agreement measures stability, not correctness. Do not describe this panel as a multi-model jury. See docs/JUDGE_METROLOGY_REFINEMENT.md."
+  },
   "network_policy": "no_web_tools_exposed",
   "filesystem_policy": "read_only_packet_workspace"
 }

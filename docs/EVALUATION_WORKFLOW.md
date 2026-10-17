@@ -107,6 +107,12 @@ packets, so they need a working Claude Code installation; every other stage
 is local and deterministic. Each export writes a dataset manifest, dataset
 card, quality summary, and export audit alongside its JSONL records.
 
+Pilot / validation agreement summaries now include Cohen's κ and quadratic
+weighted κ under `metrology` (see
+[JUDGE_METROLOGY_REFINEMENT.md](./JUDGE_METROLOGY_REFINEMENT.md)). The default
+runner panel is a **same-model replicate** (`judge_runner_config.json`); high
+agreement measures stability, not Expert–Judge correctness.
+
 For what the exports contain (and what they deliberately do not), see
 [analysis/README.md](../analysis/README.md) and
 [analysis/docs/PROJECT_VISION_AND_LEARNING_DATA.md](../analysis/docs/PROJECT_VISION_AND_LEARNING_DATA.md).
